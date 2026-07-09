@@ -1,0 +1,14 @@
+---
+description: Patrones para features del frontend
+globs: src/features/**/*
+alwaysApply: false
+---
+
+# Features Frontend
+
+Estructura: components/, hooks/, services/, types/, index.ts
+
+No importar de otro feature. API calls en features/<x>/services/.
+Textos en src/constants/messages.constants.ts.
+
+Actualizar specs/FEATURES.md y specs/ROUTES.md al implementar.
