@@ -10,7 +10,8 @@ import {
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { useAuth, parseApiError } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
+import { parseApiError } from '@/utils/api-error';
 import { ProfileRoleCard, type ProfileRole } from '@/features/auth/components/ProfileRoleCard';
 import {
   registerFoundationSchema,

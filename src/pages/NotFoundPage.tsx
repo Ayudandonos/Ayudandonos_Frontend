@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { buttonLinkClass } from '@/components/ui/Button';
+import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
