@@ -1,2 +1,1 @@
-// Feature skeleton — Fase 1
-export {};
+export { PublishNeedPage } from './components/PublishNeedPage';
