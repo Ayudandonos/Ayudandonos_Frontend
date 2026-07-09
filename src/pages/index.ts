@@ -1,2 +1,2 @@
-export { HomePage } from './HomePage';
+export { HomePage } from '@/features/marketing';
 export { NotFoundPage } from './NotFoundPage';

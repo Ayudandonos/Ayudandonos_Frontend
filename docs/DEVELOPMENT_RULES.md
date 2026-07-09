@@ -45,3 +45,19 @@ Reglas obligatorias para humanos y agentes de IA.
 - Codigo no solicitado
 - Commitear `specs/` o `.env`
 - Mezclar varias tareas en una rama
+- **Mezclar estilos visuales distintos al Design System**
+- **Importar iconos fuera del componente `Icon`**
+- **Usar librerias UI externas (MUI, shadcn, etc.)**
+- **Usar imagenes con fondo de color o sin transparencia**
+
+## Design System
+
+Referencia obligatoria antes de implementar UI:
+
+| Documento | Alcance |
+| --------- | ------- |
+| `docs/DESIGN_SYSTEM.md` | Documentacion oficial versionada |
+| `specs/DESIGN_SYSTEM.md` | Especificacion tecnica local |
+| `specs/UI_GUIDELINES.md` | Guia practica de implementacion |
+
+Implementacion: `src/index.css` + `src/components/ui/`.

@@ -1,5 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import type { ApiErrorResponse } from '@/types';
+import { clearAccessToken, getAccessToken } from '@/utils/auth-storage';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
 
@@ -21,7 +22,7 @@ export const api = axios.create({
 // Retorna la configuración modificada para continuar la petición.
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('accessToken');
+    const token = getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -42,7 +43,7 @@ api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('accessToken');
+      clearAccessToken();
     }
     return Promise.reject(error);
   },

@@ -27,6 +27,23 @@ export interface User {
   role: 'donor' | 'foundation' | 'admin';
 }
 
+export interface Foundation {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface AuthTokenData {
+  accessToken: string;
+  user: User;
+  foundation?: Foundation;
+}
+
+export interface MeData {
+  user: User;
+  foundation?: Foundation;
+}
+
 export interface HealthCheck {
   status: string;
   environment: string;

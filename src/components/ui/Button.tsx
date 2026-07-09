@@ -1,49 +1,129 @@
-import { type ButtonHTMLAttributes } from 'react';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { cn } from '@/utils/cn';
+
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   isLoading?: boolean;
+  fullWidth?: boolean;
+  iconLeft?: IconName;
+  iconRight?: IconName;
+  pill?: boolean;
 }
 
-const variants = {
-  primary: 'bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500',
-  secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
-  outline: 'border border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500',
-  ghost: 'text-gray-600 hover:bg-gray-100 focus:ring-gray-500',
+const variantStyles: Record<ButtonVariant, string> = {
+  primary:
+    'bg-primary-700 text-white shadow-[var(--shadow-button)] hover:bg-primary-600 focus-visible:ring-primary-600/40',
+  secondary:
+    'bg-secondary-700 text-white hover:bg-secondary-500 focus-visible:ring-secondary-500/40',
+  outline:
+    'border border-border-default bg-white/80 text-text-primary hover:border-primary-300 hover:bg-primary-50 focus-visible:ring-primary-600/30',
+  ghost:
+    'bg-transparent text-text-secondary hover:bg-primary-50 hover:text-primary-700 focus-visible:ring-primary-600/30',
+  danger:
+    'bg-error-500 text-white hover:bg-error-600 focus-visible:ring-error-500/40',
 };
 
-const sizes = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-6 py-3 text-lg',
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: 'h-9 gap-1.5 px-3 text-sm',
+  md: 'h-11 gap-2 px-5 text-sm',
+  lg: 'h-12 gap-2 px-6 text-base',
 };
 
 // Entrada:
-// variant: estilo visual; size: tamaño; isLoading: estado de carga; demás props nativas de button.
+// variant, size, isLoading, iconos y props nativas de button.
 
 // Proceso:
-// Renderiza un botón con las clases de variante y tamaño correspondientes.
+// Renderiza boton unificado del sistema de diseno con estados hover, focus y disabled.
 
 // Salida:
-// Retorna el elemento JSX del botón.
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  isLoading = false,
-  disabled,
-  className = '',
-  children,
-  ...props
-}: ButtonProps) {
+// Retorna el elemento JSX del boton.
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  {
+    variant = 'primary',
+    size = 'md',
+    isLoading = false,
+    fullWidth = false,
+    iconLeft,
+    iconRight,
+    pill = false,
+    disabled,
+    className,
+    children,
+    ...props
+  },
+  ref,
+) {
   return (
     <button
-      className={`inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      ref={ref}
       disabled={disabled || isLoading}
+      className={cn(
+        'inline-flex items-center justify-center rounded-[var(--radius-md)] font-medium transition-smooth interactive-scale',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+        'disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none',
+        variantStyles[variant],
+        sizeStyles[size],
+        pill && 'rounded-[var(--radius-pill)]',
+        fullWidth && 'w-full',
+        className,
+      )}
       {...props}
     >
-      {isLoading ? UI_MESSAGES.LOADING : children}
+      {isLoading ? (
+        <>
+          <span
+            className="size-4 shrink-0 animate-spin rounded-full border-2 border-current border-t-transparent"
+            aria-hidden="true"
+          />
+          <span>{UI_MESSAGES.LOADING}</span>
+        </>
+      ) : (
+        <>
+          {iconLeft && <Icon name={iconLeft} size="sm" decorative />}
+          {children}
+          {iconRight && <Icon name={iconRight} size="sm" decorative />}
+        </>
+      )}
     </button>
+  );
+});
+
+interface ButtonLinkClassOptions {
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  fullWidth?: boolean;
+  pill?: boolean;
+  className?: string;
+}
+
+// Entrada:
+// Opciones visuales del boton para className en Link.
+
+// Proceso:
+// Genera clases CSS del sistema de botones.
+
+// Salida:
+// Retorna string de clases Tailwind.
+export function buttonLinkClass({
+  variant = 'primary',
+  size = 'md',
+  fullWidth = false,
+  pill = false,
+  className,
+}: ButtonLinkClassOptions): string {
+  return cn(
+    'inline-flex items-center justify-center rounded-[var(--radius-md)] font-medium transition-smooth interactive-scale',
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+    variantStyles[variant],
+    sizeStyles[size],
+    pill && 'rounded-[var(--radius-pill)]',
+    fullWidth && 'w-full',
+    className,
   );
 }
