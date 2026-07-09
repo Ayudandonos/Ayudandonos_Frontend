@@ -1,0 +1,25 @@
+---
+description: Reglas obligatorias del frontend Ayudandonos
+alwaysApply: true
+---
+
+# Frontend Ayudandonos
+
+Leer AGENTS.md antes de modificar codigo.
+
+## Arquitectura
+Feature-Based. features/<dominio>/ independientes. UI generica en components/ui/.
+
+## Idioma
+Codigo en ingles. Comentarios Entrada/Proceso/Salida en espanol. Textos UI en UI_MESSAGES.
+
+## Prohibido
+Emojis. Acceso a BD. Import entre features. Textos hardcodeados en JSX.
+
+## Integracion
+Solo via Axios a VITE_API_URL. React Hook Form + Zod en formularios.
+
+## Flujo
+Analizar -> Disenar -> Explicar -> Implementar -> build + lint -> Documentar -> Esperar aprobacion
+
+Specs: specs/ | Skills: .cursor/skills/
