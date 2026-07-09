@@ -28,13 +28,21 @@ npm run dev
 | `npm run preview` | Preview del build |
 | `npm run lint` | ESLint |
 
+## Git
+
+GitFlow por tarea: una rama `feature/*` por iteracion, integracion en `develop`, estable en `main`.
+
+Ver [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md).
+
 ## Desarrollo con IA
 
 | Archivo | Proposito |
 | ------- | --------- |
 | [AGENTS.md](./AGENTS.md) | Instrucciones para agentes de IA |
+| [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | GitFlow y ramas por tarea |
 | [docs/AI_WORKFLOW.md](./docs/AI_WORKFLOW.md) | Flujo de trabajo iterativo |
-| [specs/](./specs/) | Especificaciones tecnicas |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Guia de contribucion |
+| [specs/](./specs/) | Especificaciones tecnicas (local, no en Git) |
 | [.cursor/skills/](./.cursor/skills/) | Skills del proyecto |
 
 ## Arquitectura

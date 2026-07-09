@@ -26,9 +26,16 @@ Reglas obligatorias para humanos y agentes de IA.
 - Sin emojis
 - Estados en docs: COMPLETADO, PARCIAL, PENDIENTE
 
+## API
+
+- Base URL: `VITE_API_URL` (ej. `http://localhost:3000/api/v1`)
+- Respuesta estandar del backend: `{ success, message, data, errors }`
+- Documentar endpoints consumidos en `specs/API_INTEGRATION.md` (local)
+
 ## Flujo de trabajo
 
-1. Analizar 2. Disenar 3. Explicar 4. Implementar 5. build + lint 6. Documentar 7. Esperar aprobacion
+1. Rama `feature/*` desde `develop` (ver `docs/GIT_WORKFLOW.md`)
+2. Analizar 3. Disenar 4. Explicar 5. Implementar 6. build + lint 7. Documentar (`specs/` local) 8. PR a `develop` 9. Esperar aprobacion
 
 ## Prohibido sin autorizacion
 
@@ -36,3 +43,5 @@ Reglas obligatorias para humanos y agentes de IA.
 - Acceso directo a BD
 - Textos hardcodeados en componentes
 - Codigo no solicitado
+- Commitear `specs/` o `.env`
+- Mezclar varias tareas en una rama
