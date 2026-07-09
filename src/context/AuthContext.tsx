@@ -6,7 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react';
-import type { Foundation, User } from '@/types';
+import type { Foundation, User, UserRole } from '@/types';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { authService } from '@/features/auth/services/auth.service';
 import type {
@@ -20,6 +20,7 @@ interface AuthContextValue {
   user: User | null;
   foundation: Foundation | null;
   accessToken: string | null;
+  role: UserRole | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string, remember?: boolean) => Promise<User>;
@@ -168,6 +169,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         user,
         foundation,
         accessToken,
+        role: user?.role ?? null,
         isAuthenticated: !!user && !!accessToken,
         isLoading,
         login,

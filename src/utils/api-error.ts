@@ -1,4 +1,4 @@
-import type { AxiosError } from 'axios';
+import axios from 'axios';
 import type { ApiErrorResponse } from '@/types';
 
 export interface ParsedApiError {
@@ -16,8 +16,11 @@ export interface ParsedApiError {
 // Salida:
 // Retorna objeto ParsedApiError listo para la UI.
 export function parseApiError(error: unknown): ParsedApiError {
-  const axiosError = error as AxiosError<ApiErrorResponse>;
-  const response = axiosError.response;
+  if (!axios.isAxiosError<ApiErrorResponse>(error)) {
+    return { message: '', fieldErrors: {} };
+  }
+
+  const response = error.response;
   const fieldErrors: Record<string, string> = {};
 
   if (response?.data?.errors) {

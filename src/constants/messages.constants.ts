@@ -15,6 +15,36 @@ export const UI_MESSAGES = {
   NAV_REGISTER: 'Registrarse',
   NAV_LOGOUT: 'Cerrar sesión',
 
+  NAV_CAMPAIGNS: 'Campañas',
+  NAV_MY_COMMITMENTS: 'Mis Compromisos',
+  NAV_FOUNDATIONS: 'Fundaciones',
+  NAV_PROFILE: 'Perfil',
+  NAV_NEW_DONATION: 'Nueva Donación',
+  NAV_SETTINGS: 'Configuración',
+  NAV_CREATE_CAMPAIGN: 'Crear Campaña',
+  NAV_NEEDS: 'Necesidades',
+  NAV_REQUESTS: 'Solicitudes',
+  NAV_DELIVERIES: 'Entregas',
+
+  CAMPAIGNS_TITLE: 'Campañas',
+  CAMPAIGNS_DESCRIPTION:
+    'Explora campañas activas de fundaciones verificadas y encuentra cómo ayudar.',
+  CAMPAIGNS_SEARCH_PLACEHOLDER: 'Buscar por nombre o palabra clave...',
+  CAMPAIGNS_FILTER_CITY: 'Ciudad',
+  CAMPAIGNS_FILTER_CATEGORY: 'Categoría',
+  CAMPAIGNS_FILTER_STATUS: 'Estado',
+  CAMPAIGNS_FILTER_ALL: 'Todas',
+  CAMPAIGNS_FILTER_ACTIVE: 'Activas',
+  CAMPAIGNS_VIEW: 'Ver campaña',
+  CAMPAIGNS_STATUS_ACTIVE: 'Activa',
+  CAMPAIGNS_NEEDS_COUNT: (count: number) => `${count} necesidades publicadas`,
+  CAMPAIGNS_CTA_TITLE: '¿Tienes una iniciativa?',
+  CAMPAIGNS_CTA_DESC:
+    'Publica una campaña y conecta con donantes que quieren ayudar en especie.',
+  CAMPAIGNS_CTA_ACTION: 'Empezar ahora',
+
+  GLOBAL_SEARCH_PLACEHOLDER: 'Buscar en la plataforma...',
+
   FOOTER_SECURE: 'Plataforma Segura y Verificada',
   FOOTER_TERMS: 'Términos y Condiciones',
   FOOTER_PRIVACY: 'Privacidad',

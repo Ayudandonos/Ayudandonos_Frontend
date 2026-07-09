@@ -20,17 +20,20 @@ export interface ApiErrorResponse {
 
 export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
 
+export type UserRole = 'USER' | 'FOUNDATION' | 'ADMIN';
+
 export interface User {
   id: string;
   email: string;
   fullName: string;
-  role: 'donor' | 'foundation' | 'admin';
+  role: UserRole;
 }
 
 export interface Foundation {
   id: string;
   name: string;
-  description?: string;
+  description: string | null;
+  isVerified: boolean;
 }
 
 export interface AuthTokenData {
@@ -41,7 +44,7 @@ export interface AuthTokenData {
 
 export interface MeData {
   user: User;
-  foundation?: Foundation;
+  foundation: Foundation | null;
 }
 
 export interface HealthCheck {

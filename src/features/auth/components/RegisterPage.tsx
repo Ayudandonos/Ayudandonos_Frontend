@@ -61,7 +61,7 @@ export function RegisterPage() {
         password: data.password,
         fullName: data.fullName,
       });
-      navigate('/', { replace: true });
+      navigate('/campaigns', { replace: true });
     } catch (error) {
       handleRegisterError(error);
     }
@@ -77,7 +77,7 @@ export function RegisterPage() {
         foundationName: data.foundationName,
         description: data.description,
       });
-      navigate('/', { replace: true });
+      navigate('/foundation/requests', { replace: true });
     } catch (error) {
       handleRegisterError(error);
     }

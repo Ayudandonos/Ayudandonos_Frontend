@@ -3,6 +3,7 @@ export type {
   ApiSuccessResponse,
   ApiErrorResponse,
   User,
+  UserRole,
   Foundation,
   AuthTokenData,
   MeData,

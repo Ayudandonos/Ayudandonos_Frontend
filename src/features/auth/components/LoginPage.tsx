@@ -45,7 +45,8 @@ export function LoginPage() {
     setApiError('');
     try {
       const user = await login(data.email, data.password, data.remember ?? true);
-      const redirect = user.role === 'foundation' ? '/' : '/';
+      const redirect =
+        user.role === 'FOUNDATION' ? '/foundation/requests' : '/campaigns';
       navigate(redirect, { replace: true });
     } catch (error) {
       const parsed = parseApiError(error);

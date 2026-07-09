@@ -45,3 +45,15 @@ export function clearAccessToken(): void {
   sessionStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REMEMBER_KEY);
 }
+
+// Entrada:
+// Ninguna.
+
+// Proceso:
+// Determina si la sesion debe persistir en localStorage.
+
+// Salida:
+// Retorna true si rememberSession esta activo.
+export function isRememberSession(): boolean {
+  return localStorage.getItem(REMEMBER_KEY) === 'true';
+}
