@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
+import { AppImage } from '@/components/ui/AppImage';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
 import { cn } from '@/utils/cn';
 import type { UserRole } from '@/types';
 
@@ -49,7 +50,7 @@ export function SideNav() {
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border-default bg-vivid-50">
       <div className="flex h-16 items-center gap-3 border-b border-border-default px-6">
-        <img src={FIGMA_ASSETS.LOGO} alt="" className="h-8 w-8" />
+        <AppImage src={FIGMA_ASSETS.LOGO} alt="" className="h-8 w-8" />
         <span className="text-xl font-bold text-vivid-700">{UI_MESSAGES.APP_NAME}</span>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-4">

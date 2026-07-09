@@ -2,32 +2,32 @@ const TOKEN_KEY = 'accessToken';
 const REMEMBER_KEY = 'rememberSession';
 
 // Entrada:
-// token: JWT de acceso; remember: si persiste en localStorage.
+// token: JWT de acceso; remember: si persiste en localStorage o sessionStorage.
 
 // Proceso:
-// Guarda el token en localStorage o sessionStorage segun preferencia de recordar sesion.
+// Guarda el token segun la preferencia de recordar sesion.
 
 // Salida:
 // No retorna valor.
 export function saveAccessToken(token: string, remember: boolean): void {
-  localStorage.setItem(REMEMBER_KEY, remember ? 'true' : 'false');
+  clearAccessToken();
+  const storage = remember ? localStorage : sessionStorage;
+  storage.setItem(TOKEN_KEY, token);
   if (remember) {
-    sessionStorage.removeItem(TOKEN_KEY);
-    localStorage.setItem(TOKEN_KEY, token);
-    return;
+    localStorage.setItem(REMEMBER_KEY, 'true');
+  } else {
+    localStorage.removeItem(REMEMBER_KEY);
   }
-  localStorage.removeItem(TOKEN_KEY);
-  sessionStorage.setItem(TOKEN_KEY, token);
 }
 
 // Entrada:
 // Ninguna.
 
 // Proceso:
-// Lee el token desde localStorage o sessionStorage.
+// Obtiene token desde localStorage o sessionStorage.
 
 // Salida:
-// Retorna el token o null si no existe.
+// Retorna token o null si no existe.
 export function getAccessToken(): string | null {
   return localStorage.getItem(TOKEN_KEY) ?? sessionStorage.getItem(TOKEN_KEY);
 }
@@ -36,7 +36,7 @@ export function getAccessToken(): string | null {
 // Ninguna.
 
 // Proceso:
-// Elimina el token y la preferencia de recordar sesion.
+// Elimina token y preferencia de ambos storages.
 
 // Salida:
 // No retorna valor.

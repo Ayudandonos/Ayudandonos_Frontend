@@ -1,6 +1,6 @@
-# Instrucciones para agentes de IA — Frontend Ayudándonos
+# Instrucciones para agentes de IA — Frontend Ayudandonos
 
-Este repositorio contiene la SPA del proyecto **Ayudándonos**. Lee este archivo antes de modificar codigo.
+Este repositorio contiene la SPA del proyecto **Ayudandonos**. Lee este archivo antes de modificar codigo.
 
 ## Contexto del proyecto
 
@@ -43,6 +43,8 @@ src/
 7. No implementar funcionalidades no solicitadas (YAGNI).
 8. Esperar aprobacion antes de avanzar de fase.
 9. Trabajar en rama `feature/*` (una tarea por rama); PR hacia `develop`. Ver `docs/GIT_WORKFLOW.md`.
+10. **Design System obligatorio:** consultar `docs/DESIGN_SYSTEM.md` antes de cualquier UI nueva. Usar solo componentes de `src/components/ui/`, iconos via `Icon`, tokens de `src/index.css`. No mezclar estilos ni librerias UI sin autorizacion.
+11. **Iconografia centralizada:** todo icono UI via `<Icon name="..." />` desde `src/components/ui/Icon/`. SVG solo en `src/assets/icons/` registrados en `icons.ts`. Prohibido importar SVG en features o paginas. Si falta un icono en la carpeta oficial, informar antes de usar otra fuente.
 
 ## Git (GitFlow por tarea)
 
@@ -55,13 +57,13 @@ src/
 
 | Fase | Estado | Frontend |
 | ---- | ------ | -------- |
-| 1 | COMPLETADO | Layouts, rutas, UI base, auth skeleton |
-| 2 | PENDIENTE | Auth integrado, formularios, rutas protegidas |
+| 1 | COMPLETADO | Layouts, rutas, UI base, Design System |
+| 2 | EN PROGRESO | Auth integrado, formularios, rutas protegidas |
 | 3 | PENDIENTE | Fundaciones, campanas (UI) |
 | 4 | PENDIENTE | Donaciones, ciclo de vida (UI) |
 | 5 | PENDIENTE | Reportes, despliegue |
 
-**Siguiente:** Fase 2 — integracion auth, formularios completos, rutas protegidas.
+**Siguiente:** Fase 2 — integracion auth, formularios completos, rutas protegidas (aplicando Design System).
 
 ## Documentacion interna
 
@@ -70,9 +72,10 @@ src/
 | Flujo Git | `docs/GIT_WORKFLOW.md` |
 | Flujo de trabajo con IA | `docs/AI_WORKFLOW.md` |
 | Arquitectura | `docs/ARCHITECTURE.md` |
+| **Design System** | **`docs/DESIGN_SYSTEM.md`** |
 | Convenciones | `docs/CONVENTIONS.md` |
 | Reglas de desarrollo | `docs/DEVELOPMENT_RULES.md` |
-| Especificaciones (local) | `specs/FEATURES.md`, `specs/ROUTES.md`, `specs/API_INTEGRATION.md` |
+| Especificaciones (local) | `specs/DESIGN_SYSTEM.md`, `specs/UI_GUIDELINES.md`, `specs/FEATURES.md`, `specs/ROUTES.md`, `specs/API_INTEGRATION.md` |
 | Skills del proyecto | `.cursor/skills/` |
 
 ## Comandos utiles

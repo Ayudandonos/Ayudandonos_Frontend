@@ -24,7 +24,7 @@ export interface RegisterFoundationPayload {
 // payload: credenciales de login.
 
 // Proceso:
-// Envía POST /auth/login al backend.
+// Envia POST /auth/login al backend.
 
 // Salida:
 // Retorna accessToken, user y foundation opcional.
@@ -37,7 +37,7 @@ async function login(payload: LoginPayload): Promise<AuthTokenData> {
 // payload: datos de registro de donante.
 
 // Proceso:
-// Envía POST /auth/register/user al backend.
+// Envia POST /auth/register/user al backend.
 
 // Salida:
 // Retorna accessToken y user.
@@ -50,10 +50,10 @@ async function registerUser(payload: RegisterUserPayload): Promise<AuthTokenData
 }
 
 // Entrada:
-// payload: datos de registro de fundación.
+// payload: datos de registro de fundacion.
 
 // Proceso:
-// Envía POST /auth/register/foundation al backend.
+// Envia POST /auth/register/foundation al backend.
 
 // Salida:
 // Retorna accessToken, user y foundation.
@@ -69,7 +69,7 @@ async function registerFoundation(payload: RegisterFoundationPayload): Promise<A
 // Ninguna (token en interceptor).
 
 // Proceso:
-// Envía POST /auth/logout al backend.
+// Envia POST /auth/logout al backend.
 
 // Salida:
 // No retorna datos.
@@ -81,7 +81,7 @@ async function logout(): Promise<void> {
 // Ninguna (token en interceptor).
 
 // Proceso:
-// Envía GET /auth/me al backend.
+// Envia GET /auth/me al backend.
 
 // Salida:
 // Retorna user y foundation.

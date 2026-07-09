@@ -1,38 +1,74 @@
-import { Link } from 'react-router-dom';
+import { forwardRef, type InputHTMLAttributes } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
+import { AppImage } from '@/components/ui/AppImage';
+import { Icon, type IconName } from '@/components/ui/Icon';
+import { Input } from '@/components/ui/Input';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { cn } from '@/utils/cn';
+
+const PUBLIC_NAV = [
+  { path: '/', label: UI_MESSAGES.NAV_HOME },
+  { path: '/organizaciones', label: UI_MESSAGES.NAV_ORGANIZATIONS },
+  { path: '/impacto', label: UI_MESSAGES.NAV_IMPACT },
+] as const;
 
 interface AuthHeaderProps {
   variant?: 'login' | 'register';
 }
 
 // Entrada:
-// variant: variante visual del header de autenticacion.
+// variant: variante visual del header.
 
 // Proceso:
-// Renderiza barra superior con logo ConectaAyuda segun prototipo Figma.
+// Renderiza header glass con logo y navegacion publica.
 
 // Salida:
 // Retorna el elemento JSX del header.
 export function AuthHeader({ variant = 'login' }: AuthHeaderProps) {
+  const location = useLocation();
+
+  const navLinkClass = (path: string) =>
+    cn(
+      'rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/40',
+      location.pathname === path
+        ? 'bg-primary-50 font-semibold text-primary-700'
+        : 'text-text-secondary hover:bg-white/60 hover:text-primary-700',
+    );
+
+  if (variant === 'register') {
+    return (
+      <header className="glass-header sticky top-0 z-50 flex h-16 items-center justify-between px-6">
+        <Link
+          to="/login"
+          className="flex items-center gap-2 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+          aria-label={UI_MESSAGES.REGISTER_BACK_ARIA}
+        >
+          <AppImage src={FIGMA_ASSETS.LOGO_REGISTER} alt="" className="h-[26px] w-[26px]" />
+          <span className="text-2xl font-bold text-primary-700">{UI_MESSAGES.APP_NAME}</span>
+        </Link>
+        <p className="hidden text-sm font-medium text-text-secondary sm:block">{UI_MESSAGES.APP_TAGLINE}</p>
+      </header>
+    );
+  }
+
   return (
-    <header className="flex h-16 items-center justify-between border-b border-border-default bg-surface-page px-6 shadow-[0px_1px_1px_rgba(0,0,0,0.05)]">
-      <Link to="/" className="flex items-center gap-2">
-        <img src={FIGMA_ASSETS.LOGO} alt="" className="h-[26px] w-[26px]" />
-        <span className="text-2xl font-bold text-vivid-700">{UI_MESSAGES.APP_NAME}</span>
+    <header className="glass-header sticky top-0 z-50 flex h-16 items-center justify-between px-6">
+      <Link
+        to="/"
+        className="flex items-center gap-2 transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+      >
+        <AppImage src={FIGMA_ASSETS.LOGO} alt="" className="h-[26px] w-[26px]" />
+        <span className="text-2xl font-bold text-primary-700">{UI_MESSAGES.APP_NAME}</span>
       </Link>
-      {variant === 'login' ? (
-        <nav className="flex items-center gap-4">
-          <span className="text-sm font-medium text-text-secondary">{UI_MESSAGES.NAV_HOME}</span>
-          <span className="text-sm font-medium text-text-secondary">
-            {UI_MESSAGES.NAV_ORGANIZATIONS}
-          </span>
-          <span className="text-sm font-medium text-text-secondary">{UI_MESSAGES.NAV_IMPACT}</span>
-        </nav>
-      ) : (
-        <p className="text-sm font-medium text-text-secondary">{UI_MESSAGES.APP_TAGLINE}</p>
-      )}
+      <nav className="hidden items-center gap-1 sm:flex" aria-label="Navegacion principal">
+        {PUBLIC_NAV.map((item) => (
+          <Link key={item.path} to={item.path} className={navLinkClass(item.path)}>
+            {item.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }
@@ -45,111 +81,129 @@ interface AuthFooterProps {
 // variant: pie de pagina completo o simplificado.
 
 // Proceso:
-// Renderiza footer de autenticacion segun Figma.
+// Renderiza footer glass con enlaces legales.
 
 // Salida:
 // Retorna el elemento JSX del footer.
 export function AuthFooter({ variant = 'full' }: AuthFooterProps) {
+  const year = new Date().getFullYear();
+  const linkClass =
+    'text-xs font-semibold tracking-wide text-text-muted transition-smooth hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600';
+
   if (variant === 'simple') {
     return (
-      <footer className="py-4 text-center">
-        <p className="text-xs font-medium text-text-muted">
-          {UI_MESSAGES.APP_FOOTER(new Date().getFullYear())}
-        </p>
+      <footer className="py-6 text-center">
+        <p className="text-caption">{UI_MESSAGES.APP_FOOTER(year)}</p>
       </footer>
     );
   }
 
   return (
-    <footer className="border-t border-border-default bg-white px-6 pb-6 pt-6">
+    <footer className="glass-header mt-auto px-6 py-6">
       <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <img src={FIGMA_ASSETS.LOGO} alt="" className="h-5 w-4" />
-          <span className="text-xs font-semibold tracking-wide text-text-secondary">
-            {UI_MESSAGES.FOOTER_SECURE}
-          </span>
-        </div>
-        <div className="flex gap-6">
-          <span className="text-xs font-semibold tracking-wide text-text-muted">
+        <Link to="/legal/secure-platform" className={cn(linkClass, 'flex items-center gap-2')}>
+          <Icon name="browsers" size="sm" className="text-primary-600" decorative />
+          <span className="text-text-secondary">{UI_MESSAGES.FOOTER_SECURE}</span>
+        </Link>
+        <nav className="flex flex-wrap gap-6" aria-label="Enlaces legales">
+          <Link to="/legal/terms" className={linkClass}>
             {UI_MESSAGES.FOOTER_TERMS}
-          </span>
-          <span className="text-xs font-semibold tracking-wide text-text-muted">
+          </Link>
+          <Link to="/legal/privacy" className={linkClass}>
             {UI_MESSAGES.FOOTER_PRIVACY}
-          </span>
-          <span className="text-xs font-semibold tracking-wide text-text-muted">
+          </Link>
+          <Link to="/legal/help" className={linkClass}>
             {UI_MESSAGES.FOOTER_HELP}
-          </span>
-        </div>
-        <p className="text-xs font-semibold tracking-wide text-text-muted">
-          {UI_MESSAGES.APP_FOOTER(2024)}
-        </p>
+          </Link>
+        </nav>
+        <p className={linkClass}>{UI_MESSAGES.APP_FOOTER(year)}</p>
       </div>
     </footer>
   );
 }
 
-interface FigmaInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface AuthPasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string;
   error?: string;
-  iconSrc?: string;
-  rightElement?: React.ReactNode;
-  variant?: 'default' | 'auth';
+  showPassword: boolean;
+  onToggle: () => void;
+  filled?: boolean;
 }
 
 // Entrada:
-// label, error, iconSrc, rightElement, variant y props nativas de input.
+// showPassword, onToggle y props de Input excepto type.
 
 // Proceso:
-// Renderiza input estilizado segun diseno Figma con icono opcional.
+// Renderiza campo de contraseña con toggle accesible.
 
 // Salida:
-// Retorna el elemento JSX del campo de entrada.
-export function FigmaInput({
-  label,
-  error,
-  iconSrc,
-  rightElement,
-  variant = 'default',
-  className,
-  id,
-  ...props
-}: FigmaInputProps) {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
+// Retorna el elemento JSX del campo de contraseña.
+export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldProps>(
+  function AuthPasswordField({ showPassword, onToggle, label, filled, ...props }, ref) {
+    return (
+      <Input
+        ref={ref}
+        label={label}
+        type={showPassword ? 'text' : 'password'}
+        filled={filled}
+        iconRight={
+          <button
+            type="button"
+            onClick={onToggle}
+            className="rounded-md px-1 text-xs font-semibold text-primary-700 transition-smooth hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            aria-label={showPassword ? UI_MESSAGES.LOGIN_HIDE_PASSWORD : UI_MESSAGES.LOGIN_SHOW_PASSWORD}
+            aria-pressed={showPassword}
+          >
+            {showPassword ? UI_MESSAGES.LOGIN_PASSWORD_TOGGLE_HIDE : UI_MESSAGES.LOGIN_PASSWORD_TOGGLE_SHOW}
+          </button>
+        }
+        {...props}
+      />
+    );
+  },
+);
 
+// Re-export para compatibilidad durante migracion
+export { Input as FigmaInput };
+
+interface AuthSubmitButtonProps {
+  isLoading?: boolean;
+  label: string;
+  iconRight?: IconName;
+  variant?: 'login' | 'register';
+  disabled?: boolean;
+  className?: string;
+}
+
+// Entrada:
+// Props del boton de envio de formularios auth.
+
+// Proceso:
+// Renderiza Button primario del sistema con icono opcional.
+
+// Salida:
+// Retorna el elemento JSX del boton de envio.
+export function AuthSubmitButton({
+  isLoading = false,
+  label,
+  iconRight,
+  variant = 'login',
+  disabled,
+  className,
+}: AuthSubmitButtonProps) {
   return (
-    <div className="flex w-full flex-col gap-1">
-      {label && (
-        <label
-          htmlFor={inputId}
-          className={cn(
-            'text-sm font-medium text-text-secondary',
-            variant === 'auth' && 'font-semibold text-text-primary',
-          )}
-        >
-          {label}
-        </label>
-      )}
-      <div className="relative">
-        <input
-          id={inputId}
-          className={cn(
-            'h-10 w-full rounded-lg border border-border-default bg-white py-2.5 text-base text-text-primary placeholder:text-text-placeholder focus:border-vivid-600 focus:outline-none focus:ring-2 focus:ring-vivid-600/20',
-            iconSrc ? 'pl-10 pr-3' : 'px-4',
-            rightElement ? 'pr-10' : '',
-            variant === 'default' && 'bg-vivid-50 py-[15px] h-auto',
-            error && 'border-red-500',
-            className,
-          )}
-          {...props}
-        />
-        {iconSrc && (
-          <img src={iconSrc} alt="" className="absolute left-3 top-1/2 h-4 w-5 -translate-y-1/2" />
-        )}
-        {rightElement && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2">{rightElement}</div>
-        )}
-      </div>
-      {error && <span className="text-sm text-red-500">{error}</span>}
-    </div>
+    <Button
+      type="submit"
+      variant="primary"
+      size={variant === 'register' ? 'lg' : 'md'}
+      fullWidth
+      isLoading={isLoading}
+      disabled={disabled}
+      iconRight={isLoading ? undefined : iconRight}
+      pill={variant === 'register'}
+      className={className}
+    >
+      {label}
+    </Button>
   );
 }

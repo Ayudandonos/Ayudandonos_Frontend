@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Frontend de Ayudándonos — React + Vite",
+  "description": "Frontend de Ayudandonos — React + Vite",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -2,17 +2,27 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AuthFooter, AuthHeader, FigmaInput } from '@/components/ui/AuthChrome';
+import {
+  AuthFooter,
+  AuthHeader,
+  AuthPasswordField,
+  AuthSubmitButton,
+} from '@/components/ui/AuthChrome';
+import { AppImage } from '@/components/ui/AppImage';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { useAuth, parseApiError } from '@/context/AuthContext';
+import { useAuth } from '@/context/useAuth';
+import { parseApiError } from '@/utils/api-error';
+import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
 import { loginSchema, type LoginFormData } from '@/features/auth/validations/auth.validations';
 
 // Entrada:
 // Ninguna.
 
 // Proceso:
-// Renderiza pantalla de login segun Figma e integra POST /auth/login.
+// Renderiza pantalla de login con sistema de diseno glass e integra POST /auth/login.
 
 // Salida:
 // Retorna el elemento JSX de la pagina de login.
@@ -55,118 +65,103 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-surface-page">
+    <div className="flex min-h-screen flex-col">
       <AuthHeader variant="login" />
-      <div className="flex flex-1 items-center justify-center px-6 py-16 lg:px-10">
-        <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-10 lg:flex-row lg:gap-10">
-          <section className="flex flex-1 flex-col gap-6">
-            <img
+      <div className="flex flex-1 animate-fade-in items-center justify-center px-6 py-16 lg:px-10">
+        <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center gap-10 lg:flex-row lg:gap-16">
+          <section className="flex flex-1 flex-col items-center gap-8 lg:items-start">
+            <AppImage
               src={FIGMA_ASSETS.HERO_ILLUSTRATION}
               alt=""
-              className="aspect-square max-h-[448px] max-w-[448px] object-contain"
+              width={448}
+              height={448}
+              className="aspect-square w-full max-w-[448px]"
             />
-            <div className="space-y-4">
-              <h1 className="text-[32px] font-semibold leading-10 tracking-tight text-text-primary">
+            <div className="w-full max-w-lg space-y-4 text-center lg:text-left">
+              <h1 className="text-display">
                 {UI_MESSAGES.LOGIN_HERO_TITLE_1}
                 <br />
-                {UI_MESSAGES.LOGIN_HERO_TITLE_2}{' '}
-                <span className="text-vivid-700">{UI_MESSAGES.LOGIN_HERO_HIGHLIGHT}</span>
+                <span className="text-primary-700">{UI_MESSAGES.LOGIN_HERO_HIGHLIGHT}</span>
               </h1>
-              <p className="max-w-lg text-lg leading-7 text-text-secondary">
-                {UI_MESSAGES.LOGIN_HERO_DESCRIPTION}
-              </p>
+              <p className="text-body">{UI_MESSAGES.LOGIN_HERO_DESCRIPTION}</p>
             </div>
           </section>
           <section className="w-full max-w-[440px]">
-            <div className="rounded-xl border border-border-default bg-white p-6 shadow-[var(--shadow-card)]">
+            <Card padding="md" hover={false}>
               <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-text-primary">{UI_MESSAGES.LOGIN_TITLE}</h2>
-                <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.LOGIN_SUBTITLE}</p>
+                <h2 className="text-heading">{UI_MESSAGES.LOGIN_TITLE}</h2>
+                <p className="mt-1 text-caption">{UI_MESSAGES.LOGIN_SUBTITLE}</p>
               </div>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <FigmaInput
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+                <Input
                   label={UI_MESSAGES.LOGIN_EMAIL_LABEL}
                   type="email"
+                  autoComplete="email"
                   placeholder={UI_MESSAGES.LOGIN_EMAIL_PLACEHOLDER}
-                  iconSrc={FIGMA_ASSETS.ICON_MAIL}
+                  iconLeft="envelope"
                   error={errors.email?.message}
                   {...register('email')}
                 />
                 <div>
-                  <div className="mb-1 flex items-center justify-between">
-                    <label className="text-sm font-medium text-text-secondary">
-                      {UI_MESSAGES.LOGIN_PASSWORD_LABEL}
-                    </label>
-                    <span className="text-xs font-semibold text-vivid-700">
+                  <div className="mb-1.5 flex items-center justify-between">
+                    <span className="text-label">{UI_MESSAGES.LOGIN_PASSWORD_LABEL}</span>
+                    <span
+                      className="cursor-not-allowed text-xs font-semibold text-primary-700 opacity-70"
+                      aria-disabled="true"
+                      title={UI_MESSAGES.LOGIN_FORGOT_PASSWORD_ARIA}
+                    >
                       {UI_MESSAGES.LOGIN_FORGOT_PASSWORD}
                     </span>
                   </div>
-                  <FigmaInput
-                    type={showPassword ? 'text' : 'password'}
+                  <AuthPasswordField
+                    autoComplete="current-password"
                     placeholder={UI_MESSAGES.LOGIN_PASSWORD_PLACEHOLDER}
-                    iconSrc={FIGMA_ASSETS.ICON_LOCK}
+                    showPassword={showPassword}
+                    onToggle={() => setShowPassword((v) => !v)}
                     error={errors.password?.message}
-                    rightElement={
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((v) => !v)}
-                        className="text-xs text-text-muted"
-                      >
-                        {showPassword ? 'Ocultar' : 'Ver'}
-                      </button>
-                    }
                     {...register('password')}
                   />
                 </div>
                 <label className="flex items-center gap-2 py-1">
                   <input
                     type="checkbox"
-                    className="size-4 rounded border-border-default"
+                    className="size-4 rounded border-border-default text-primary-600 focus:ring-primary-600"
                     {...register('remember')}
                   />
-                  <span className="text-sm text-text-secondary">{UI_MESSAGES.LOGIN_REMEMBER}</span>
+                  <span className="text-caption">{UI_MESSAGES.LOGIN_REMEMBER}</span>
                 </label>
-                {apiError && <p className="text-sm text-red-600">{apiError}</p>}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-vivid-700 text-sm font-medium text-white shadow-sm hover:bg-vivid-600 disabled:opacity-50"
-                >
-                  {isSubmitting ? UI_MESSAGES.LOADING : UI_MESSAGES.LOGIN_SUBMIT}
-                </button>
+                {apiError && (
+                  <p className="text-sm text-error-500" role="alert">
+                    {apiError}
+                  </p>
+                )}
+                <AuthSubmitButton
+                  isLoading={isSubmitting}
+                  label={UI_MESSAGES.LOGIN_SUBMIT}
+                  variant="login"
+                />
                 <div className="relative py-4">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-border-default" />
                   </div>
                   <div className="relative flex justify-center">
-                    <span className="bg-white px-2 text-xs uppercase text-text-muted">
+                    <span className="glass-subtle rounded-full px-3 py-0.5 text-xs uppercase text-text-muted">
                       {UI_MESSAGES.LOGIN_DIVIDER}
                     </span>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    className="flex h-10 items-center justify-center gap-1 rounded-xl border border-border-default bg-white text-base text-text-primary"
-                  >
-                    <img src={FIGMA_ASSETS.ICON_GOOGLE} alt="" className="size-4" />
-                    {UI_MESSAGES.LOGIN_GOOGLE}
-                  </button>
-                  <button
-                    type="button"
-                    className="flex h-10 items-center justify-center rounded-xl border border-border-default bg-white text-base text-text-primary"
-                  >
-                    {UI_MESSAGES.LOGIN_SSO}
-                  </button>
-                </div>
-                <p className="pt-4 text-center text-sm text-text-secondary">
+                <SocialLoginButtons />
+                <p className="pt-2 text-center text-caption">
                   {UI_MESSAGES.LOGIN_NO_ACCOUNT}{' '}
-                  <Link to="/register" className="font-semibold text-vivid-700">
+                  <Link
+                    to="/register"
+                    className="font-semibold text-primary-700 transition-smooth hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+                  >
                     {UI_MESSAGES.LOGIN_REGISTER_LINK}
                   </Link>
                 </p>
               </form>
-            </div>
+            </Card>
           </section>
         </div>
       </div>

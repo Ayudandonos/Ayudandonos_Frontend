@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import type { ApiErrorResponse } from '@/types';
-import { getAccessToken, clearAccessToken } from '@/utils/auth-storage';
+import { clearAccessToken, getAccessToken } from '@/utils/auth-storage';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1';
 

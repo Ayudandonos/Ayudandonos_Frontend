@@ -24,7 +24,9 @@ export const registerUserSchema = z
     phone: z.string().optional(),
     password: passwordField,
     confirmPassword: z.string(),
-    acceptTerms: z.literal(true, { errorMap: () => ({ message: UI_MESSAGES.AUTH_TERMS_REQUIRED }) }),
+    acceptTerms: z.literal(true, {
+      errorMap: () => ({ message: UI_MESSAGES.AUTH_TERMS_REQUIRED }),
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: UI_MESSAGES.VALIDATION_PASSWORD_MATCH,
@@ -40,7 +42,9 @@ export const registerFoundationSchema = z
     confirmPassword: z.string(),
     foundationName: z.string().trim().min(2, UI_MESSAGES.VALIDATION_FOUNDATION_NAME),
     description: z.string().trim().max(500).optional(),
-    acceptTerms: z.literal(true, { errorMap: () => ({ message: UI_MESSAGES.AUTH_TERMS_REQUIRED }) }),
+    acceptTerms: z.literal(true, {
+      errorMap: () => ({ message: UI_MESSAGES.AUTH_TERMS_REQUIRED }),
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: UI_MESSAGES.VALIDATION_PASSWORD_MATCH,

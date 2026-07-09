@@ -3,6 +3,18 @@
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
+  /* Marca — primario */
+  --color-primary-50: #fcf8ff;
+  --color-primary-100: #f6f1ff;
+  --color-primary-200: #ebe6f5;
+  --color-primary-300: #c9c4d9;
+  --color-primary-400: #787588;
+  --color-primary-500: #5e52a7;
+  --color-primary-600: #6646ff;
+  --color-primary-700: #4d21e7;
+  --color-primary-800: #1c1a25;
+
+  /* Alias vivid (compatibilidad) */
   --color-vivid-50: #fcf8ff;
   --color-vivid-100: #f6f1ff;
   --color-vivid-200: #ebe6f5;
@@ -13,23 +25,202 @@
   --color-vivid-700: #4d21e7;
   --color-vivid-800: #1c1a25;
 
+  /* Secundario */
+  --color-secondary-50: #f8fafc;
+  --color-secondary-100: #f1f5f9;
+  --color-secondary-500: #64748b;
+  --color-secondary-700: #334155;
+
+  /* Semánticos */
+  --color-success-500: #10b981;
+  --color-success-600: #059669;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+  --color-info-500: #3b82f6;
+  --color-info-600: #2563eb;
+
+  /* Texto y superficies */
   --color-text-primary: #1c1a25;
   --color-text-secondary: #474556;
   --color-text-muted: #787588;
   --color-text-placeholder: #94a3b8;
-  --color-border-default: #c9c4d9;
-  --color-surface-page: #fcf8ff;
-  --color-status-active: #f97316;
+  --color-border-default: rgba(201, 196, 217, 0.6);
+  --color-surface-page: #f8f6fc;
 
-  --radius-card: 12px;
-  --radius-input: 8px;
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-pill: 9999px;
 
-  --shadow-card: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-auth-card: 0px 1px 1px 0px rgba(77, 33, 231, 0.05), 0px 10px 15px -3px rgba(77, 33, 231, 0.08);
-  --shadow-button: 0px 10px 15px -3px rgba(102, 70, 255, 0.3), 0px 4px 6px -4px rgba(102, 70, 255, 0.3);
+  /* Sombras */
+  --shadow-glass: 0 8px 32px rgba(77, 33, 231, 0.06);
+  --shadow-card: 0 4px 24px rgba(28, 26, 37, 0.06);
+  --shadow-card-hover: 0 12px 40px rgba(77, 33, 231, 0.1);
+  --shadow-button: 0 8px 24px rgba(102, 70, 255, 0.25);
+
+  /* Transiciones */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 body {
-  @apply bg-surface-page font-sans text-text-primary antialiased;
+  @apply min-h-screen font-sans text-text-primary antialiased;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(102, 70, 255, 0.08), transparent),
+    linear-gradient(180deg, #f6f1ff 0%, #fcf8ff 40%, #ffffff 100%);
+}
+
+/* Scroll invisible — funcional pero sin barra visible */
+html,
+body,
+.scrollbar-hidden {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/* Glassmorphism */
+.glass {
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.glass-subtle {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-header {
+  border-bottom: 1px solid rgba(201, 196, 217, 0.35);
+  background: rgba(252, 248, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Tipografia */
+.text-display {
+  @apply text-3xl font-bold tracking-tight text-text-primary sm:text-4xl;
+}
+
+.text-heading {
+  @apply text-2xl font-semibold tracking-tight text-text-primary;
+}
+
+.text-subheading {
+  @apply text-lg font-medium text-text-primary;
+}
+
+.text-body {
+  @apply text-base leading-relaxed text-text-secondary;
+}
+
+.text-caption {
+  @apply text-sm text-text-muted;
+}
+
+.text-label {
+  @apply text-sm font-medium text-text-secondary;
+}
+
+/* Animaciones */
+.animate-fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-smooth) both;
+}
+
+.animate-scale-in {
+  animation: scale-in var(--duration-normal) var(--ease-smooth) both;
+}
+
+.animate-slide-in {
+  animation: slide-in-up var(--duration-slow) var(--ease-smooth) both;
+}
+
+.transition-smooth {
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.interactive-scale {
+  transition: all var(--duration-normal) var(--ease-smooth);
+  active:scale-[0.98];
+}
+
+.interactive-scale:active {
+  transform: scale(0.98);
+}
+
+.interactive-lift {
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.interactive-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.auth-register-bg {
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%, rgba(102, 70, 255, 0.06), transparent),
+    linear-gradient(180deg, #f6f1ff 0%, #fcf8ff 50%, #ffffff 100%);
 }

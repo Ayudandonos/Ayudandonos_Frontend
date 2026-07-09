@@ -42,5 +42,9 @@ docs: update ROUTES spec
 ## Estilo
 
 - Sin emojis
-- TailwindCSS para estilos
+- TailwindCSS para estilos; tokens en `src/index.css`
 - Sin textos hardcodeados en componentes
+- **Design System obligatorio:** ver `docs/DESIGN_SYSTEM.md`
+- Componentes UI solo desde `src/components/ui/`
+- Iconos solo via `src/components/ui/Icon/`
+- No instalar librerias de componentes UI sin autorizacion

@@ -1,4 +1,4 @@
-# Ayudándonos — Frontend
+# Ayudandonos — Frontend
 
 SPA React para la plataforma de donaciones en especie.
 
@@ -39,6 +39,7 @@ Ver [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md).
 | Archivo | Proposito |
 | ------- | --------- |
 | [AGENTS.md](./AGENTS.md) | Instrucciones para agentes de IA |
+| [docs/DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) | Sistema de diseno oficial |
 | [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md) | GitFlow y ramas por tarea |
 | [docs/AI_WORKFLOW.md](./docs/AI_WORKFLOW.md) | Flujo de trabajo iterativo |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Guia de contribucion |
@@ -48,6 +49,20 @@ Ver [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md).
 ## Arquitectura
 
 Feature-Based Architecture. Ver [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
+
+## Design System
+
+Identidad visual unica (Glassmorphism + minimalismo). Obligatorio para toda UI nueva.
+
+| Documento | Proposito |
+| --------- | --------- |
+| [docs/DESIGN_SYSTEM.md](./docs/DESIGN_SYSTEM.md) | Referencia oficial (versionada) |
+| `specs/DESIGN_SYSTEM.md` | Especificacion tecnica detallada (local) |
+| `specs/UI_GUIDELINES.md` | Guia practica para implementacion (local) |
+
+Componentes base: `src/components/ui/` (Button, Input, Card, Icon).
+
+Iconografia centralizada: SVG en `src/assets/icons/`, registro en `src/components/ui/Icon/icons.ts`. Uso exclusivo via `<Icon name="..." />`. Ver `specs/ICONS_REGISTRY.md` (local).
 
 ## Licencia
 

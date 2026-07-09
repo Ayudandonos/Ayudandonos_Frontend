@@ -1,35 +1,37 @@
 import axios from 'axios';
 import type { ApiErrorResponse } from '@/types';
 
+export interface ParsedApiError {
+  message: string;
+  status?: number;
+  fieldErrors: Record<string, string>;
+}
+
 // Entrada:
-// error: error capturado de una peticion API.
+// error: error capturado desde Axios o desconocido.
 
 // Proceso:
-// Extrae mensaje y errores por campo del formato estandar del backend.
+// Normaliza mensaje, codigo HTTP y errores por campo desde la respuesta API.
 
 // Salida:
-// Retorna objeto con message y fieldErrors normalizados.
-export function parseApiError(error: unknown): {
-  message: string;
-  fieldErrors: Record<string, string>;
-  status?: number;
-} {
+// Retorna objeto ParsedApiError listo para la UI.
+export function parseApiError(error: unknown): ParsedApiError {
   if (!axios.isAxiosError<ApiErrorResponse>(error)) {
     return { message: '', fieldErrors: {} };
   }
 
-  const data = error.response?.data;
+  const response = error.response;
   const fieldErrors: Record<string, string> = {};
 
-  if (data?.errors) {
-    for (const [key, messages] of Object.entries(data.errors)) {
-      if (messages[0]) fieldErrors[key] = messages[0];
-    }
+  if (response?.data?.errors) {
+    Object.entries(response.data.errors).forEach(([field, messages]) => {
+      if (messages[0]) fieldErrors[field] = messages[0];
+    });
   }
 
   return {
-    message: data?.message ?? '',
+    message: response?.data?.message ?? '',
+    status: response?.status,
     fieldErrors,
-    status: error.response?.status,
   };
 }

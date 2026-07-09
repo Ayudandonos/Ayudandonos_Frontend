@@ -1,23 +1,29 @@
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui';
+import { buttonLinkClass } from '@/components/ui/button-link-class';
+import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
 
 // Entrada:
 // Ninguna.
 
 // Proceso:
-// Renderiza la página de error 404 con mensaje y enlace de regreso al inicio.
+// Renderiza pagina 404 con diseno glass del sistema.
 
 // Salida:
-// Retorna el elemento JSX de la página no encontrada.
+// Retorna el elemento JSX de la pagina no encontrada.
 export function NotFoundPage() {
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
-      <h1 className="text-6xl font-bold text-gray-300">{UI_MESSAGES.NOT_FOUND_CODE}</h1>
-      <p className="mt-4 text-xl text-gray-600">{UI_MESSAGES.NOT_FOUND_MESSAGE}</p>
-      <Link to="/" className="mt-8">
-        <Button>{UI_MESSAGES.NOT_FOUND_BACK}</Button>
-      </Link>
-    </div>
+    <PublicPageShell>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center px-4 py-16 text-center">
+        <Card padding="lg" className="max-w-md" hover={false}>
+          <h1 className="text-6xl font-bold text-primary-300">{UI_MESSAGES.NOT_FOUND_CODE}</h1>
+          <p className="mt-4 text-subheading">{UI_MESSAGES.NOT_FOUND_MESSAGE}</p>
+          <Link to="/" className={buttonLinkClass({ variant: 'primary', size: 'md', className: 'mt-8' })}>
+            {UI_MESSAGES.NOT_FOUND_BACK}
+          </Link>
+        </Card>
+      </div>
+    </PublicPageShell>
   );
 }

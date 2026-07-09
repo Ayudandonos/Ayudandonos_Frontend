@@ -29,12 +29,14 @@ Una rama por tarea. PR hacia `develop` al cerrar la iteracion.
 
 ## Antes de escribir codigo
 
+- Consultar `docs/DESIGN_SYSTEM.md` y `specs/UI_GUIDELINES.md` (local) para cualquier UI.
 - Consultar `specs/ROUTES.md` y `specs/FEATURES.md` (local).
 - Revisar contratos API en backend (`specs/API_OVERVIEW.md`, `specs/modules/*.md`) y documentar en `specs/API_INTEGRATION.md`.
 - Revisar `docs/DEVELOPMENT_RULES.md`.
 - Usar skill `.cursor/skills/create-feature/` para features nuevos.
 - Usar skill `.cursor/skills/create-page/` para paginas nuevas.
 - Textos UI solo en `src/constants/messages.constants.ts`.
+- Componentes visuales solo desde `src/components/ui/`; iconos via `Icon`.
 
 ## Checklist por feature nuevo
 
@@ -46,6 +48,8 @@ Una rama por tarea. PR hacia `develop` al cerrar la iteracion.
 - [ ] Formularios con React Hook Form + Zod
 - [ ] Textos desde `UI_MESSAGES`
 - [ ] Comentarios Entrada/Proceso/Salida en funciones
+- [ ] Componentes UI del Design System (Button, Input, Card, Icon)
+- [ ] Sin iconos ni estilos fuera del sistema de diseno
 - [ ] Responsive con TailwindCSS
 - [ ] Build y lint sin errores
 - [ ] `specs/` actualizado localmente
@@ -59,13 +63,16 @@ Una rama por tarea. PR hacia `develop` al cerrar la iteracion.
 - Emojis en cualquier artefacto.
 - Commitear `specs/` o `.env`.
 - Mezclar varias tareas en una misma rama.
+- Mezclar estilos visuales distintos al Design System.
+- Importar iconos fuera de `src/components/ui/Icon/`.
+- Instalar librerias UI externas sin autorizacion.
 
 ## Fases del proyecto
 
 | Fase | Estado | Alcance |
 | ---- | ------ | ------- |
-| 1 | COMPLETADO | Layouts, rutas, UI base, auth skeleton |
-| 2 | PENDIENTE | Auth integrado, rutas protegidas |
+| 1 | COMPLETADO | Layouts, rutas, UI base, Design System |
+| 2 | EN PROGRESO | Auth integrado, rutas protegidas |
 | 3 | PENDIENTE | Fundaciones, campanas (UI) |
 | 4 | PENDIENTE | Donaciones, ciclo de vida (UI) |
 | 5 | PENDIENTE | Reportes, despliegue Vercel |
