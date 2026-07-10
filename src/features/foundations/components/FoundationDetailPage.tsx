@@ -27,6 +27,11 @@ export function FoundationDetailPage() {
 
     let cancelled = false;
 
+    /**
+     * Entrada: foundationId: identificador UUID de la fundacion a consultar.
+     * Proceso: Obtiene detalle publico de fundacion desde la API.
+     * Salida: No retorna valor; actualiza foundation o error en el componente.
+     */
     async function loadFoundation(foundationId: string) {
       setIsLoading(true);
       setError('');

@@ -26,6 +26,11 @@ interface AuthHeaderProps {
 export function AuthHeader({ variant = 'login' }: AuthHeaderProps) {
   const location = useLocation();
 
+  /**
+   * Entrada: path: ruta de navegacion a evaluar.
+   * Proceso: Calcula clases Tailwind segun coincidencia con la ruta activa.
+   * Salida: Retorna cadena de clases CSS para el enlace.
+   */
   const navLinkClass = (path: string) =>
     cn(
       'rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/40',
@@ -124,12 +129,12 @@ interface AuthPasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   filled?: boolean;
 }
 
-/**
- * Entrada: showPassword, onToggle y props de Input excepto type.
- * Proceso: Renderiza campo de contraseña con toggle accesible.
- * Salida: Retorna el elemento JSX del campo de contraseña.
- */
 export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldProps>(
+  /**
+   * Entrada: showPassword, onToggle y props de Input excepto type; ref: referencia al input nativo.
+   * Proceso: Renderiza campo de contraseña con toggle accesible mediante forwardRef.
+   * Salida: Retorna el elemento JSX del campo de contraseña.
+   */
   function AuthPasswordField({ showPassword, onToggle, label, filled, ...props }, ref) {
     return (
       <Input
@@ -154,7 +159,6 @@ export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldP
   },
 );
 
-// Re-export para compatibilidad durante migracion
 export { Input as FigmaInput };
 
 interface AuthSubmitButtonProps {

@@ -36,6 +36,11 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
 
   const socialLinks = watch('socialLinks') ?? [];
 
+  /**
+   * Entrada: network: red social; url: enlace a persistir en el formulario.
+   * Proceso: Actualiza o agrega la URL de la red social en el estado del formulario.
+   * Salida: No retorna valor; modifica socialLinks via setValue.
+   */
   const updateSocialUrl = (network: FoundationSocialLink['network'], url: string) => {
     const current = [...socialLinks];
     const index = current.findIndex((link) => link.network === network);
@@ -49,6 +54,11 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
     setValue('socialLinks', current, { shouldDirty: true });
   };
 
+  /**
+   * Entrada: network: red social a consultar.
+   * Proceso: Busca la URL registrada para la red social en socialLinks.
+   * Salida: Retorna la URL encontrada o cadena vacia.
+   */
   const getSocialUrl = (network: FoundationSocialLink['network']) =>
     socialLinks.find((link) => link.network === network)?.url ?? '';
 

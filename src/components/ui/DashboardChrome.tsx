@@ -4,6 +4,7 @@ import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
 import { cn } from '@/utils/cn';
+import { canFoundationOperate } from '@/utils/foundation-access';
 import type { UserRole } from '@/types';
 
 interface NavItem {
@@ -40,16 +41,25 @@ const ADMIN_NAV: NavItem[] = [
  * Salida: Retorna el elemento JSX del SideNav.
  */
 export function SideNav() {
-  const { role, logout } = useAuth();
+  const { role, foundation, logout } = useAuth();
   const location = useLocation();
+
+  const foundationNavItems = canFoundationOperate(foundation)
+    ? FOUNDATION_NAV
+    : FOUNDATION_NAV.filter((item) => item.path === '/foundation/profile');
 
   const items =
     role === 'ADMIN'
       ? ADMIN_NAV
       : role === 'FOUNDATION'
-        ? FOUNDATION_NAV
+        ? foundationNavItems
         : USER_NAV.filter((item) => role && item.roles.includes(role));
 
+  /**
+   * Entrada: path: ruta del item de navegacion.
+   * Proceso: Determina si la ruta actual coincide o es prefijo del path dado.
+   * Salida: Retorna true si el enlace debe mostrarse como activo.
+   */
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(`${path}/`);
 

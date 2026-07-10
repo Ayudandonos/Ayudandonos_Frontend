@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
+/**
+ * Entrada: max: longitud maxima permitida; message: mensaje de error de validacion.
+ * Proceso: Construye esquema Zod de texto opcional nullable con limite de caracteres.
+ * Salida: Retorna el esquema Zod configurado.
+ */
 const optionalNullableText = (max: number, message: string) =>
   z.string().trim().max(max, message).nullable().optional();
 

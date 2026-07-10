@@ -100,6 +100,15 @@ export const UI_MESSAGES = {
   FOUNDATIONS_DOCUMENT_LEGAL_CERTIFICATE: 'Certificado de existencia y representación legal',
   FOUNDATIONS_DOCUMENT_REPRESENTATIVE_ID: 'Documento de identidad del representante legal',
   FOUNDATIONS_DOCUMENT_BANK_CERT: 'Certificación bancaria',
+  FOUNDATIONS_GATE_INCOMPLETE:
+    'Completa todos los datos obligatorios y sube los documentos legales requeridos antes de continuar.',
+  FOUNDATIONS_GATE_VERIFICATION:
+    'Un administrador debe verificar tu fundación antes de que puedas gestionar campañas, necesidades o solicitudes.',
+  FOUNDATIONS_REQUESTS_LOAD_ERROR: 'No fue posible cargar las solicitudes de ayuda.',
+  FOUNDATIONS_REQUESTS_EMPTY: 'Aún no tienes solicitudes de ayuda pendientes.',
+  FOUNDATIONS_REQUESTS_IN_DEVELOPMENT:
+    'El listado de solicitudes estará disponible cuando se implemente el módulo de donaciones.',
+  FOUNDATIONS_REQUESTS_GO_TO_PROFILE: 'Ir a completar perfil',
   FOUNDATIONS_PROFILE_INCOMPLETE: 'Completa todos los campos obligatorios y documentos para solicitar verificación.',
   FOUNDATIONS_PROFILE_COMPLETE: 'Perfil completo. Tu fundación puede ser verificada por un administrador.',
   FOUNDATIONS_REJECTION_REASON: 'Motivo de rechazo',

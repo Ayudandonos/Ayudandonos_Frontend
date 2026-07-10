@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
@@ -17,6 +18,13 @@ import type { UpdateFoundationFormData } from '@/features/foundations/validation
 import { parseApiError } from '@/utils/api-error';
 import { downloadBlob } from '@/utils/file-download';
 
+type ProfileGateState = 'incomplete' | 'verification';
+
+/**
+ * Entrada: foundation: detalle cargado desde la API.
+ * Proceso: Normaliza campos nullable a valores por defecto del formulario de edicion.
+ * Salida: Retorna UpdateFoundationFormData listo para react-hook-form.
+ */
 function buildDefaultValues(foundation: FoundationDetail): UpdateFoundationFormData {
   return {
     name: foundation.name,
@@ -45,6 +53,8 @@ function buildDefaultValues(foundation: FoundationDetail): UpdateFoundationFormD
  */
 export function FoundationProfilePage() {
   const { fetchMe } = useAuth();
+  const location = useLocation();
+  const gate = (location.state as { gate?: ProfileGateState } | null)?.gate;
   const [foundation, setFoundation] = useState<FoundationDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
@@ -56,6 +66,11 @@ export function FoundationProfilePage() {
   useEffect(() => {
     let cancelled = false;
 
+    /**
+     * Entrada: Ninguna (usa el servicio de fundaciones del usuario autenticado).
+     * Proceso: Obtiene el perfil propio de fundacion y actualiza el estado local.
+     * Salida: No retorna valor; actualiza foundation o error en el componente.
+     */
     async function loadProfile() {
       setIsLoading(true);
       setApiError('');
@@ -83,6 +98,11 @@ export function FoundationProfilePage() {
     };
   }, []);
 
+  /**
+   * Entrada: data: valores validados del formulario de perfil.
+   * Proceso: Envía PATCH al backend, refresca perfil y sesion del usuario.
+   * Salida: No retorna valor; actualiza estado de exito o error.
+   */
   const handleSubmit = async (data: UpdateFoundationFormData) => {
     if (!foundation) {
       return;
@@ -101,6 +121,11 @@ export function FoundationProfilePage() {
     }
   };
 
+  /**
+   * Entrada: file: archivo de imagen seleccionado para el logo.
+   * Proceso: Sube el logo via API multipart y sincroniza el perfil local.
+   * Salida: No retorna valor; actualiza foundation o error en pantalla.
+   */
   const handleUploadLogo = async (file: File) => {
     if (!foundation) {
       return;
@@ -121,6 +146,11 @@ export function FoundationProfilePage() {
     }
   };
 
+  /**
+   * Entrada: type: tipo documental; file: archivo legal a cargar.
+   * Proceso: Sube el documento via API y refresca la lista documental del perfil.
+   * Salida: No retorna valor; actualiza foundation o error en pantalla.
+   */
   const handleUploadDocument = async (type: FoundationDocumentType, file: File) => {
     if (!foundation) {
       return;
@@ -133,6 +163,7 @@ export function FoundationProfilePage() {
       const updated = await foundationsService.uploadDocument(foundation.id, type, file);
       setFoundation(updated);
       setSuccessMessage(UI_MESSAGES.FOUNDATIONS_DOCUMENT_UPLOADED);
+      await fetchMe();
     } catch (uploadError) {
       setApiError(parseApiError(uploadError).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
     } finally {
@@ -140,6 +171,11 @@ export function FoundationProfilePage() {
     }
   };
 
+  /**
+   * Entrada: type: tipo documental a descargar.
+   * Proceso: Obtiene blob autenticado del backend e inicia descarga en el navegador.
+   * Salida: No retorna valor; dispara la descarga o registra error.
+   */
   const handleDownloadDocument = async (type: FoundationDocumentType) => {
     if (!foundation) {
       return;
@@ -153,6 +189,11 @@ export function FoundationProfilePage() {
     }
   };
 
+  /**
+   * Entrada: type: tipo documental a previsualizar.
+   * Proceso: Descarga blob autenticado del documento para preview embebido.
+   * Salida: Retorna el Blob del archivo solicitado.
+   */
   const fetchDocumentBlob = async (type: FoundationDocumentType) => {
     if (!foundation) {
       throw new Error(UI_MESSAGES.FOUNDATIONS_NOT_FOUND);
@@ -184,9 +225,21 @@ export function FoundationProfilePage() {
         <FoundationStatusBadge status={foundation.status} />
       </header>
 
+      {gate === 'incomplete' && (
+        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800" role="alert">
+          {UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE}
+        </p>
+      )}
+
+      {gate === 'verification' && (
+        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800" role="alert">
+          {UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}
+        </p>
+      )}
+
       {foundation.status === 'PENDING' && (
         <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {foundation.isProfileComplete
+          {foundation.isProfileComplete && foundation.hasRequiredDocuments
             ? UI_MESSAGES.FOUNDATIONS_PROFILE_COMPLETE
             : UI_MESSAGES.FOUNDATIONS_PROFILE_INCOMPLETE}
         </p>

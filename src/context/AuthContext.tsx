@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, type ReactNode } from 'react';
 import type { Foundation, User } from '@/types';
-import { AuthContext } from '@/context/auth-context';
+import { AuthContext, type AuthSession } from '@/context/auth-context';
 import { authService } from '@/features/auth/services/auth.service';
 import type {
   RegisterFoundationPayload,
@@ -23,12 +23,13 @@ function applyAuthSession(
   setUser: (u: User | null) => void,
   setFoundation: (f: Foundation | null) => void,
   setAccessToken: (t: string | null) => void,
-): User {
+): AuthSession {
   saveAccessToken(authData.accessToken, remember);
   setAccessToken(authData.accessToken);
   setUser(authData.user);
-  setFoundation(authData.foundation ?? null);
-  return authData.user;
+  const foundation = authData.foundation ?? null;
+  setFoundation(foundation);
+  return { user: authData.user, foundation };
 }
 
 /**

@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { AuthLayout, DashboardLayout } from '@/layouts';
 import { NotFoundPage } from '@/pages';
 import { LoginPage, RegisterPage } from '@/features/auth';
@@ -23,6 +23,8 @@ import {
 } from '@/features/legal';
 import { HomePage, ImpactPage, OrganizationsPage } from '@/features/marketing';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
+import { FoundationDashboardGuard } from '@/routes/FoundationDashboardGuard';
+import { DashboardRedirect } from '@/routes/DashboardRedirect';
 import { RoleRoute } from '@/routes/RoleRoute';
 
 export const router = createBrowserRouter([
@@ -54,6 +56,9 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      {
+        element: <FoundationDashboardGuard />,
+        children: [
       { path: 'campaigns', element: <CampaignsExplorerPage /> },
       { path: 'campaigns/:id', element: <CampaignDetailPage /> },
       {
@@ -144,7 +149,9 @@ export const router = createBrowserRouter([
           </RoleRoute>
         ),
       },
-      { path: 'dashboard', element: <Navigate to="/campaigns" replace /> },
+      { path: 'dashboard', element: <DashboardRedirect /> },
+        ],
+      },
     ],
   },
 ]);

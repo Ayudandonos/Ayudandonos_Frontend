@@ -57,6 +57,11 @@ export function FoundationDocumentManager({
     };
   }, [previewUrl]);
 
+  /**
+   * Entrada: type: tipo documental; event: cambio del input file.
+   * Proceso: Propaga archivo seleccionado al callback onUpload y limpia el input.
+   * Salida: No retorna valor; dispara carga del documento.
+   */
   const handleFileChange = async (
     type: FoundationDocumentType,
     event: React.ChangeEvent<HTMLInputElement>,
@@ -75,6 +80,11 @@ export function FoundationDocumentManager({
     }
   };
 
+  /**
+   * Entrada: type: tipo documental a previsualizar.
+   * Proceso: Obtiene blob autenticado y crea URL temporal para iframe o enlace.
+   * Salida: No retorna valor; actualiza previewUrl o previewError.
+   */
   const handlePreview = async (type: FoundationDocumentType) => {
     if (!fetchDocumentBlob) {
       return;
@@ -96,6 +106,11 @@ export function FoundationDocumentManager({
     }
   };
 
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Revoca URL de previsualizacion y limpia estado del modal de preview.
+   * Salida: No retorna valor; restablece previewUrl y previewError.
+   */
   const closePreview = () => {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);

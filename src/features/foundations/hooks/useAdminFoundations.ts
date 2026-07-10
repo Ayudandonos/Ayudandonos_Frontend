@@ -70,6 +70,11 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
   useEffect(() => {
     let cancelled = false;
 
+    /**
+     * Entrada: Ninguna (usa filtros administrativos y paginacion del hook).
+     * Proceso: Consulta fundaciones con stats para el panel admin y actualiza el estado.
+     * Salida: No retorna valor; actualiza items, stats, paginacion y errores del hook.
+     */
     async function loadAdminData() {
       setIsLoading(true);
       setError('');
@@ -113,6 +118,11 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     setPage(1);
   }, [debouncedSearch, statusFilter, debouncedCategory, debouncedCity, debouncedDepartment]);
 
+  /**
+   * Entrada: foundation: item del listado seleccionado por el administrador.
+   * Proceso: Carga el detalle completo de la fundacion para revision administrativa.
+   * Salida: No retorna valor; actualiza selected o error del hook.
+   */
   const selectFoundation = useCallback(async (foundation: FoundationListItem) => {
     setError('');
 
@@ -124,10 +134,20 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     }
   }, []);
 
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Limpia la fundacion seleccionada y cierra el panel de revision.
+   * Salida: No retorna valor; establece selected en null.
+   */
   const closeReview = useCallback(() => {
     setSelected(null);
   }, []);
 
+  /**
+   * Entrada: payload: nuevo estado, motivo de rechazo u observaciones administrativas.
+   * Proceso: Aplica cambio de estado via API y refresca listado y estadisticas admin.
+   * Salida: No retorna valor; actualiza selected, items y stats o propaga error.
+   */
   const updateStatus = useCallback(
     async (payload: UpdateFoundationStatusFormData) => {
       if (!selected) {
@@ -158,6 +178,11 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     [selected],
   );
 
+  /**
+   * Entrada: type: tipo documental a descargar de la fundacion seleccionada.
+   * Proceso: Obtiene blob autenticado e inicia descarga en el navegador.
+   * Salida: No retorna valor; dispara descarga o actualiza error del hook.
+   */
   const downloadDocument = useCallback(
     async (type: FoundationDocumentType) => {
       if (!selected) {
@@ -175,6 +200,11 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     [selected],
   );
 
+  /**
+   * Entrada: type: tipo documental a previsualizar de la fundacion seleccionada.
+   * Proceso: Descarga blob autenticado del documento para preview embebido.
+   * Salida: Retorna el Blob del archivo solicitado.
+   */
   const fetchDocumentBlob = useCallback(
     async (type: FoundationDocumentType) => {
       if (!selected) {

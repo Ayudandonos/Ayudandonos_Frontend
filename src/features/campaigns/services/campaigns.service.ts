@@ -47,12 +47,20 @@ export const MOCK_CAMPAIGNS: Campaign[] = [
   },
 ];
 
-// TODO: conectar API fase 3
+/**
+ * Entrada: Ninguna.
+ * Proceso: Retorna campanas mock mientras la API de campanas no esta disponible.
+ * Salida: Retorna arreglo de campanas simuladas.
+ */
 export async function fetchCampaigns(): Promise<Campaign[]> {
   return MOCK_CAMPAIGNS;
 }
 
-// TODO: conectar API fase 3
+/**
+ * Entrada: id: identificador de la campana buscada.
+ * Proceso: Busca la campana mock por id mientras la API no esta conectada.
+ * Salida: Retorna la campana encontrada o undefined.
+ */
 export async function fetchCampaignById(id: string): Promise<Campaign | undefined> {
   return MOCK_CAMPAIGNS.find((c) => c.id === id);
 }

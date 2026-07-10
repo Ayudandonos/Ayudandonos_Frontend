@@ -75,6 +75,11 @@ export function FoundationAdminReviewPanel({
     },
   });
 
+  /**
+   * Entrada: status: nuevo estado administrativo a aplicar.
+   * Proceso: Valida motivo de rechazo si aplica y delega actualizacion al callback padre.
+   * Salida: No retorna valor; cierra dialogo pendiente tras exito.
+   */
   const executeAction = async (status: FoundationStatus) => {
     const data = getValues();
 
@@ -92,6 +97,11 @@ export function FoundationAdminReviewPanel({
     setPendingAction(null);
   };
 
+  /**
+   * Entrada: Ninguna (lee adminNotes del formulario).
+   * Proceso: Solicita informacion adicional devolviendo la fundacion a estado PENDING.
+   * Salida: No retorna valor; cierra dialogo pendiente tras exito.
+   */
   const executeRequestInfo = async () => {
     const data = getValues();
 
@@ -108,6 +118,11 @@ export function FoundationAdminReviewPanel({
     setPendingAction(null);
   };
 
+  /**
+   * Entrada: Ninguna (usa pendingAction del estado local).
+   * Proceso: Ejecuta la accion administrativa confirmada o solicitud de informacion.
+   * Salida: No retorna valor; delega en executeAction o executeRequestInfo.
+   */
   const handleConfirm = async () => {
     setActionError('');
 
@@ -121,7 +136,7 @@ export function FoundationAdminReviewPanel({
         await executeAction(pendingAction);
       }
     } catch {
-      // El error lo muestra el hook padre.
+      return;
     }
   };
 

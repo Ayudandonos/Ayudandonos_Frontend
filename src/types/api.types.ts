@@ -39,6 +39,8 @@ export interface Foundation {
   category: string | null;
   city: string | null;
   description: string | null;
+  isProfileComplete: boolean;
+  hasRequiredDocuments: boolean;
 }
 
 export interface AuthTokenData {

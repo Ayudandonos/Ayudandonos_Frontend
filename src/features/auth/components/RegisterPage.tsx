@@ -42,6 +42,11 @@ export function RegisterPage() {
   const isSubmitting =
     role === 'USER' ? userForm.formState.isSubmitting : foundationForm.formState.isSubmitting;
 
+  /**
+   * Entrada: error: excepcion capturada durante el registro.
+   * Proceso: Normaliza el error de API y muestra mensaje global en pantalla.
+   * Salida: No retorna valor; actualiza apiError del componente.
+   */
   const handleRegisterError = (error: unknown) => {
     const parsed = parseApiError(error);
     if (parsed.status === 409) {
@@ -51,6 +56,11 @@ export function RegisterPage() {
     setApiError(parsed.message || UI_MESSAGES.AUTH_GENERIC_ERROR);
   };
 
+  /**
+   * Entrada: data: datos validados del registro de donante.
+   * Proceso: Registra usuario via API y redirige al explorador de campanas.
+   * Salida: No retorna valor; navega o delega error a handleRegisterError.
+   */
   const onSubmitUser = async (data: RegisterUserFormData) => {
     setApiError('');
     try {
@@ -65,6 +75,11 @@ export function RegisterPage() {
     }
   };
 
+  /**
+   * Entrada: data: datos validados del registro de fundacion.
+   * Proceso: Registra fundacion via API y redirige al flujo de solicitudes.
+   * Salida: No retorna valor; navega o delega error a handleRegisterError.
+   */
   const onSubmitFoundation = async (data: RegisterFoundationFormData) => {
     setApiError('');
     try {
@@ -75,7 +90,7 @@ export function RegisterPage() {
         foundationName: data.foundationName,
         description: data.description,
       });
-      navigate('/foundation/requests', { replace: true });
+      navigate('/foundation/profile', { replace: true });
     } catch (error) {
       handleRegisterError(error);
     }

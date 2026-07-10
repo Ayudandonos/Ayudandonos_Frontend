@@ -77,6 +77,7 @@ export interface FoundationDetail extends FoundationListItem {
   documents: FoundationDocument[];
   observations: FoundationAdminObservation[];
   isProfileComplete: boolean;
+  hasRequiredDocuments: boolean;
 }
 
 export interface FoundationStats {
@@ -125,4 +126,11 @@ export interface UpdateFoundationStatusPayload {
   status: FoundationStatus;
   rejectionReason?: string | null;
   adminNotes?: string | null;
+}
+
+export interface FoundationHelpRequest {
+  id: string;
+  donorName: string;
+  needSummary: string;
+  submittedAt: string;
 }

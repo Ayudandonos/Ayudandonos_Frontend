@@ -141,6 +141,18 @@ async function downloadDocument(
   return { blob: response.data, fileName };
 }
 
+/**
+ * Entrada: Ninguna (token en interceptor; fundacion verificada en backend).
+ * Proceso: Consulta GET /foundation/requests para listar solicitudes de ayuda recibidas.
+ * Salida: Retorna arreglo de solicitudes o lanza error HTTP (403, 501, etc.).
+ */
+async function fetchFoundationRequests(): Promise<FoundationHelpRequest[]> {
+  const { data } = await api.get<ApiSuccessResponse<FoundationHelpRequest[]>>(
+    '/foundation/requests',
+  );
+  return data.data ?? [];
+}
+
 export const foundationsService = {
   fetchFoundations,
   fetchFoundationById,
@@ -150,4 +162,5 @@ export const foundationsService = {
   uploadLogo,
   uploadDocument,
   downloadDocument,
+  fetchFoundationRequests,
 };

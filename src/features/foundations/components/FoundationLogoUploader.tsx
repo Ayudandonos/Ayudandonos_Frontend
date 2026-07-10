@@ -22,6 +22,11 @@ export function FoundationLogoUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  /**
+   * Entrada: event: cambio del input file con imagen de logo.
+   * Proceso: Genera preview local y delega la subida al callback onUpload.
+   * Salida: No retorna valor; actualiza preview y limpia el input.
+   */
   const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {

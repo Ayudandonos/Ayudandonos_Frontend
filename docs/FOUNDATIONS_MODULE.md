@@ -70,11 +70,12 @@ Pantalla admin: `Prototipado/Verificación de Fundaciones - ConectaAyuda.png`
 
 Flujos implementados:
 
-1. Admin filtra por estado, ciudad, categoria y departamento.
-2. Admin revisa fundacion en modal lateral con documentos descargables.
-3. Admin aprueba, rechaza, suspende o solicita informacion adicional.
-4. Fundacion completa perfil, sube logo y documentos obligatorios.
-5. Publico explora fundaciones verificadas con filtros.
+1. Registro como fundacion (`/register`) redirige a `/foundation/profile` para completar el perfil.
+2. Admin filtra por estado, ciudad, categoria y departamento.
+3. Admin revisa fundacion en modal lateral con documentos descargables.
+4. Admin aprueba, rechaza, suspende o solicita informacion adicional.
+5. Fundacion completa perfil, sube logo y documentos obligatorios.
+6. Publico explora fundaciones verificadas con filtros.
 
 ## Textos UI
 

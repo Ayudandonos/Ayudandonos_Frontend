@@ -43,6 +43,11 @@ export function useFoundationsList(options: UseFoundationsListOptions = {}): Use
   useEffect(() => {
     let cancelled = false;
 
+    /**
+     * Entrada: Ninguna (usa filtros y paginacion del estado del hook).
+     * Proceso: Consulta fundaciones verificadas en la API y actualiza listado y meta.
+     * Salida: No retorna valor; actualiza items, paginacion y errores del hook.
+     */
     async function loadFoundations() {
       setIsLoading(true);
       setError('');
