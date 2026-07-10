@@ -1,14 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import { DashboardHeader, SideNav } from '@/components/ui/DashboardChrome';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza layout con SideNav 256px, header 64px y area de contenido.
-
-// Salida:
-// Retorna el elemento JSX del layout de dashboard.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza layout con SideNav 256px, header 64px y area de contenido.
+ * Salida: Retorna el elemento JSX del layout de dashboard.
+ */
 export function DashboardLayout() {
   return (
     <div className="flex min-h-screen bg-white">

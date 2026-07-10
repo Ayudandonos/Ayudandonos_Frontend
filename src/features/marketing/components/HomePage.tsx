@@ -6,14 +6,11 @@ import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina de inicio publica con sistema de diseno glass.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de inicio.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina de inicio publica con sistema de diseno glass.
+ * Salida: Retorna el elemento JSX de la pagina de inicio.
+ */
 export function HomePage() {
   return (
     <PublicPageShell>

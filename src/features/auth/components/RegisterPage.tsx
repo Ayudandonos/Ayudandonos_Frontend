@@ -20,14 +20,11 @@ import {
   type RegisterUserFormData,
 } from '@/features/auth/validations/auth.validations';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza registro segun prototipo con selector de rol e integracion API.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de registro.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza registro segun prototipo con selector de rol e integracion API.
+ * Salida: Retorna el elemento JSX de la pagina de registro.
+ */
 export function RegisterPage() {
   const navigate = useNavigate();
   const { registerUser, registerFoundation } = useAuth();

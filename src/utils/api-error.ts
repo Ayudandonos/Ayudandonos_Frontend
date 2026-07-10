@@ -7,14 +7,11 @@ export interface ParsedApiError {
   fieldErrors: Record<string, string>;
 }
 
-// Entrada:
-// error: error capturado desde Axios o desconocido.
-
-// Proceso:
-// Normaliza mensaje, codigo HTTP y errores por campo desde la respuesta API.
-
-// Salida:
-// Retorna objeto ParsedApiError listo para la UI.
+/**
+ * Entrada: error: error capturado desde Axios o desconocido.
+ * Proceso: Normaliza mensaje, codigo HTTP y errores por campo desde la respuesta API.
+ * Salida: Retorna objeto ParsedApiError listo para la UI.
+ */
 export function parseApiError(error: unknown): ParsedApiError {
   if (!axios.isAxiosError<ApiErrorResponse>(error)) {
     return { message: '', fieldErrors: {} };

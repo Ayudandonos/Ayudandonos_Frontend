@@ -12,14 +12,11 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Entrada:
-// authData: respuesta de login o registro; remember: persistencia de sesion.
-
-// Proceso:
-// Guarda token y actualiza estado de usuario y fundacion.
-
-// Salida:
-// Retorna el usuario autenticado.
+/**
+ * Entrada: authData: respuesta de login o registro; remember: persistencia de sesion.
+ * Proceso: Guarda token y actualiza estado de usuario y fundacion.
+ * Salida: Retorna el usuario autenticado.
+ */
 function applyAuthSession(
   authData: { accessToken: string; user: User; foundation?: Foundation },
   remember: boolean,
@@ -34,28 +31,22 @@ function applyAuthSession(
   return authData.user;
 }
 
-// Entrada:
-// children: componentes hijos.
-
-// Proceso:
-// Gestiona sesion JWT, login, registro, logout y restauracion desde storage.
-
-// Salida:
-// Retorna el proveedor de contexto de autenticacion.
+/**
+ * Entrada: children: componentes hijos.
+ * Proceso: Gestiona sesion JWT, login, registro, logout y restauracion desde storage.
+ * Salida: Retorna el proveedor de contexto de autenticacion.
+ */
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [foundation, setFoundation] = useState<Foundation | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(getAccessToken());
   const [isLoading, setIsLoading] = useState(true);
 
-  // Entrada:
-  // Ninguna.
-
-  // Proceso:
-  // Restaura sesion desde token almacenado llamando GET /auth/me.
-
-  // Salida:
-  // Actualiza estado de usuario o limpia sesion invalida.
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Restaura sesion desde token almacenado llamando GET /auth/me.
+   * Salida: Actualiza estado de usuario o limpia sesion invalida.
+   */
   const fetchMe = useCallback(async () => {
     const token = getAccessToken();
     if (!token) {
@@ -81,53 +72,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
     void fetchMe();
   }, [fetchMe]);
 
-  // Entrada:
-  // email, password, remember: credenciales y preferencia de sesion.
-
-  // Proceso:
-  // Autentica contra POST /auth/login.
-
-  // Salida:
-  // Retorna el usuario autenticado.
+  /**
+   * Entrada: email, password, remember: credenciales y preferencia de sesion.
+   * Proceso: Autentica contra POST /auth/login.
+   * Salida: Retorna el usuario autenticado.
+   */
   const login = useCallback(async (email: string, password: string, remember = true) => {
     const data = await authService.login({ email, password });
     return applyAuthSession(data, remember, setUser, setFoundation, setAccessToken);
   }, []);
 
-  // Entrada:
-  // payload: datos de registro de donante.
-
-  // Proceso:
-  // Registra via POST /auth/register/user y establece sesion.
-
-  // Salida:
-  // Retorna el usuario creado.
+  /**
+   * Entrada: payload: datos de registro de donante.
+   * Proceso: Registra via POST /auth/register/user y establece sesion.
+   * Salida: Retorna el usuario creado.
+   */
   const registerUser = useCallback(async (payload: RegisterUserPayload) => {
     const data = await authService.registerUser(payload);
     return applyAuthSession(data, true, setUser, setFoundation, setAccessToken);
   }, []);
 
-  // Entrada:
-  // payload: datos de registro de fundacion.
-
-  // Proceso:
-  // Registra via POST /auth/register/foundation y establece sesion.
-
-  // Salida:
-  // Retorna el usuario creado.
+  /**
+   * Entrada: payload: datos de registro de fundacion.
+   * Proceso: Registra via POST /auth/register/foundation y establece sesion.
+   * Salida: Retorna el usuario creado.
+   */
   const registerFoundation = useCallback(async (payload: RegisterFoundationPayload) => {
     const data = await authService.registerFoundation(payload);
     return applyAuthSession(data, true, setUser, setFoundation, setAccessToken);
   }, []);
 
-  // Entrada:
-  // Ninguna.
-
-  // Proceso:
-  // Invalida sesion en backend y limpia estado local.
-
-  // Salida:
-  // No retorna valor.
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Invalida sesion en backend y limpia estado local.
+   * Salida: No retorna valor.
+   */
   const logout = useCallback(async () => {
     try {
       if (getAccessToken()) await authService.logout();

@@ -11,7 +11,7 @@ Leer AGENTS.md antes de modificar codigo.
 Feature-Based. features/<dominio>/ independientes. UI generica en components/ui/.
 
 ## Idioma
-Codigo en ingles. Comentarios Entrada/Proceso/Salida en espanol. Textos UI en UI_MESSAGES.
+Codigo en ingles. Comentarios JSDoc unico (Entrada/Proceso/Salida) en espanol. Textos UI en UI_MESSAGES.
 
 ## Prohibido
 Emojis. Acceso a BD. Import entre features. Textos hardcodeados en JSX.

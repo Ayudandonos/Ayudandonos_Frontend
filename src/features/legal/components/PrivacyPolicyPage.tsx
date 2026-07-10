@@ -1,14 +1,11 @@
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { LegalPageLayout, LegalSection } from '@/features/legal/components/LegalPageLayout';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina de politica de privacidad de Ayudandonos.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de privacidad.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina de politica de privacidad de Ayudandonos.
+ * Salida: Retorna el elemento JSX de la pagina de privacidad.
+ */
 export function PrivacyPolicyPage() {
   return (
     <LegalPageLayout

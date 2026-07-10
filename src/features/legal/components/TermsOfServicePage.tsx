@@ -1,14 +1,11 @@
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { LegalPageLayout, LegalSection } from '@/features/legal/components/LegalPageLayout';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina de terminos de servicio de Ayudandonos.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de terminos.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina de terminos de servicio de Ayudandonos.
+ * Salida: Retorna el elemento JSX de la pagina de terminos.
+ */
 export function TermsOfServicePage() {
   return (
     <LegalPageLayout

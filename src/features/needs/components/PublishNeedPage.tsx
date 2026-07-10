@@ -1,13 +1,10 @@
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza formulario publicar necesidad (mock).
-
-// Salida:
-// Retorna el elemento JSX de publicar necesidad.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza formulario publicar necesidad (mock).
+ * Salida: Retorna el elemento JSX de publicar necesidad.
+ */
 export function PublishNeedPage() {
   return (
     <div className="mx-auto max-w-3xl rounded-xl border border-border-default bg-white p-8">

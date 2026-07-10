@@ -4,14 +4,11 @@ import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina publica de impacto con estadisticas y cards glass.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de impacto.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina publica de impacto con estadisticas y cards glass.
+ * Salida: Retorna el elemento JSX de la pagina de impacto.
+ */
 export function ImpactPage() {
   return (
     <PublicPageShell>

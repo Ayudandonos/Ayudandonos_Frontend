@@ -10,14 +10,11 @@ interface LegalPageLayoutProps {
   children: ReactNode;
 }
 
-// Entrada:
-// title, subtitle opcional y children con el contenido legal.
-
-// Proceso:
-// Renderiza layout legal con header glass, card de contenido y footer.
-
-// Salida:
-// Retorna el elemento JSX del contenedor de pagina legal.
+/**
+ * Entrada: title, subtitle opcional y children con el contenido legal.
+ * Proceso: Renderiza layout legal con header glass, card de contenido y footer.
+ * Salida: Retorna el elemento JSX del contenedor de pagina legal.
+ */
 export function LegalPageLayout({ title, subtitle, children }: LegalPageLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -50,14 +47,11 @@ interface LegalSectionProps {
   paragraphs: readonly string[];
 }
 
-// Entrada:
-// title y paragraphs de una seccion legal.
-
-// Proceso:
-// Renderiza bloque de titulo y parrafos.
-
-// Salida:
-// Retorna el elemento JSX de la seccion.
+/**
+ * Entrada: title y paragraphs de una seccion legal.
+ * Proceso: Renderiza bloque de titulo y parrafos.
+ * Salida: Retorna el elemento JSX de la seccion.
+ */
 export function LegalSection({ title, paragraphs }: LegalSectionProps) {
   return (
     <section>

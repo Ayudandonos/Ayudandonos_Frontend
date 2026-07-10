@@ -15,14 +15,11 @@ const paddingMap = {
   lg: 'p-8',
 };
 
-// Entrada:
-// children, hover, padding, glass y props nativas de div.
-
-// Proceso:
-// Renderiza tarjeta glass del sistema de diseno con sombra y borde translucido.
-
-// Salida:
-// Retorna el elemento JSX de la tarjeta.
+/**
+ * Entrada: children, hover, padding, glass y props nativas de div.
+ * Proceso: Renderiza tarjeta glass del sistema de diseno con sombra y borde translucido.
+ * Salida: Retorna el elemento JSX de la tarjeta.
+ */
 export function Card({
   children,
   hover = false,

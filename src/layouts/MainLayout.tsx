@@ -3,14 +3,11 @@ import { useAuth } from '@/context';
 import { Button } from '@/components/ui';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza el layout principal con encabezado, navegación, contenido y pie de página.
-
-// Salida:
-// Retorna el elemento JSX del layout principal.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza el layout principal con encabezado, navegación, contenido y pie de página.
+ * Salida: Retorna el elemento JSX del layout principal.
+ */
 export function MainLayout() {
   const { isAuthenticated, logout } = useAuth();
 

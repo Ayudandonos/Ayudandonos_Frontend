@@ -22,6 +22,8 @@ export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
 
 export type UserRole = 'USER' | 'FOUNDATION' | 'ADMIN';
 
+export type FoundationStatus = 'PENDING' | 'VERIFIED' | 'REJECTED' | 'SUSPENDED';
+
 export interface User {
   id: string;
   email: string;
@@ -32,8 +34,11 @@ export interface User {
 export interface Foundation {
   id: string;
   name: string;
+  status: FoundationStatus;
+  logoUrl: string | null;
+  category: string | null;
+  city: string | null;
   description: string | null;
-  isVerified: boolean;
 }
 
 export interface AuthTokenData {

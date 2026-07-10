@@ -1,30 +1,30 @@
 import { useParams } from 'react-router-dom';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza revision de solicitud de ayuda (mock).
-
-// Salida:
-// Retorna el elemento JSX de revisar solicitud.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza revision de solicitud de ayuda (mock hasta modulo donaciones).
+ * Salida: Retorna el elemento JSX de revisar solicitud.
+ */
 export function ReviewRequestPage() {
   const { id } = useParams<{ id: string }>();
 
   return (
-    <div className="mx-auto max-w-3xl rounded-xl border border-border-default bg-white p-8">
-      <h1 className="text-3xl font-bold">Revisar solicitud #{id}</h1>
-      <p className="mt-4 text-text-secondary">
-        Detalle del compromiso del donante, necesidad asociada y acciones de aprobar o rechazar (mock).
-      </p>
+    <Card glass={false} className="mx-auto max-w-3xl border border-border-default bg-white p-8">
+      <h1 className="text-3xl font-bold text-text-primary">
+        {UI_MESSAGES.FOUNDATION_REQUEST_REVIEW_TITLE(id ?? '')}
+      </h1>
+      <p className="mt-4 text-text-secondary">{UI_MESSAGES.FOUNDATION_REQUEST_REVIEW_DESC}</p>
       <div className="mt-6 flex gap-4">
-        <button type="button" className="rounded-xl bg-vivid-700 px-6 py-3 text-white">
-          Aprobar
-        </button>
-        <button type="button" className="rounded-xl border border-border-default px-6 py-3">
-          Rechazar
-        </button>
+        <Button type="button" variant="primary">
+          {UI_MESSAGES.FOUNDATION_REQUEST_APPROVE}
+        </Button>
+        <Button type="button" variant="outline">
+          {UI_MESSAGES.FOUNDATION_REQUEST_REJECT}
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 }

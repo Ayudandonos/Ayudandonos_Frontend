@@ -35,7 +35,7 @@ Una rama por tarea. PR hacia `develop`. Ver `docs/GIT_WORKFLOW.md`.
 4. Documentar endpoints en `specs/API_INTEGRATION.md` (local).
 5. Crear componentes; textos desde `UI_MESSAGES`.
 6. Formularios: React Hook Form + Zod.
-7. Comentarios Entrada/Proceso/Salida en funciones.
+7. Comentarios JSDoc unico (Entrada/Proceso/Salida) en funciones.
 8. Exportar desde `index.ts`.
 9. Registrar rutas en `src/routes/AppRouter.tsx` si aplica.
 10. Actualizar `specs/ROUTES.md` (local).

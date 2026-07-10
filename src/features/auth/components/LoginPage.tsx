@@ -18,14 +18,11 @@ import { parseApiError } from '@/utils/api-error';
 import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
 import { loginSchema, type LoginFormData } from '@/features/auth/validations/auth.validations';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pantalla de login con sistema de diseno glass e integra POST /auth/login.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de login.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pantalla de login con sistema de diseno glass e integra POST /auth/login.
+ * Salida: Retorna el elemento JSX de la pagina de login.
+ */
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -47,7 +44,11 @@ export function LoginPage() {
     try {
       const user = await login(data.email, data.password, data.remember ?? true);
       const redirect =
-        user.role === 'FOUNDATION' ? '/foundation/requests' : '/campaigns';
+        user.role === 'ADMIN'
+          ? '/admin/foundations'
+          : user.role === 'FOUNDATION'
+            ? '/foundation/profile'
+            : '/campaigns';
       navigate(redirect, { replace: true });
     } catch (error) {
       const parsed = parseApiError(error);

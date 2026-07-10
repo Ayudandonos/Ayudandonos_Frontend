@@ -10,6 +10,10 @@ import {
   ReviewRequestPage,
   ScheduleDeliveryPage,
   ConfirmDeliveryPage,
+  FoundationsListPage,
+  FoundationDetailPage,
+  FoundationProfilePage,
+  AdminFoundationsPage,
 } from '@/features/foundations';
 import {
   HelpPage,
@@ -31,6 +35,8 @@ export const router = createBrowserRouter([
       { path: 'impacto', element: <ImpactPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'foundations', element: <FoundationsListPage /> },
+      { path: 'foundations/:id', element: <FoundationDetailPage /> },
       { path: 'legal/secure-platform', element: <SecurePlatformPage /> },
       { path: 'legal/terms', element: <TermsOfServicePage /> },
       { path: 'legal/privacy', element: <PrivacyPolicyPage /> },
@@ -87,6 +93,22 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allowedRoles={['FOUNDATION']}>
             <PublishNeedPage />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: 'foundation/profile',
+        element: (
+          <RoleRoute allowedRoles={['FOUNDATION']}>
+            <FoundationProfilePage />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: 'admin/foundations',
+        element: (
+          <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
+            <AdminFoundationsPage />
           </RoleRoute>
         ),
       },

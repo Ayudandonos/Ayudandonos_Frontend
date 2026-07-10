@@ -18,14 +18,11 @@ interface AuthHeaderProps {
   variant?: 'login' | 'register';
 }
 
-// Entrada:
-// variant: variante visual del header.
-
-// Proceso:
-// Renderiza header glass con logo y navegacion publica.
-
-// Salida:
-// Retorna el elemento JSX del header.
+/**
+ * Entrada: variant: variante visual del header.
+ * Proceso: Renderiza header glass con logo y navegacion publica.
+ * Salida: Retorna el elemento JSX del header.
+ */
 export function AuthHeader({ variant = 'login' }: AuthHeaderProps) {
   const location = useLocation();
 
@@ -77,14 +74,11 @@ interface AuthFooterProps {
   variant?: 'full' | 'simple';
 }
 
-// Entrada:
-// variant: pie de pagina completo o simplificado.
-
-// Proceso:
-// Renderiza footer glass con enlaces legales.
-
-// Salida:
-// Retorna el elemento JSX del footer.
+/**
+ * Entrada: variant: pie de pagina completo o simplificado.
+ * Proceso: Renderiza footer glass con enlaces legales.
+ * Salida: Retorna el elemento JSX del footer.
+ */
 export function AuthFooter({ variant = 'full' }: AuthFooterProps) {
   const year = new Date().getFullYear();
   const linkClass =
@@ -130,14 +124,11 @@ interface AuthPasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   filled?: boolean;
 }
 
-// Entrada:
-// showPassword, onToggle y props de Input excepto type.
-
-// Proceso:
-// Renderiza campo de contraseña con toggle accesible.
-
-// Salida:
-// Retorna el elemento JSX del campo de contraseña.
+/**
+ * Entrada: showPassword, onToggle y props de Input excepto type.
+ * Proceso: Renderiza campo de contraseña con toggle accesible.
+ * Salida: Retorna el elemento JSX del campo de contraseña.
+ */
 export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldProps>(
   function AuthPasswordField({ showPassword, onToggle, label, filled, ...props }, ref) {
     return (
@@ -175,14 +166,11 @@ interface AuthSubmitButtonProps {
   className?: string;
 }
 
-// Entrada:
-// Props del boton de envio de formularios auth.
-
-// Proceso:
-// Renderiza Button primario del sistema con icono opcional.
-
-// Salida:
-// Retorna el elemento JSX del boton de envio.
+/**
+ * Entrada: Props del boton de envio de formularios auth.
+ * Proceso: Renderiza Button primario del sistema con icono opcional.
+ * Salida: Retorna el elemento JSX del boton de envio.
+ */
 export function AuthSubmitButton({
   isLoading = false,
   label,

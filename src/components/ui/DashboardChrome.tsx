@@ -15,34 +15,40 @@ interface NavItem {
 const USER_NAV: NavItem[] = [
   { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['USER', 'FOUNDATION', 'ADMIN'] },
   { label: UI_MESSAGES.NAV_MY_COMMITMENTS, path: '/my-donations', roles: ['USER'] },
-  { label: UI_MESSAGES.NAV_FOUNDATIONS, path: '/campaigns', roles: ['USER'] },
-  { label: UI_MESSAGES.NAV_PROFILE, path: '/campaigns', roles: ['USER', 'FOUNDATION', 'ADMIN'] },
+  { label: UI_MESSAGES.NAV_FOUNDATIONS, path: '/foundations', roles: ['USER', 'ADMIN'] },
+  { label: UI_MESSAGES.NAV_PROFILE, path: '/campaigns', roles: ['USER', 'ADMIN'] },
 ];
 
 const FOUNDATION_NAV: NavItem[] = [
   { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['FOUNDATION'] },
+  { label: UI_MESSAGES.NAV_FOUNDATION_PROFILE, path: '/foundation/profile', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_CREATE_CAMPAIGN, path: '/foundation/campaigns/new', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_NEEDS, path: '/foundation/needs/new', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_REQUESTS, path: '/foundation/requests', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_DELIVERIES, path: '/foundation/deliveries/schedule', roles: ['FOUNDATION'] },
 ];
 
-// Entrada:
-// Ninguna.
+const ADMIN_NAV: NavItem[] = [
+  { label: UI_MESSAGES.NAV_ADMIN_FOUNDATIONS, path: '/admin/foundations', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_FOUNDATIONS, path: '/foundations', roles: ['ADMIN'] },
+];
 
-// Proceso:
-// Renderiza barra lateral de 256px con navegacion segun rol del usuario.
-
-// Salida:
-// Retorna el elemento JSX del SideNav.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza barra lateral de 256px con navegacion segun rol del usuario.
+ * Salida: Retorna el elemento JSX del SideNav.
+ */
 export function SideNav() {
   const { role, logout } = useAuth();
   const location = useLocation();
 
   const items =
-    role === 'FOUNDATION'
-      ? FOUNDATION_NAV
-      : USER_NAV.filter((item) => role && item.roles.includes(role));
+    role === 'ADMIN'
+      ? ADMIN_NAV
+      : role === 'FOUNDATION'
+        ? FOUNDATION_NAV
+        : USER_NAV.filter((item) => role && item.roles.includes(role));
 
   const isActive = (path: string) =>
     location.pathname === path || location.pathname.startsWith(`${path}/`);
@@ -91,14 +97,11 @@ export function SideNav() {
   );
 }
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza header superior de 64px con busqueda y avatar.
-
-// Salida:
-// Retorna el elemento JSX del header del dashboard.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza header superior de 64px con busqueda y avatar.
+ * Salida: Retorna el elemento JSX del header del dashboard.
+ */
 export function DashboardHeader() {
   const { user } = useAuth();
 

@@ -2,3 +2,8 @@ export { HelpRequestsPage } from './components/HelpRequestsPage';
 export { ReviewRequestPage } from './components/ReviewRequestPage';
 export { ScheduleDeliveryPage } from './components/ScheduleDeliveryPage';
 export { ConfirmDeliveryPage } from './components/ConfirmDeliveryPage';
+export { FoundationsListPage } from './components/FoundationsListPage';
+export { FoundationDetailPage } from './components/FoundationDetailPage';
+export { FoundationProfilePage } from './components/FoundationProfilePage';
+export { AdminFoundationsPage } from './components/AdminFoundationsPage';
+export { foundationsService } from './services/foundations.service';

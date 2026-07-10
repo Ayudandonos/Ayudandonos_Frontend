@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { buttonLinkClass } from '@/components/ui/button-link-class';
+import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
 const MOCK_REQUESTS = [
@@ -6,36 +8,30 @@ const MOCK_REQUESTS = [
   { id: '2', donor: 'Carlos Ruiz', need: 'Arroz x 5kg', date: '21 Oct, 2026' },
 ];
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza solicitudes de ayuda recibidas (mock).
-
-// Salida:
-// Retorna el elemento JSX de solicitudes.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza solicitudes de ayuda recibidas (mock hasta modulo donaciones).
+ * Salida: Retorna el elemento JSX de solicitudes.
+ */
 export function HelpRequestsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
-      <h1 className="text-3xl font-bold">{UI_MESSAGES.NAV_REQUESTS}</h1>
+      <h1 className="text-3xl font-bold text-text-primary">{UI_MESSAGES.NAV_REQUESTS}</h1>
       <div className="space-y-4">
-        {MOCK_REQUESTS.map((r) => (
-          <div
-            key={r.id}
-            className="flex items-center justify-between rounded-xl border border-border-default bg-white p-5"
-          >
+        {MOCK_REQUESTS.map((request) => (
+          <Card key={request.id} glass={false} className="flex items-center justify-between border border-border-default bg-white">
             <div>
-              <p className="font-semibold">{r.donor}</p>
-              <p className="text-sm text-text-secondary">{r.need}</p>
-              <p className="text-xs text-text-muted">{r.date}</p>
+              <p className="font-semibold text-text-primary">{request.donor}</p>
+              <p className="text-sm text-text-secondary">{request.need}</p>
+              <p className="text-xs text-text-muted">{request.date}</p>
             </div>
             <Link
-              to={`/foundation/requests/${r.id}`}
-              className="rounded-lg bg-vivid-700 px-4 py-2 text-sm text-white"
+              to={`/foundation/requests/${request.id}`}
+              className={buttonLinkClass({ variant: 'primary', size: 'sm' })}
             >
-              Revisar
+              {UI_MESSAGES.FOUNDATIONS_REVIEW}
             </Link>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

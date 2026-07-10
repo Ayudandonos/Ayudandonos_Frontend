@@ -1,13 +1,10 @@
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza formulario crear campana (mock fundacion).
-
-// Salida:
-// Retorna el elemento JSX de crear campana.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza formulario crear campana (mock fundacion).
+ * Salida: Retorna el elemento JSX de crear campana.
+ */
 export function CreateCampaignPage() {
   return (
     <div className="mx-auto max-w-3xl rounded-xl border border-border-default bg-white p-8">

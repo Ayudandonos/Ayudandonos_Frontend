@@ -11,14 +11,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   filled?: boolean;
 }
 
-// Entrada:
-// label, error, hint, iconLeft, iconRight, filled y props nativas de input.
-
-// Proceso:
-// Renderiza campo de formulario unificado con glass sutil, foco y errores accesibles.
-
-// Salida:
-// Retorna el elemento JSX del input.
+/**
+ * Entrada: label, error, hint, iconLeft, iconRight, filled y props nativas de input.
+ * Proceso: Renderiza campo de formulario unificado con glass sutil, foco y errores accesibles.
+ * Salida: Retorna el elemento JSX del input.
+ */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   { label, error, hint, iconLeft, iconRight, filled = false, className, id, ...props },
   ref,

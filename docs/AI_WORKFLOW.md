@@ -47,7 +47,7 @@ Una rama por tarea. PR hacia `develop` al cerrar la iteracion.
 - [ ] Servicio API usa instancia `api` de `services/api.ts`
 - [ ] Formularios con React Hook Form + Zod
 - [ ] Textos desde `UI_MESSAGES`
-- [ ] Comentarios Entrada/Proceso/Salida en funciones
+- [ ] Comentarios JSDoc (Entrada/Proceso/Salida) en funciones
 - [ ] Componentes UI del Design System (Button, Input, Card, Icon)
 - [ ] Sin iconos ni estilos fuera del sistema de diseno
 - [ ] Responsive con TailwindCSS

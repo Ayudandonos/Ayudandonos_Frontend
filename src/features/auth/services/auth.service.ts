@@ -20,27 +20,21 @@ export interface RegisterFoundationPayload {
   description?: string;
 }
 
-// Entrada:
-// payload: credenciales de login.
-
-// Proceso:
-// Envia POST /auth/login al backend.
-
-// Salida:
-// Retorna accessToken, user y foundation opcional.
+/**
+ * Entrada: payload: credenciales de login.
+ * Proceso: Envia POST /auth/login al backend.
+ * Salida: Retorna accessToken, user y foundation opcional.
+ */
 async function login(payload: LoginPayload): Promise<AuthTokenData> {
   const { data } = await api.post<ApiSuccessResponse<AuthTokenData>>('/auth/login', payload);
   return data.data;
 }
 
-// Entrada:
-// payload: datos de registro de donante.
-
-// Proceso:
-// Envia POST /auth/register/user al backend.
-
-// Salida:
-// Retorna accessToken y user.
+/**
+ * Entrada: payload: datos de registro de donante.
+ * Proceso: Envia POST /auth/register/user al backend.
+ * Salida: Retorna accessToken y user.
+ */
 async function registerUser(payload: RegisterUserPayload): Promise<AuthTokenData> {
   const { data } = await api.post<ApiSuccessResponse<AuthTokenData>>(
     '/auth/register/user',
@@ -49,14 +43,11 @@ async function registerUser(payload: RegisterUserPayload): Promise<AuthTokenData
   return data.data;
 }
 
-// Entrada:
-// payload: datos de registro de fundacion.
-
-// Proceso:
-// Envia POST /auth/register/foundation al backend.
-
-// Salida:
-// Retorna accessToken, user y foundation.
+/**
+ * Entrada: payload: datos de registro de fundacion.
+ * Proceso: Envia POST /auth/register/foundation al backend.
+ * Salida: Retorna accessToken, user y foundation.
+ */
 async function registerFoundation(payload: RegisterFoundationPayload): Promise<AuthTokenData> {
   const { data } = await api.post<ApiSuccessResponse<AuthTokenData>>(
     '/auth/register/foundation',
@@ -65,26 +56,20 @@ async function registerFoundation(payload: RegisterFoundationPayload): Promise<A
   return data.data;
 }
 
-// Entrada:
-// Ninguna (token en interceptor).
-
-// Proceso:
-// Envia POST /auth/logout al backend.
-
-// Salida:
-// No retorna datos.
+/**
+ * Entrada: Ninguna (token en interceptor).
+ * Proceso: Envia POST /auth/logout al backend.
+ * Salida: No retorna datos.
+ */
 async function logout(): Promise<void> {
   await api.post('/auth/logout');
 }
 
-// Entrada:
-// Ninguna (token en interceptor).
-
-// Proceso:
-// Envia GET /auth/me al backend.
-
-// Salida:
-// Retorna user y foundation.
+/**
+ * Entrada: Ninguna (token en interceptor).
+ * Proceso: Envia GET /auth/me al backend.
+ * Salida: Retorna user y foundation.
+ */
 async function fetchMe(): Promise<MeData> {
   const { data } = await api.get<ApiSuccessResponse<MeData>>('/auth/me');
   return data.data;
