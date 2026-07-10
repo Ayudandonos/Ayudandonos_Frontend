@@ -3,6 +3,7 @@ import type { ApiSuccessResponse } from '@/types';
 import type {
   FoundationDetail,
   FoundationDocumentType,
+  FoundationHelpRequest,
   ListFoundationsParams,
   PaginatedFoundationsData,
   UpdateFoundationPayload,
