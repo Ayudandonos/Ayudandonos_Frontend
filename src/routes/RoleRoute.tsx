@@ -9,14 +9,11 @@ interface RoleRouteProps {
   fallback?: string;
 }
 
-// Entrada:
-// children: contenido; allowedRoles: roles permitidos; fallback: ruta alternativa.
-
-// Proceso:
-// Valida que el rol del usuario este en la lista permitida.
-
-// Salida:
-// Retorna children, fallback o redireccion a /campaigns.
+/**
+ * Entrada: children: contenido; allowedRoles: roles permitidos; fallback: ruta alternativa.
+ * Proceso: Valida que el rol del usuario este en la lista permitida.
+ * Salida: Retorna children, fallback o redireccion a /campaigns.
+ */
 export function RoleRoute({ children, allowedRoles, fallback = '/campaigns' }: RoleRouteProps) {
   const { role } = useAuth();
 

@@ -5,14 +5,11 @@ interface PublicPageShellProps {
   children: ReactNode;
 }
 
-// Entrada:
-// children: contenido principal de la pagina publica.
-
-// Proceso:
-// Renderiza shell publico glass con header, animacion fade-in y footer.
-
-// Salida:
-// Retorna el elemento JSX del contenedor publico.
+/**
+ * Entrada: children: contenido principal de la pagina publica.
+ * Proceso: Renderiza shell publico glass con header, animacion fade-in y footer.
+ * Salida: Retorna el elemento JSX del contenedor publico.
+ */
 export function PublicPageShell({ children }: PublicPageShellProps) {
   return (
     <div className="flex min-h-screen flex-col">

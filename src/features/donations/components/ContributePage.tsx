@@ -1,13 +1,10 @@
 import { Link, useParams } from 'react-router-dom';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza formulario de confirmar aporte (mock, sin API).
-
-// Salida:
-// Retorna el elemento JSX de confirmar aporte.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza formulario de confirmar aporte (mock, sin API).
+ * Salida: Retorna el elemento JSX de confirmar aporte.
+ */
 export function ContributePage() {
   const { id } = useParams<{ id: string }>();
 

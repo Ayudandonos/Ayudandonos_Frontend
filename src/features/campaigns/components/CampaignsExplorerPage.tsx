@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { fetchCampaigns, type Campaign } from '@/features/campaigns/services/campaigns.service';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza explorador de campanas segun Figma con datos mock.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de campanas.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza explorador de campanas segun Figma con datos mock.
+ * Salida: Retorna el elemento JSX de la pagina de campanas.
+ */
 export function CampaignsExplorerPage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 

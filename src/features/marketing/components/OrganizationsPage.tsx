@@ -5,14 +5,11 @@ import { Icon } from '@/components/ui/Icon';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina publica de organizaciones con cards glass.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de organizaciones.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina publica de organizaciones con cards glass.
+ * Salida: Retorna el elemento JSX de la pagina de organizaciones.
+ */
 export function OrganizationsPage() {
   return (
     <PublicPageShell>
@@ -44,12 +41,20 @@ export function OrganizationsPage() {
         <Card padding="lg" className="mt-12 text-center" hover={false}>
           <h2 className="text-heading">{UI_MESSAGES.ORGANIZATIONS_CTA_TITLE}</h2>
           <p className="mx-auto mt-2 max-w-xl text-caption">{UI_MESSAGES.ORGANIZATIONS_CTA_BODY}</p>
-          <Link
-            to="/register"
-            className={buttonLinkClass({ variant: 'primary', size: 'md', className: 'mt-6 inline-flex gap-2' })}
-          >
-            {UI_MESSAGES.ORGANIZATIONS_CTA_BUTTON}
-          </Link>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+            <Link
+              to="/foundations"
+              className={buttonLinkClass({ variant: 'outline', size: 'md' })}
+            >
+              {UI_MESSAGES.ORGANIZATIONS_BROWSE_LINK}
+            </Link>
+            <Link
+              to="/register"
+              className={buttonLinkClass({ variant: 'primary', size: 'md' })}
+            >
+              {UI_MESSAGES.ORGANIZATIONS_CTA_BUTTON}
+            </Link>
+          </div>
         </Card>
       </section>
     </PublicPageShell>

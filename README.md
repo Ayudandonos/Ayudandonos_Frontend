@@ -50,6 +50,8 @@ Ver [docs/GIT_WORKFLOW.md](./docs/GIT_WORKFLOW.md).
 
 Feature-Based Architecture. Ver [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
+Modulo Fundaciones (Iteracion C): [docs/FOUNDATIONS_MODULE.md](./docs/FOUNDATIONS_MODULE.md).
+
 ## Design System
 
 Identidad visual unica (Glassmorphism + minimalismo). Obligatorio para toda UI nueva.

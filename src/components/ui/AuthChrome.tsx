@@ -18,17 +18,19 @@ interface AuthHeaderProps {
   variant?: 'login' | 'register';
 }
 
-// Entrada:
-// variant: variante visual del header.
-
-// Proceso:
-// Renderiza header glass con logo y navegacion publica.
-
-// Salida:
-// Retorna el elemento JSX del header.
+/**
+ * Entrada: variant: variante visual del header.
+ * Proceso: Renderiza header glass con logo y navegacion publica.
+ * Salida: Retorna el elemento JSX del header.
+ */
 export function AuthHeader({ variant = 'login' }: AuthHeaderProps) {
   const location = useLocation();
 
+  /**
+   * Entrada: path: ruta de navegacion a evaluar.
+   * Proceso: Calcula clases Tailwind segun coincidencia con la ruta activa.
+   * Salida: Retorna cadena de clases CSS para el enlace.
+   */
   const navLinkClass = (path: string) =>
     cn(
       'rounded-lg px-3 py-1.5 text-sm font-medium transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/40',
@@ -77,14 +79,11 @@ interface AuthFooterProps {
   variant?: 'full' | 'simple';
 }
 
-// Entrada:
-// variant: pie de pagina completo o simplificado.
-
-// Proceso:
-// Renderiza footer glass con enlaces legales.
-
-// Salida:
-// Retorna el elemento JSX del footer.
+/**
+ * Entrada: variant: pie de pagina completo o simplificado.
+ * Proceso: Renderiza footer glass con enlaces legales.
+ * Salida: Retorna el elemento JSX del footer.
+ */
 export function AuthFooter({ variant = 'full' }: AuthFooterProps) {
   const year = new Date().getFullYear();
   const linkClass =
@@ -130,15 +129,12 @@ interface AuthPasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   filled?: boolean;
 }
 
-// Entrada:
-// showPassword, onToggle y props de Input excepto type.
-
-// Proceso:
-// Renderiza campo de contraseña con toggle accesible.
-
-// Salida:
-// Retorna el elemento JSX del campo de contraseña.
 export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldProps>(
+  /**
+   * Entrada: showPassword, onToggle y props de Input excepto type; ref: referencia al input nativo.
+   * Proceso: Renderiza campo de contraseña con toggle accesible mediante forwardRef.
+   * Salida: Retorna el elemento JSX del campo de contraseña.
+   */
   function AuthPasswordField({ showPassword, onToggle, label, filled, ...props }, ref) {
     return (
       <Input
@@ -163,7 +159,6 @@ export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldP
   },
 );
 
-// Re-export para compatibilidad durante migracion
 export { Input as FigmaInput };
 
 interface AuthSubmitButtonProps {
@@ -175,14 +170,11 @@ interface AuthSubmitButtonProps {
   className?: string;
 }
 
-// Entrada:
-// Props del boton de envio de formularios auth.
-
-// Proceso:
-// Renderiza Button primario del sistema con icono opcional.
-
-// Salida:
-// Retorna el elemento JSX del boton de envio.
+/**
+ * Entrada: Props del boton de envio de formularios auth.
+ * Proceso: Renderiza Button primario del sistema con icono opcional.
+ * Salida: Retorna el elemento JSX del boton de envio.
+ */
 export function AuthSubmitButton({
   isLoading = false,
   label,

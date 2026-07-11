@@ -5,6 +5,11 @@ import type {
   RegisterUserPayload,
 } from '@/features/auth/services/auth.service';
 
+export interface AuthSession {
+  user: User;
+  foundation: Foundation | null;
+}
+
 export interface AuthContextValue {
   user: User | null;
   foundation: Foundation | null;
@@ -12,10 +17,10 @@ export interface AuthContextValue {
   role: UserRole | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string, remember?: boolean) => Promise<User>;
+  login: (email: string, password: string, remember?: boolean) => Promise<AuthSession>;
   logout: () => Promise<void>;
-  registerUser: (payload: RegisterUserPayload) => Promise<User>;
-  registerFoundation: (payload: RegisterFoundationPayload) => Promise<User>;
+  registerUser: (payload: RegisterUserPayload) => Promise<AuthSession>;
+  registerFoundation: (payload: RegisterFoundationPayload) => Promise<AuthSession>;
   fetchMe: () => Promise<void>;
 }
 

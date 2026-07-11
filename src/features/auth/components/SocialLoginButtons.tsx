@@ -3,14 +3,11 @@ import { Icon } from '@/components/ui/Icon';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza botones de login social; Google usa asset de marca, SSO usa icono del sistema.
-
-// Salida:
-// Retorna el elemento JSX de los botones sociales.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza botones de login social; Google usa asset de marca, SSO usa icono del sistema.
+ * Salida: Retorna el elemento JSX de los botones sociales.
+ */
 export function SocialLoginButtons() {
   const socialClass =
     'flex h-11 flex-1 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-border-default bg-white/70 text-sm font-medium text-text-primary transition-smooth hover:bg-primary-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600/30 disabled:cursor-not-allowed disabled:opacity-60';

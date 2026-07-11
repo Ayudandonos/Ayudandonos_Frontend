@@ -1,14 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza detalle de aporte con timeline mock.
-
-// Salida:
-// Retorna el elemento JSX del detalle de aporte.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza detalle de aporte con timeline mock.
+ * Salida: Retorna el elemento JSX del detalle de aporte.
+ */
 export function DonationDetailPage() {
   const { id } = useParams<{ id: string }>();
 

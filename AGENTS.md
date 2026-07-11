@@ -35,7 +35,7 @@ src/
 ## Reglas no negociables
 
 1. Codigo en **ingles**; documentacion y comentarios en **espanol**.
-2. Comentarios en funciones: formato **Entrada / Proceso / Salida**.
+2. Comentarios en funciones: **un unico bloque JSDoc** con lineas `Entrada`, `Proceso` y `Salida` (ver `docs/CONVENTIONS.md`).
 3. Sin emojis en ningun artefacto.
 4. Mensajes UI en `UI_MESSAGES`; no hardcodear textos en componentes.
 5. Validacion de formularios con React Hook Form + Zod.
@@ -58,12 +58,12 @@ src/
 | Fase | Estado | Frontend |
 | ---- | ------ | -------- |
 | 1 | COMPLETADO | Layouts, rutas, UI base, Design System |
-| 2 | EN PROGRESO | Auth integrado, formularios, rutas protegidas |
-| 3 | PENDIENTE | Fundaciones, campanas (UI) |
+| 2 | COMPLETADO | Auth integrado, formularios, rutas protegidas |
+| 3 | EN PROGRESO | Fundaciones (listado, detalle, perfil, admin verificacion) |
 | 4 | PENDIENTE | Donaciones, ciclo de vida (UI) |
 | 5 | PENDIENTE | Reportes, despliegue |
 
-**Siguiente:** Fase 2 — integracion auth, formularios completos, rutas protegidas (aplicando Design System).
+**Siguiente:** Completar campanas UI y donaciones (Fase 4).
 
 ## Documentacion interna
 

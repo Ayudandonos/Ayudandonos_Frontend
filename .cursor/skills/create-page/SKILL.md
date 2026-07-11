@@ -30,7 +30,7 @@ Una rama por tarea. PR hacia `develop`. Ver `docs/GIT_WORKFLOW.md`.
 7. Estados: loading, error, vacio.
 8. Textos desde `UI_MESSAGES`.
 9. Responsive con TailwindCSS.
-10. Comentarios Entrada/Proceso/Salida.
+10. Comentarios JSDoc unico (Entrada/Proceso/Salida).
 11. Verificar build y lint.
 
 ## Layouts disponibles

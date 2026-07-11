@@ -19,14 +19,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   pill?: boolean;
 }
 
-// Entrada:
-// variant, size, isLoading, iconos y props nativas de button.
-
-// Proceso:
-// Renderiza boton unificado del sistema de diseno con estados hover, focus y disabled.
-
-// Salida:
-// Retorna el elemento JSX del boton.
+/**
+ * Entrada: variant, size, isLoading, iconos y props nativas de button.
+ * Proceso: Renderiza boton unificado del sistema de diseno con estados hover, focus y disabled.
+ * Salida: Retorna el elemento JSX del boton.
+ */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     variant = 'primary',

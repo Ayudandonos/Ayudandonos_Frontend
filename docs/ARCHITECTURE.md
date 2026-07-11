@@ -20,13 +20,13 @@ SPA React con arquitectura por features. Comunicacion exclusiva con backend via 
 
 | Feature | Estado |
 | ------- | ------ |
-| `auth` | PARCIAL (UI + servicios) |
+| `auth` | COMPLETADO (API integrada) |
 | `marketing` | PARCIAL (paginas publicas) |
 | `legal` | PARCIAL (paginas legales) |
-| `foundations` | PENDIENTE |
-| `campaigns` | PENDIENTE |
-| `needs` | PENDIENTE |
-| `donations` | PENDIENTE |
+| `foundations` | COMPLETADO (Iteracion C: CRUD API, admin, perfil, directorio publico, documentos) |
+| `campaigns` | PARCIAL (UI mock) |
+| `needs` | PARCIAL (UI mock) |
+| `donations` | PARCIAL (UI mock) |
 | `statistics` | PENDIENTE |
 
 ## Cliente HTTP
@@ -55,7 +55,9 @@ Identidad visual: **Glassmorphism + minimalismo** (Ayudandonos). Documentacion c
 | Textos visibles | `src/constants/messages.constants.ts` |
 | Assets (logos, ilustraciones) | `public/assets/figma/` |
 
-Componentes implementados: Button, Input, Card, Icon, AuthChrome.  
-Componentes pendientes (crear antes de usar): Select, Table, Modal, Alert, Badge, Breadcrumb, Sidebar, Tooltip, Toast, Dropdown.
+Componentes implementados: Button, Input, Card, Icon, AuthChrome, DashboardChrome, AppImage.  
+Componentes de dominio en `features/foundations/components/` (Table, Badge, Filters, Pagination, ReviewModal, DocumentManager).  
+Documentacion del modulo: [docs/FOUNDATIONS_MODULE.md](./FOUNDATIONS_MODULE.md).
+Componentes pendientes globales: Select, Modal, Alert, Breadcrumb, Tooltip, Toast, Dropdown.
 
 Reglas: no mezclar estilos, no librerias UI externas sin autorizacion, iconos solo via `Icon`, imagenes con fondo transparente.

@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { AuthLayout, DashboardLayout } from '@/layouts';
 import { NotFoundPage } from '@/pages';
 import { LoginPage, RegisterPage } from '@/features/auth';
@@ -10,6 +10,10 @@ import {
   ReviewRequestPage,
   ScheduleDeliveryPage,
   ConfirmDeliveryPage,
+  FoundationsListPage,
+  FoundationDetailPage,
+  FoundationProfilePage,
+  AdminFoundationsPage,
 } from '@/features/foundations';
 import {
   HelpPage,
@@ -19,6 +23,8 @@ import {
 } from '@/features/legal';
 import { HomePage, ImpactPage, OrganizationsPage } from '@/features/marketing';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
+import { FoundationDashboardGuard } from '@/routes/FoundationDashboardGuard';
+import { DashboardRedirect } from '@/routes/DashboardRedirect';
 import { RoleRoute } from '@/routes/RoleRoute';
 
 export const router = createBrowserRouter([
@@ -31,6 +37,8 @@ export const router = createBrowserRouter([
       { path: 'impacto', element: <ImpactPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'foundations', element: <FoundationsListPage /> },
+      { path: 'foundations/:id', element: <FoundationDetailPage /> },
       { path: 'legal/secure-platform', element: <SecurePlatformPage /> },
       { path: 'legal/terms', element: <TermsOfServicePage /> },
       { path: 'legal/privacy', element: <PrivacyPolicyPage /> },
@@ -48,6 +56,9 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      {
+        element: <FoundationDashboardGuard />,
+        children: [
       { path: 'campaigns', element: <CampaignsExplorerPage /> },
       { path: 'campaigns/:id', element: <CampaignDetailPage /> },
       {
@@ -91,6 +102,22 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'foundation/profile',
+        element: (
+          <RoleRoute allowedRoles={['FOUNDATION']}>
+            <FoundationProfilePage />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: 'admin/foundations',
+        element: (
+          <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
+            <AdminFoundationsPage />
+          </RoleRoute>
+        ),
+      },
+      {
         path: 'foundation/requests',
         element: (
           <RoleRoute allowedRoles={['FOUNDATION']}>
@@ -122,7 +149,9 @@ export const router = createBrowserRouter([
           </RoleRoute>
         ),
       },
-      { path: 'dashboard', element: <Navigate to="/campaigns" replace /> },
+      { path: 'dashboard', element: <DashboardRedirect /> },
+        ],
+      },
     ],
   },
 ]);

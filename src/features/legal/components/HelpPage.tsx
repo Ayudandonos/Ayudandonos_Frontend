@@ -4,14 +4,11 @@ import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { LegalPageLayout, LegalSection } from '@/features/legal/components/LegalPageLayout';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza centro de ayuda con FAQ y contacto usando cards glass.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de ayuda.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza centro de ayuda con FAQ y contacto usando cards glass.
+ * Salida: Retorna el elemento JSX de la pagina de ayuda.
+ */
 export function HelpPage() {
   return (
     <LegalPageLayout title={UI_MESSAGES.LEGAL_HELP_TITLE} subtitle={UI_MESSAGES.LEGAL_HELP_SUBTITLE}>

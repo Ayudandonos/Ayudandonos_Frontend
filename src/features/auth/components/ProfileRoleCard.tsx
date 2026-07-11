@@ -10,14 +10,11 @@ interface ProfileRoleCardProps {
   onSelect: (role: ProfileRole) => void;
 }
 
-// Entrada:
-// role, selected y onSelect para tarjeta de perfil.
-
-// Proceso:
-// Renderiza tarjeta glass de seleccion de perfil donante o fundacion.
-
-// Salida:
-// Retorna el elemento JSX de la tarjeta de perfil.
+/**
+ * Entrada: role, selected y onSelect para tarjeta de perfil.
+ * Proceso: Renderiza tarjeta glass de seleccion de perfil donante o fundacion.
+ * Salida: Retorna el elemento JSX de la tarjeta de perfil.
+ */
 export function ProfileRoleCard({ role, selected, onSelect }: ProfileRoleCardProps) {
   const isDonor = role === 'USER';
 

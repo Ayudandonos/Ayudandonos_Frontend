@@ -6,14 +6,11 @@ import {
   type Campaign,
 } from '@/features/campaigns/services/campaigns.service';
 
-// Entrada:
-// Ninguna (id desde useParams).
-
-// Proceso:
-// Renderiza detalle de campana con datos mock.
-
-// Salida:
-// Retorna el elemento JSX del detalle de campana.
+/**
+ * Entrada: Ninguna (id desde useParams).
+ * Proceso: Renderiza detalle de campana con datos mock.
+ * Salida: Retorna el elemento JSX del detalle de campana.
+ */
 export function CampaignDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [campaign, setCampaign] = useState<Campaign | null>(null);

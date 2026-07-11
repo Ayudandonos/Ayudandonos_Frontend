@@ -30,14 +30,11 @@ export interface ButtonLinkClassOptions {
   className?: string;
 }
 
-// Entrada:
-// Opciones visuales del boton para className en Link.
-
-// Proceso:
-// Genera clases CSS del sistema de botones.
-
-// Salida:
-// Retorna string de clases Tailwind.
+/**
+ * Entrada: Opciones visuales del boton para className en Link.
+ * Proceso: Genera clases CSS del sistema de botones.
+ * Salida: Retorna string de clases Tailwind.
+ */
 export function buttonLinkClass({
   variant = 'primary',
   size = 'md',

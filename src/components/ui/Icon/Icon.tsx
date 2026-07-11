@@ -19,14 +19,11 @@ interface IconProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children' | '
   role?: string;
 }
 
-// Entrada:
-// name, size, dimensiones, color, accesibilidad y props HTML adicionales.
-
-// Proceso:
-// Resuelve el SVG desde el registro centralizado y lo renderiza con currentColor.
-
-// Salida:
-// Retorna el elemento JSX del icono.
+/**
+ * Entrada: name, size, dimensiones, color, accesibilidad y props HTML adicionales.
+ * Proceso: Resuelve el SVG desde el registro centralizado y lo renderiza con currentColor.
+ * Salida: Retorna el elemento JSX del icono.
+ */
 export function Icon({
   name,
   size = 'md',

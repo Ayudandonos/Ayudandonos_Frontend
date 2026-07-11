@@ -15,17 +15,15 @@ import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
 import { parseApiError } from '@/utils/api-error';
+import { canFoundationOperate } from '@/utils/foundation-access';
 import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
 import { loginSchema, type LoginFormData } from '@/features/auth/validations/auth.validations';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pantalla de login con sistema de diseno glass e integra POST /auth/login.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de login.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pantalla de login con sistema de diseno glass e integra POST /auth/login.
+ * Salida: Retorna el elemento JSX de la pagina de login.
+ */
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -42,12 +40,23 @@ export function LoginPage() {
     defaultValues: { remember: true },
   });
 
+  /**
+   * Entrada: data: credenciales validadas del formulario de login.
+   * Proceso: Autentica al usuario y redirige segun su rol en la aplicacion.
+   * Salida: No retorna valor; navega a la ruta correspondiente o muestra error.
+   */
   const onSubmit = async (data: LoginFormData) => {
     setApiError('');
     try {
-      const user = await login(data.email, data.password, data.remember ?? true);
+      const { user, foundation } = await login(data.email, data.password, data.remember ?? true);
       const redirect =
-        user.role === 'FOUNDATION' ? '/foundation/requests' : '/campaigns';
+        user.role === 'ADMIN'
+          ? '/admin/foundations'
+          : user.role === 'FOUNDATION'
+            ? canFoundationOperate(foundation)
+              ? '/foundation/requests'
+              : '/foundation/profile'
+            : '/campaigns';
       navigate(redirect, { replace: true });
     } catch (error) {
       const parsed = parseApiError(error);

@@ -6,14 +6,11 @@ const MOCK_DONATIONS = [
   { id: '2', title: 'Utiles escolares', status: 'En camino', date: '12 Nov, 2026' },
 ];
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza listado de aportes del donante (mock).
-
-// Salida:
-// Retorna el elemento JSX de mis aportes.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza listado de aportes del donante (mock).
+ * Salida: Retorna el elemento JSX de mis aportes.
+ */
 export function MyDonationsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">

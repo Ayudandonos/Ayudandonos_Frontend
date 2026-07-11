@@ -12,14 +12,11 @@ export const api = axios.create({
   timeout: 10000,
 });
 
-// Entrada:
-// config: configuración de la petición saliente.
-
-// Proceso:
-// Adjunta el token de acceso al encabezado Authorization si existe.
-
-// Salida:
-// Retorna la configuración modificada para continuar la petición.
+/**
+ * Entrada: config: configuración de la petición saliente.
+ * Proceso: Adjunta el token de acceso al encabezado Authorization si existe.
+ * Salida: Retorna la configuración modificada para continuar la petición.
+ */
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
@@ -31,14 +28,11 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// Entrada:
-// response: respuesta exitosa o error de Axios.
-
-// Proceso:
-// En respuestas 401 elimina el token y redirige a login si no está en ruta pública.
-
-// Salida:
-// Retorna la respuesta sin modificar o rechaza la promesa con el error.
+/**
+ * Entrada: response: respuesta exitosa o error de Axios.
+ * Proceso: En respuestas 401 elimina el token y redirige a login si no está en ruta pública.
+ * Salida: Retorna la respuesta sin modificar o rechaza la promesa con el error.
+ */
 api.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ApiErrorResponse>) => {

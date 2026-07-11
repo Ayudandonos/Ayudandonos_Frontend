@@ -1,14 +1,11 @@
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { LegalPageLayout, LegalSection } from '@/features/legal/components/LegalPageLayout';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina informativa sobre seguridad y verificacion de la plataforma.
-
-// Salida:
-// Retorna el elemento JSX de la pagina de plataforma segura.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina informativa sobre seguridad y verificacion de la plataforma.
+ * Salida: Retorna el elemento JSX de la pagina de plataforma segura.
+ */
 export function SecurePlatformPage() {
   return (
     <LegalPageLayout

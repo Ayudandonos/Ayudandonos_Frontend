@@ -4,14 +4,11 @@ import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { PublicPageShell } from '@/features/marketing/components/PublicPageShell';
 
-// Entrada:
-// Ninguna.
-
-// Proceso:
-// Renderiza pagina 404 con diseno glass del sistema.
-
-// Salida:
-// Retorna el elemento JSX de la pagina no encontrada.
+/**
+ * Entrada: Ninguna.
+ * Proceso: Renderiza pagina 404 con diseno glass del sistema.
+ * Salida: Retorna el elemento JSX de la pagina no encontrada.
+ */
 export function NotFoundPage() {
   return (
     <PublicPageShell>

@@ -7,14 +7,11 @@ interface ProtectedRouteProps {
   children: ReactNode;
 }
 
-// Entrada:
-// children: contenido protegido.
-
-// Proceso:
-// Redirige a login si el usuario no esta autenticado.
-
-// Salida:
-// Retorna children o redireccion a /login.
+/**
+ * Entrada: children: contenido protegido.
+ * Proceso: Redirige a login si el usuario no esta autenticado.
+ * Salida: Retorna children o redireccion a /login.
+ */
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
