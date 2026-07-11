@@ -2,6 +2,11 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "build": {
+    "env": {
+      "VITE_API_URL": "https://ayudandonos-backend.vercel.app/api/v1"
+    }
+  },
   "rewrites": [
     {
       "source": "/((?!assets/).*)",
