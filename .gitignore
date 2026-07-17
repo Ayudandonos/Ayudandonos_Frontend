@@ -67,3 +67,4 @@ temp/
 # Documentacion interna (solo local, no versionar)
 specs/
 .vercel
+.env*
