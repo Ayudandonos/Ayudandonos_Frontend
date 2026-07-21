@@ -16,7 +16,6 @@ import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
 import { parseApiError } from '@/utils/api-error';
 import { canFoundationOperate } from '@/utils/foundation-access';
-import { SocialLoginButtons } from '@/features/auth/components/SocialLoginButtons';
 import { loginSchema, type LoginFormData } from '@/features/auth/validations/auth.validations';
 
 /**
@@ -149,17 +148,6 @@ export function LoginPage() {
                   label={UI_MESSAGES.LOGIN_SUBMIT}
                   variant="login"
                 />
-                <div className="relative py-4">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border-default" />
-                  </div>
-                  <div className="relative flex justify-center">
-                    <span className="glass-subtle rounded-full px-3 py-0.5 text-xs uppercase text-text-muted">
-                      {UI_MESSAGES.LOGIN_DIVIDER}
-                    </span>
-                  </div>
-                </div>
-                <SocialLoginButtons />
                 <p className="pt-2 text-center text-caption">
                   {UI_MESSAGES.LOGIN_NO_ACCOUNT}{' '}
                   <Link

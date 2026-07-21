@@ -6,7 +6,6 @@ export const FIGMA_ASSETS = {
   HERO_ILLUSTRATION: '/assets/figma/hero-illustration.png',
   LOGO: '/assets/figma/logo.svg',
   LOGO_REGISTER: '/assets/figma/logo-register.svg',
-  ICON_GOOGLE: '/assets/figma/icon-google.svg',
 } as const;
 
 /** Clases estandar para imagenes con fondo transparente. */

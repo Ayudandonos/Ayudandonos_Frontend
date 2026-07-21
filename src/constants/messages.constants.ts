@@ -487,11 +487,6 @@ export const UI_MESSAGES = {
   LOGIN_PASSWORD_TOGGLE_HIDE: 'Ocultar',
   LOGIN_REMEMBER: 'Recordar mi sesión',
   LOGIN_SUBMIT: 'Iniciar sesión',
-  LOGIN_DIVIDER: 'O CONTINÚA CON',
-  LOGIN_GOOGLE: 'Google',
-  LOGIN_SSO: 'SSO',
-  LOGIN_GOOGLE_ARIA: 'Continuar con Google',
-  LOGIN_SSO_ARIA: 'Continuar con SSO',
   LOGIN_NO_ACCOUNT: '¿No tienes una cuenta?',
   LOGIN_REGISTER_LINK: 'Crear cuenta',
 
