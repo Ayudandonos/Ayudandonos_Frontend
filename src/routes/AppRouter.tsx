@@ -2,7 +2,14 @@ import { createBrowserRouter } from 'react-router-dom';
 import { AuthLayout, DashboardLayout } from '@/layouts';
 import { NotFoundPage } from '@/pages';
 import { LoginPage, RegisterPage } from '@/features/auth';
-import { CampaignsExplorerPage, CampaignDetailPage, CreateCampaignPage } from '@/features/campaigns';
+import {
+  CampaignsExplorerPage,
+  CampaignDetailPage,
+  CreateCampaignPage,
+  EditCampaignPage,
+  MyCampaignsPage,
+  FoundationCampaignsDashboardPage,
+} from '@/features/campaigns';
 import { ContributePage, MyDonationsPage, DonationDetailPage } from '@/features/donations';
 import { PublishNeedPage } from '@/features/needs';
 import {
@@ -59,97 +66,121 @@ export const router = createBrowserRouter([
       {
         element: <FoundationDashboardGuard />,
         children: [
-      { path: 'campaigns', element: <CampaignsExplorerPage /> },
-      { path: 'campaigns/:id', element: <CampaignDetailPage /> },
-      {
-        path: 'campaigns/:id/contribute',
-        element: (
-          <RoleRoute allowedRoles={['USER']}>
-            <ContributePage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'my-donations',
-        element: (
-          <RoleRoute allowedRoles={['USER']}>
-            <MyDonationsPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'my-donations/:id',
-        element: (
-          <RoleRoute allowedRoles={['USER']}>
-            <DonationDetailPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/campaigns/new',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <CreateCampaignPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/needs/new',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <PublishNeedPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/profile',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <FoundationProfilePage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'admin/foundations',
-        element: (
-          <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
-            <AdminFoundationsPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/requests',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <HelpRequestsPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/requests/:id',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <ReviewRequestPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/deliveries/schedule',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <ScheduleDeliveryPage />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: 'foundation/deliveries/confirm',
-        element: (
-          <RoleRoute allowedRoles={['FOUNDATION']}>
-            <ConfirmDeliveryPage />
-          </RoleRoute>
-        ),
-      },
-      { path: 'dashboard', element: <DashboardRedirect /> },
+          { path: 'campaigns', element: <CampaignsExplorerPage /> },
+          { path: 'campaigns/:id', element: <CampaignDetailPage /> },
+          {
+            path: 'campaigns/:id/contribute',
+            element: (
+              <RoleRoute allowedRoles={['USER']}>
+                <ContributePage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'my-donations',
+            element: (
+              <RoleRoute allowedRoles={['USER']}>
+                <MyDonationsPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'my-donations/:id',
+            element: (
+              <RoleRoute allowedRoles={['USER']}>
+                <DonationDetailPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/campaigns',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <MyCampaignsPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/campaigns/new',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <CreateCampaignPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/campaigns/dashboard',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <FoundationCampaignsDashboardPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/campaigns/:id/edit',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <EditCampaignPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/needs/new',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <PublishNeedPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/profile',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <FoundationProfilePage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/foundations',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
+                <AdminFoundationsPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/requests',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <HelpRequestsPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/requests/:id',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <ReviewRequestPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/deliveries/schedule',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <ScheduleDeliveryPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'foundation/deliveries/confirm',
+            element: (
+              <RoleRoute allowedRoles={['FOUNDATION']}>
+                <ConfirmDeliveryPage />
+              </RoleRoute>
+            ),
+          },
+          { path: 'dashboard', element: <DashboardRedirect /> },
         ],
       },
     ],

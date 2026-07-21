@@ -59,11 +59,11 @@ src/
 | ---- | ------ | -------- |
 | 1 | COMPLETADO | Layouts, rutas, UI base, Design System |
 | 2 | COMPLETADO | Auth integrado, formularios, rutas protegidas |
-| 3 | EN PROGRESO | Fundaciones (listado, detalle, perfil, admin verificacion) |
-| 4 | PENDIENTE | Donaciones, ciclo de vida (UI) |
+| 3 | COMPLETADO | Fundaciones (listado, detalle, perfil, admin verificacion) |
+| 4 | EN PROGRESO | Campanas, needs, donaciones, chat, mapa entrega (`feature/campaigns-flow`) |
 | 5 | PENDIENTE | Reportes, despliegue |
 
-**Siguiente:** Completar campanas UI y donaciones (Fase 4).
+**Siguiente / handoff Fase 4:** Leer y aplicar `docs/CAMPAIGNS_FRONTEND_GUIDE.md` (contrato API backend + pantallas + checklist).
 
 ## Documentacion interna
 
@@ -73,6 +73,7 @@ src/
 | Flujo de trabajo con IA | `docs/AI_WORKFLOW.md` |
 | Arquitectura | `docs/ARCHITECTURE.md` |
 | **Design System** | **`docs/DESIGN_SYSTEM.md`** |
+| **Campanas / Donaciones (handoff)** | **`docs/CAMPAIGNS_FRONTEND_GUIDE.md`** |
 | Convenciones | `docs/CONVENTIONS.md` |
 | Reglas de desarrollo | `docs/DEVELOPMENT_RULES.md` |
 | Especificaciones (local) | `specs/DESIGN_SYSTEM.md`, `specs/UI_GUIDELINES.md`, `specs/FEATURES.md`, `specs/ROUTES.md`, `specs/API_INTEGRATION.md` |
@@ -89,4 +90,7 @@ npm run preview      # Preview del build
 
 ## Variables de entorno
 
-Copiar `.env.example` a `.env`. Variable principal: `VITE_API_URL`.
+Copiar `.env.example` a `.env`.
+
+- `VITE_API_URL` — URL base de la API (`/api/v1`).
+- `VITE_GOOGLE_MAPS_API_KEY` — Maps JavaScript API (mapa de entregas). Sin key, UI con fallback textual.

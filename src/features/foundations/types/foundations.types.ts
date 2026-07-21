@@ -127,10 +127,3 @@ export interface UpdateFoundationStatusPayload {
   rejectionReason?: string | null;
   adminNotes?: string | null;
 }
-
-export interface FoundationHelpRequest {
-  id: string;
-  donorName: string;
-  needSummary: string;
-  submittedAt: string;
-}
