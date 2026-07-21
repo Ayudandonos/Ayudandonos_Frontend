@@ -11,7 +11,7 @@ export function DashboardRedirect() {
   const { role, foundation } = useAuth();
 
   if (role === 'ADMIN') {
-    return <Navigate to="/admin/foundations" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   if (role === 'FOUNDATION') {

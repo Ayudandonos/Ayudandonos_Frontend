@@ -1,11 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
+import type { UserRole } from '@/types';
 import { AppImage } from '@/components/ui/AppImage';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
 import { cn } from '@/utils/cn';
 import { canFoundationOperate } from '@/utils/foundation-access';
-import type { UserRole } from '@/types';
 
 interface NavItem {
   label: string;
@@ -35,9 +35,12 @@ const FOUNDATION_NAV: NavItem[] = [
 ];
 
 const ADMIN_NAV: NavItem[] = [
+  { label: UI_MESSAGES.NAV_ADMIN_DASHBOARD, path: '/admin/dashboard', roles: ['ADMIN'] },
   { label: UI_MESSAGES.NAV_ADMIN_FOUNDATIONS, path: '/admin/foundations', roles: ['ADMIN'] },
-  { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['ADMIN'] },
-  { label: UI_MESSAGES.NAV_FOUNDATIONS, path: '/foundations', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_ADMIN_CAMPAIGNS, path: '/admin/campaigns', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_ADMIN_USERS, path: '/admin/users', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_ADMIN_REPORTS, path: '/admin/reports', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_ADMIN_PROFILE, path: '/admin/profile', roles: ['ADMIN'] },
 ];
 
 /**
@@ -118,7 +121,37 @@ export function SideNav() {
  * Salida: Retorna el elemento JSX del header del dashboard.
  */
 export function DashboardHeader() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
+
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Resuelve la etiqueta legible del rol para el encabezado del dashboard.
+   * Salida: Retorna cadena de rol o vacio.
+   */
+  const roleLabel = ((): string => {
+    if (role === 'ADMIN') return UI_MESSAGES.ROLE_ADMIN;
+    if (role === 'FOUNDATION') return UI_MESSAGES.ROLE_FOUNDATION;
+    if (role === 'USER') return UI_MESSAGES.ROLE_USER;
+    return '';
+  })();
+
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Determina la ruta de perfil segun el rol autenticado.
+   * Salida: Retorna path de perfil o null si no aplica enlace.
+   */
+  const profilePath =
+    role === 'ADMIN'
+      ? '/admin/profile'
+      : role === 'FOUNDATION'
+        ? '/foundation/profile'
+        : null;
+
+  const avatar = (
+    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-vivid-200 text-sm font-semibold text-vivid-700">
+      {user?.fullName?.charAt(0) ?? 'U'}
+    </div>
+  );
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-border-default bg-white px-6">
@@ -131,9 +164,11 @@ export function DashboardHeader() {
         />
       </div>
       <div className="flex items-center gap-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-vivid-200 text-sm font-semibold text-vivid-700">
-          {user?.fullName?.charAt(0) ?? 'U'}
+        <div className="hidden text-right sm:block">
+          <p className="text-sm font-medium text-text-primary">{user?.fullName ?? '—'}</p>
+          {roleLabel && <p className="text-xs text-text-muted">{roleLabel}</p>}
         </div>
+        {profilePath ? <Link to={profilePath}>{avatar}</Link> : avatar}
       </div>
     </header>
   );

@@ -403,8 +403,61 @@ export const UI_MESSAGES = {
   FOUNDATION_DELIVERY_MARK_DELIVERED: 'Marcar como entregada',
   FOUNDATION_DELIVERY_ALREADY_CONFIRMED: 'Esta donación ya fue confirmada.',
 
+  NAV_ADMIN_DASHBOARD: 'Dashboard',
   NAV_ADMIN_FOUNDATIONS: 'Fundaciones',
+  NAV_ADMIN_CAMPAIGNS: 'Campañas',
+  NAV_ADMIN_USERS: 'Usuarios',
+  NAV_ADMIN_REPORTS: 'Reportes',
+  NAV_ADMIN_PROFILE: 'Perfil',
   NAV_FOUNDATION_PROFILE: 'Mi fundación',
+
+  ROLE_ADMIN: 'Administrador',
+  ROLE_USER: 'Donante',
+  ROLE_FOUNDATION: 'Fundación',
+
+  ADMIN_DASHBOARD_TITLE: 'Panel de control',
+  ADMIN_DASHBOARD_DESCRIPTION:
+    'Resumen operativo de campañas, necesidades, entregas y fundaciones verificadas en la plataforma.',
+  ADMIN_DASHBOARD_LOAD_ERROR: 'No fue posible cargar el panel de control.',
+  ADMIN_DASHBOARD_ERROR_TITLE: 'Error al cargar el panel',
+  ADMIN_DASHBOARD_EMPTY_TITLE: 'Sin datos del panel',
+  ADMIN_DASHBOARD_EMPTY_DESCRIPTION:
+    'El backend aún no devolvió información para el panel administrativo.',
+  ADMIN_EXPORT_REPORT: 'Exportar reporte',
+  ADMIN_KPI_ACTIVE_CAMPAIGNS: 'Campañas activas',
+  ADMIN_KPI_PENDING_NEEDS: 'Necesidades pendientes',
+  ADMIN_KPI_DELIVERED_AIDS: 'Ayudas entregadas',
+  ADMIN_KPI_VERIFIED_FOUNDATIONS: 'Fundaciones verificadas',
+  ADMIN_KPI_TREND_PERCENT: (percent: number) =>
+    `${percent >= 0 ? '+' : ''}${percent}%`,
+  ADMIN_KPI_CRITICAL_BADGE: 'Crítico',
+  ADMIN_KPI_VERIFIED_BADGE: 'Verificadas',
+  ADMIN_LATEST_NEEDS_TITLE: 'Últimas necesidades',
+  ADMIN_VIEW_ALL: 'Ver todo',
+  ADMIN_NEEDS_TABLE_ITEM: 'Ítem',
+  ADMIN_NEEDS_TABLE_FOUNDATION: 'Fundación',
+  ADMIN_NEEDS_TABLE_PRIORITY: 'Prioridad',
+  ADMIN_NEEDS_TABLE_DATE: 'Fecha',
+  ADMIN_NEEDS_EMPTY_TITLE: 'Sin necesidades recientes',
+  ADMIN_NEEDS_EMPTY_DESCRIPTION:
+    'Cuando existan necesidades registradas, aparecerán aquí con su fundación y prioridad.',
+  ADMIN_FEATURED_CAMPAIGNS_TITLE: 'Campañas destacadas',
+  ADMIN_FEATURED_PRIMARY_BADGE: 'Principal',
+  ADMIN_FEATURED_PROGRESS: 'Avance',
+  ADMIN_FEATURED_DAYS_REMAINING: (days: number) =>
+    days === 1 ? '1 día restante' : `${days} días restantes`,
+  ADMIN_CAMPAIGNS_PAGE_TITLE: 'Gestión de campañas',
+  ADMIN_CAMPAIGNS_PAGE_DESCRIPTION:
+    'Módulo reservado para la administración global de campañas. Se integrará con el backend.',
+  ADMIN_USERS_PAGE_TITLE: 'Gestión de usuarios',
+  ADMIN_USERS_PAGE_DESCRIPTION:
+    'Módulo reservado para administrar donantes y cuentas. Se integrará con el backend.',
+  ADMIN_REPORTS_PAGE_TITLE: 'Reportes',
+  ADMIN_REPORTS_PAGE_DESCRIPTION:
+    'Módulo reservado para exportación y métricas avanzadas. Se integrará con el backend.',
+  ADMIN_PROFILE_PAGE_TITLE: 'Perfil del administrador',
+  ADMIN_PROFILE_PAGE_DESCRIPTION:
+    'Módulo reservado para datos y preferencias del administrador. Se integrará con el backend.',
 
   GLOBAL_SEARCH_PLACEHOLDER: 'Buscar en la plataforma...',
 

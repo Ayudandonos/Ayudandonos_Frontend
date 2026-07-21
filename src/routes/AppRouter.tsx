@@ -29,6 +29,13 @@ import {
   TermsOfServicePage,
 } from '@/features/legal';
 import { HomePage, ImpactPage, OrganizationsPage } from '@/features/marketing';
+import {
+  AdminCampaignsPlaceholderPage,
+  AdminDashboardPage,
+  AdminProfilePlaceholderPage,
+  AdminReportsPlaceholderPage,
+  AdminUsersPlaceholderPage,
+} from '@/features/admin';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { FoundationDashboardGuard } from '@/routes/FoundationDashboardGuard';
 import { DashboardRedirect } from '@/routes/DashboardRedirect';
@@ -141,10 +148,50 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: 'admin/foundations',
+            path: 'admin/dashboard',
             element: (
               <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
+                <AdminDashboardPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/foundations',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
                 <AdminFoundationsPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/campaigns',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+                <AdminCampaignsPlaceholderPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/users',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+                <AdminUsersPlaceholderPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/reports',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+                <AdminReportsPlaceholderPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'admin/profile',
+            element: (
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+                <AdminProfilePlaceholderPage />
               </RoleRoute>
             ),
           },

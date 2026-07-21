@@ -74,6 +74,7 @@ src/
 | Arquitectura | `docs/ARCHITECTURE.md` |
 | **Design System** | **`docs/DESIGN_SYSTEM.md`** |
 | **Campanas / Donaciones (handoff)** | **`docs/CAMPAIGNS_FRONTEND_GUIDE.md`** |
+| **Panel Admin / handoff backend** | **`docs/ADMIN_DASHBOARD_BACKEND_GUIDE.md`** |
 | Convenciones | `docs/CONVENTIONS.md` |
 | Reglas de desarrollo | `docs/DEVELOPMENT_RULES.md` |
 | Especificaciones (local) | `specs/DESIGN_SYSTEM.md`, `specs/UI_GUIDELINES.md`, `specs/FEATURES.md`, `specs/ROUTES.md`, `specs/API_INTEGRATION.md` |
