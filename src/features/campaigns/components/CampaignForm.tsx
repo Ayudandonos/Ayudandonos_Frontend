@@ -1,0 +1,168 @@
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { DeliveryMap } from '@/components/ui/DeliveryMap';
+import { UI_MESSAGES } from '@/constants/messages.constants';
+import {
+  campaignFormSchema,
+  type CampaignFormData,
+} from '@/features/campaigns/validations/campaigns.validations';
+
+interface CampaignFormProps {
+  defaultValues?: Partial<CampaignFormData>;
+  apiError?: string;
+  submitLabel: string;
+  onSubmit: (data: CampaignFormData) => Promise<void>;
+  secondaryAction?: {
+    label: string;
+    onClick: (data: CampaignFormData) => Promise<void>;
+  };
+}
+
+/**
+ * Entrada: defaultValues, labels y callbacks de envio.
+ * Proceso: Formulario RHF+Zod de campana con selector de mapa.
+ * Salida: Retorna el elemento JSX del formulario.
+ */
+export function CampaignForm({
+  defaultValues,
+  apiError,
+  submitLabel,
+  onSubmit,
+  secondaryAction,
+}: CampaignFormProps) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<CampaignFormData>({
+    resolver: zodResolver(campaignFormSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      imageUrl: '',
+      startDate: '',
+      endDate: '',
+      deliveryAddress: '',
+      deliveryLatitude: null,
+      deliveryLongitude: null,
+      ...defaultValues,
+    },
+  });
+
+  return (
+    <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
+      <Input
+        label={UI_MESSAGES.CAMPAIGNS_FORM_TITLE}
+        error={errors.title?.message}
+        {...register('title')}
+      />
+      <div className="flex flex-col gap-1.5">
+        <label className="text-label" htmlFor="campaign-description">
+          {UI_MESSAGES.CAMPAIGNS_FORM_DESCRIPTION}
+        </label>
+        <textarea
+          id="campaign-description"
+          rows={5}
+          className="w-full rounded-[var(--radius-sm)] border border-border-default bg-white/60 px-4 py-3 text-base text-text-primary focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20"
+          {...register('description')}
+        />
+        {errors.description?.message && (
+          <p className="text-sm text-error-500">{errors.description.message}</p>
+        )}
+      </div>
+      <Input
+        label={UI_MESSAGES.CAMPAIGNS_FORM_IMAGE_URL}
+        type="url"
+        error={errors.imageUrl?.message}
+        {...register('imageUrl')}
+      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Input
+          label={UI_MESSAGES.CAMPAIGNS_FORM_START_DATE}
+          type="datetime-local"
+          error={errors.startDate?.message}
+          {...register('startDate')}
+        />
+        <Input
+          label={UI_MESSAGES.CAMPAIGNS_FORM_END_DATE}
+          type="datetime-local"
+          error={errors.endDate?.message}
+          {...register('endDate')}
+        />
+      </div>
+      <Input
+        label={UI_MESSAGES.CAMPAIGNS_FORM_ADDRESS}
+        error={errors.deliveryAddress?.message}
+        {...register('deliveryAddress')}
+      />
+      <div className="space-y-2">
+        <p className="text-label">{UI_MESSAGES.CAMPAIGNS_FORM_MAP}</p>
+        <p className="text-xs text-text-muted">{UI_MESSAGES.CAMPAIGNS_FORM_MAP_HINT}</p>
+        <Controller
+          name="deliveryLatitude"
+          control={control}
+          render={({ field: latField }) => (
+            <Controller
+              name="deliveryLongitude"
+              control={control}
+              render={({ field: lngField }) => (
+                <DeliveryMap
+                  editable
+                  latitude={latField.value}
+                  longitude={lngField.value}
+                  onChange={(latitude, longitude) => {
+                    latField.onChange(latitude);
+                    lngField.onChange(longitude);
+                  }}
+                />
+              )}
+            />
+          )}
+        />
+        {errors.deliveryLatitude?.message && (
+          <p className="text-sm text-error-500">{errors.deliveryLatitude.message}</p>
+        )}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Input
+            label={UI_MESSAGES.CAMPAIGNS_LAT}
+            type="number"
+            step="any"
+            value={watch('deliveryLatitude') ?? ''}
+            readOnly
+          />
+          <Input
+            label={UI_MESSAGES.CAMPAIGNS_LNG}
+            type="number"
+            step="any"
+            value={watch('deliveryLongitude') ?? ''}
+            readOnly
+          />
+        </div>
+      </div>
+      {apiError && (
+        <p className="text-sm text-error-500" role="alert">
+          {apiError}
+        </p>
+      )}
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+        {secondaryAction && (
+          <Button
+            type="button"
+            variant="secondary"
+            isLoading={isSubmitting}
+            onClick={() => void handleSubmit(secondaryAction.onClick)()}
+          >
+            {secondaryAction.label}
+          </Button>
+        )}
+        <Button type="submit" isLoading={isSubmitting}>
+          {submitLabel}
+        </Button>
+      </div>
+    </form>
+  );
+}

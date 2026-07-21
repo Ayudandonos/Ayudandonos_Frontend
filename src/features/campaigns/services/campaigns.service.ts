@@ -1,66 +1,179 @@
-export interface Campaign {
-  id: string;
-  title: string;
-  foundationName: string;
-  description: string;
-  city: string;
-  date: string;
-  needsCount: number;
-  status: 'active' | 'closed';
-  imageUrl: string;
-}
-
-export const MOCK_CAMPAIGNS: Campaign[] = [
-  {
-    id: '1',
-    title: 'Campaña Invierno Cálido 2024',
-    foundationName: 'Fundación Esperanza',
-    description:
-      'Ayudamos a familias vulnerables con abrigo y alimentos durante la temporada de frío.',
-    city: 'Bogotá',
-    date: '15 Oct, 2026',
-    needsCount: 12,
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=600&h=400&fit=crop',
-  },
-  {
-    id: '2',
-    title: 'Nutriendo el futuro: Comedor Escolar',
-    foundationName: 'Alimentar con Amor',
-    description: 'Proveemos alimentos nutritivos para niños en comunidades rurales.',
-    city: 'Medellín',
-    date: '02 Nov, 2026',
-    needsCount: 8,
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop',
-  },
-  {
-    id: '3',
-    title: 'Digitalización Rural Educativa',
-    foundationName: 'Educa Futuro',
-    description: 'Equipamos aulas con tecnología para reducir la brecha digital.',
-    city: 'Cali',
-    date: '18 Oct, 2026',
-    needsCount: 5,
-    status: 'active',
-    imageUrl: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop',
-  },
-];
+import { api } from '@/services/api';
+import type { ApiSuccessResponse } from '@/types';
+import type {
+  Campaign,
+  CampaignNeed,
+  CreateCampaignNeedPayload,
+  CreateCampaignPayload,
+  ListCampaignsParams,
+  PaginatedCampaignNeedsData,
+  PaginatedCampaignsData,
+  UpdateCampaignNeedPayload,
+  UpdateCampaignPayload,
+} from '@/features/campaigns/types/campaigns.types';
 
 /**
- * Entrada: Ninguna.
- * Proceso: Retorna campanas mock mientras la API de campanas no esta disponible.
- * Salida: Retorna arreglo de campanas simuladas.
+ * Entrada: params: filtros de listado publico.
+ * Proceso: Consulta GET /campaigns (solo PUBLISHED en backend).
+ * Salida: Retorna items y meta de paginacion.
  */
-export async function fetchCampaigns(): Promise<Campaign[]> {
-  return MOCK_CAMPAIGNS;
+async function fetchCampaigns(params: ListCampaignsParams = {}): Promise<{
+  data: PaginatedCampaignsData;
+  meta: NonNullable<ApiSuccessResponse['meta']>;
+}> {
+  const { data } = await api.get<ApiSuccessResponse<PaginatedCampaignsData>>('/campaigns', {
+    params,
+  });
+  return { data: data.data, meta: data.meta ?? {} };
 }
 
 /**
- * Entrada: id: identificador de la campana buscada.
- * Proceso: Busca la campana mock por id mientras la API no esta conectada.
- * Salida: Retorna la campana encontrada o undefined.
+ * Entrada: params: filtros incluyendo status opcional.
+ * Proceso: Consulta GET /campaigns/me de la fundacion autenticada.
+ * Salida: Retorna items y meta de paginacion.
  */
-export async function fetchCampaignById(id: string): Promise<Campaign | undefined> {
-  return MOCK_CAMPAIGNS.find((c) => c.id === id);
+async function fetchMyCampaigns(params: ListCampaignsParams = {}): Promise<{
+  data: PaginatedCampaignsData;
+  meta: NonNullable<ApiSuccessResponse['meta']>;
+}> {
+  const { data } = await api.get<ApiSuccessResponse<PaginatedCampaignsData>>('/campaigns/me', {
+    params,
+  });
+  return { data: data.data, meta: data.meta ?? {} };
 }
+
+/**
+ * Entrada: id: UUID de la campana.
+ * Proceso: Consulta GET /campaigns/:id.
+ * Salida: Retorna detalle de la campana.
+ */
+async function fetchCampaignById(id: string): Promise<Campaign> {
+  const { data } = await api.get<ApiSuccessResponse<Campaign>>(`/campaigns/${id}`);
+  return data.data;
+}
+
+/**
+ * Entrada: payload: datos de creacion.
+ * Proceso: Envia POST /campaigns.
+ * Salida: Retorna campana creada.
+ */
+async function createCampaign(payload: CreateCampaignPayload): Promise<Campaign> {
+  const { data } = await api.post<ApiSuccessResponse<Campaign>>('/campaigns', payload);
+  return data.data;
+}
+
+/**
+ * Entrada: id: UUID; payload: campos a actualizar.
+ * Proceso: Envia PATCH /campaigns/:id.
+ * Salida: Retorna campana actualizada.
+ */
+async function updateCampaign(id: string, payload: UpdateCampaignPayload): Promise<Campaign> {
+  const { data } = await api.patch<ApiSuccessResponse<Campaign>>(`/campaigns/${id}`, payload);
+  return data.data;
+}
+
+/**
+ * Entrada: id: UUID de la campana.
+ * Proceso: Envia DELETE /campaigns/:id (soft delete).
+ * Salida: No retorna entidad.
+ */
+async function deleteCampaign(id: string): Promise<void> {
+  await api.delete(`/campaigns/${id}`);
+}
+
+/**
+ * Entrada: id: UUID de la campana.
+ * Proceso: Publica la campana via PATCH status PUBLISHED.
+ * Salida: Retorna campana publicada.
+ */
+async function publishCampaign(id: string): Promise<Campaign> {
+  return updateCampaign(id, { status: 'PUBLISHED' });
+}
+
+/**
+ * Entrada: campaignId: UUID; page/limit opcionales.
+ * Proceso: Consulta GET /needs?campaignId= scoped a la campana.
+ * Salida: Retorna necesidades de la campana.
+ */
+async function fetchCampaignNeeds(
+  campaignId: string,
+  page = 1,
+  limit = 50,
+): Promise<{ data: PaginatedCampaignNeedsData; meta: NonNullable<ApiSuccessResponse['meta']> }> {
+  const { data } = await api.get<ApiSuccessResponse<PaginatedCampaignNeedsData>>('/needs', {
+    params: { campaignId, page, limit },
+  });
+  return { data: data.data, meta: data.meta ?? {} };
+}
+
+/**
+ * Entrada: payload: datos de la necesidad.
+ * Proceso: Envia POST /needs desde el dominio campanas (sin importar feature needs).
+ * Salida: Retorna necesidad creada.
+ */
+async function createCampaignNeed(payload: CreateCampaignNeedPayload): Promise<CampaignNeed> {
+  const { data } = await api.post<ApiSuccessResponse<CampaignNeed>>('/needs', payload);
+  return data.data;
+}
+
+/**
+ * Entrada: id: UUID; payload: campos a actualizar.
+ * Proceso: Envia PATCH /needs/:id.
+ * Salida: Retorna necesidad actualizada.
+ */
+async function updateCampaignNeed(
+  id: string,
+  payload: UpdateCampaignNeedPayload,
+): Promise<CampaignNeed> {
+  const { data } = await api.patch<ApiSuccessResponse<CampaignNeed>>(`/needs/${id}`, payload);
+  return data.data;
+}
+
+/**
+ * Entrada: id: UUID de la necesidad.
+ * Proceso: Envia DELETE /needs/:id.
+ * Salida: No retorna entidad.
+ */
+async function deleteCampaignNeed(id: string): Promise<void> {
+  await api.delete(`/needs/${id}`);
+}
+
+/**
+ * Entrada: Ninguna (token de fundacion en interceptor).
+ * Proceso: Consulta GET /foundation/requests y cuenta items; falla silenciosa a 0.
+ * Salida: Retorna cantidad de solicitudes recibidas.
+ */
+async function fetchFoundationDonationCount(): Promise<number> {
+  try {
+    const { data } = await api.get<
+      ApiSuccessResponse<{ items: unknown[] } | unknown[]>
+    >('/foundation/requests');
+    if (Array.isArray(data.data)) {
+      return data.data.length;
+    }
+    if (data.data && typeof data.data === 'object' && 'items' in data.data) {
+      const items = (data.data as { items: unknown[] }).items;
+      return Array.isArray(items) ? items.length : (data.meta?.total ?? 0);
+    }
+    return data.meta?.total ?? 0;
+  } catch {
+    return 0;
+  }
+}
+
+export const campaignsService = {
+  fetchCampaigns,
+  fetchMyCampaigns,
+  fetchCampaignById,
+  createCampaign,
+  updateCampaign,
+  deleteCampaign,
+  publishCampaign,
+  fetchCampaignNeeds,
+  createCampaignNeed,
+  updateCampaignNeed,
+  deleteCampaignNeed,
+  fetchFoundationDonationCount,
+};
+
+export type { CampaignNeed };

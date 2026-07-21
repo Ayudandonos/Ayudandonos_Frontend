@@ -21,12 +21,17 @@ const USER_NAV: NavItem[] = [
 ];
 
 const FOUNDATION_NAV: NavItem[] = [
-  { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['FOUNDATION'] },
-  { label: UI_MESSAGES.NAV_FOUNDATION_PROFILE, path: '/foundation/profile', roles: ['FOUNDATION'] },
+  { label: UI_MESSAGES.NAV_MY_CAMPAIGNS, path: '/foundation/campaigns', roles: ['FOUNDATION'] },
+  {
+    label: UI_MESSAGES.NAV_CAMPAIGNS_DASHBOARD,
+    path: '/foundation/campaigns/dashboard',
+    roles: ['FOUNDATION'],
+  },
   { label: UI_MESSAGES.NAV_CREATE_CAMPAIGN, path: '/foundation/campaigns/new', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_NEEDS, path: '/foundation/needs/new', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_REQUESTS, path: '/foundation/requests', roles: ['FOUNDATION'] },
   { label: UI_MESSAGES.NAV_DELIVERIES, path: '/foundation/deliveries/schedule', roles: ['FOUNDATION'] },
+  { label: UI_MESSAGES.NAV_FOUNDATION_PROFILE, path: '/foundation/profile', roles: ['FOUNDATION'] },
 ];
 
 const ADMIN_NAV: NavItem[] = [

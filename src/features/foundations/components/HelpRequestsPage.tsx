@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { DonationStatusBadge } from '@/features/donations/components/DonationStatusBadge';
+import { donationsService } from '@/features/donations/services/donations.service';
+import type { Donation } from '@/features/donations/types/donations.types';
 import { EmptyState } from '@/features/foundations/components/EmptyState';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
-import { foundationsService } from '@/features/foundations/services/foundations.service';
-import type { FoundationHelpRequest } from '@/features/foundations/types/foundations.types';
 import { parseApiError } from '@/utils/api-error';
+import { formatDate } from '@/utils/date-format';
 
 type RequestsAccessError = 'profile' | 'verification' | 'generic';
 
@@ -34,11 +36,11 @@ function resolveAccessError(status?: number, message?: string): RequestsAccessEr
 
 /**
  * Entrada: Ninguna.
- * Proceso: Carga solicitudes de ayuda desde GET /foundation/requests y maneja restricciones de acceso.
+ * Proceso: Carga solicitudes de donacion desde GET /foundation/requests y maneja restricciones de acceso.
  * Salida: Retorna el elemento JSX del listado de solicitudes.
  */
 export function HelpRequestsPage() {
-  const [requests, setRequests] = useState<FoundationHelpRequest[]>([]);
+  const [requests, setRequests] = useState<Donation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
   const [accessError, setAccessError] = useState<RequestsAccessError | null>(null);
@@ -49,7 +51,7 @@ export function HelpRequestsPage() {
 
     /**
      * Entrada: Ninguna.
-     * Proceso: Obtiene solicitudes de ayuda del backend y normaliza estados de error en pantalla.
+     * Proceso: Obtiene solicitudes de donacion del backend y normaliza estados de error en pantalla.
      * Salida: No retorna valor; actualiza listado, errores o aviso de modulo en desarrollo.
      */
     async function loadRequests() {
@@ -59,9 +61,9 @@ export function HelpRequestsPage() {
       setIsInDevelopment(false);
 
       try {
-        const data = await foundationsService.fetchFoundationRequests();
+        const result = await donationsService.fetchFoundationRequests({ page: 1, limit: 50 });
         if (!cancelled) {
-          setRequests(data);
+          setRequests(result.data.items);
         }
       } catch (loadError) {
         if (cancelled) {
@@ -144,26 +146,42 @@ export function HelpRequestsPage() {
       )}
 
       {!accessError && !isInDevelopment && !errorMessage && requests.length > 0 && (
-        <div className="space-y-4">
-          {requests.map((request) => (
-            <Card
-              key={request.id}
-              glass={false}
-              className="flex items-center justify-between border border-border-default bg-white"
-            >
-              <div>
-                <p className="font-semibold text-text-primary">{request.donorName}</p>
-                <p className="text-sm text-text-secondary">{request.needSummary}</p>
-                <p className="text-xs text-text-muted">{request.submittedAt}</p>
-              </div>
-              <Link
-                to={`/foundation/requests/${request.id}`}
-                className={buttonLinkClass({ variant: 'primary', size: 'sm' })}
-              >
-                {UI_MESSAGES.FOUNDATIONS_REVIEW}
-              </Link>
-            </Card>
-          ))}
+        <div className="overflow-hidden rounded-xl border border-border-default bg-white">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-border-default bg-vivid-50">
+              <tr>
+                <th className="px-6 py-4 font-semibold">{UI_MESSAGES.FOUNDATION_REQUESTS_TABLE_DONOR}</th>
+                <th className="px-6 py-4 font-semibold">{UI_MESSAGES.FOUNDATION_REQUESTS_TABLE_NEED}</th>
+                <th className="px-6 py-4 font-semibold">{UI_MESSAGES.FOUNDATION_REQUESTS_TABLE_STATUS}</th>
+                <th className="px-6 py-4 font-semibold">{UI_MESSAGES.FOUNDATION_REQUESTS_TABLE_DATE}</th>
+                <th className="px-6 py-4 font-semibold" />
+              </tr>
+            </thead>
+            <tbody>
+              {requests.map((request) => (
+                <tr key={request.id} className="border-b border-border-default last:border-0">
+                  <td className="px-6 py-4 font-medium text-text-primary">
+                    {request.donor.fullName}
+                  </td>
+                  <td className="px-6 py-4 text-text-secondary">
+                    {request.need.name} ({request.quantity} {request.need.unit})
+                  </td>
+                  <td className="px-6 py-4">
+                    <DonationStatusBadge status={request.status} />
+                  </td>
+                  <td className="px-6 py-4 text-text-muted">{formatDate(request.createdAt)}</td>
+                  <td className="px-6 py-4">
+                    <Link
+                      to={`/foundation/requests/${request.id}`}
+                      className={buttonLinkClass({ variant: 'primary', size: 'sm' })}
+                    >
+                      {UI_MESSAGES.FOUNDATIONS_REVIEW}
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
