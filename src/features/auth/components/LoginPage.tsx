@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import {
   AuthFooter,
   AuthHeader,
@@ -138,11 +139,7 @@ export function LoginPage() {
                   />
                   <span className="text-caption">{UI_MESSAGES.LOGIN_REMEMBER}</span>
                 </label>
-                {apiError && (
-                  <p className="text-sm text-error-500" role="alert">
-                    {apiError}
-                  </p>
-                )}
+                {apiError && <Alert variant="danger">{apiError}</Alert>}
                 <AuthSubmitButton
                   isLoading={isSubmitting}
                   label={UI_MESSAGES.LOGIN_SUBMIT}

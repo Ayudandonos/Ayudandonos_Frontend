@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import type {
   FoundationDocument,
   FoundationDocumentType,
 } from '@/features/foundations/types/foundations.types';
+import { isRequiredFoundationDocument } from '@/features/foundations/utils/foundation-profile-checklist';
+import { cn } from '@/utils/cn';
 
 const DOCUMENT_LABELS: Record<FoundationDocumentType, string> = {
   RUT: UI_MESSAGES.FOUNDATIONS_DOCUMENT_RUT,
@@ -24,20 +27,22 @@ interface FoundationDocumentManagerProps {
   documents: FoundationDocument[];
   canManage?: boolean;
   isUploadingType?: FoundationDocumentType | null;
+  successMessage?: string;
   onUpload: (type: FoundationDocumentType, file: File) => Promise<void>;
   onDownload: (type: FoundationDocumentType) => Promise<void>;
   fetchDocumentBlob?: (type: FoundationDocumentType) => Promise<Blob>;
 }
 
 /**
- * Entrada: documents, permisos y callbacks de carga, descarga y previsualizacion.
- * Proceso: Lista documentos legales con acciones de ver, descargar y reemplazar via API autenticada.
+ * Entrada: documents, permisos, successMessage y callbacks documentales.
+ * Proceso: Lista documentos con badges de obligatorio/opcional y estado cargado/faltante.
  * Salida: Retorna el elemento JSX del gestor documental.
  */
 export function FoundationDocumentManager({
   documents,
   canManage = false,
   isUploadingType = null,
+  successMessage,
   onUpload,
   onDownload,
   fetchDocumentBlob,
@@ -120,26 +125,65 @@ export function FoundationDocumentManager({
   };
 
   return (
-    <div className="space-y-4">
-      <p className="text-sm font-semibold text-text-primary">{UI_MESSAGES.FOUNDATIONS_SECTION_DOCUMENTS}</p>
-      {previewError && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{previewError}</p>
-      )}
+    <div id="foundation-profile-documents" className="space-y-4">
+      <div>
+        <p className="text-sm font-semibold text-text-primary">
+          {UI_MESSAGES.FOUNDATIONS_SECTION_DOCUMENTS}
+        </p>
+        <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_DOCS_INTRO}</p>
+      </div>
+
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+      {previewError && <Alert variant="danger">{previewError}</Alert>}
+
       <div className="space-y-3">
         {DOCUMENT_TYPES.map((type) => {
           const document = documentMap.get(type);
           const isUploading = isUploadingType === type;
           const isPreviewLoading = previewLoadingType === type;
+          const required = isRequiredFoundationDocument(type);
+          const missing = required && !document;
 
           return (
             <div
               key={type}
-              className="rounded-lg border border-border-default bg-vivid-50/40 p-4"
+              className={cn(
+                'rounded-lg border p-4',
+                missing
+                  ? 'border-warning-500/40 bg-warning-500/5'
+                  : 'border-border-default bg-vivid-50/40',
+              )}
             >
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="font-medium text-text-primary">{DOCUMENT_LABELS[type]}</p>
-                  <p className="mt-1 text-xs text-text-muted">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-medium text-text-primary">{DOCUMENT_LABELS[type]}</p>
+                    <span
+                      className={cn(
+                        'rounded-full px-2 py-0.5 text-xs font-medium',
+                        required
+                          ? 'bg-error-500/10 text-error-600'
+                          : 'bg-secondary-100 text-text-secondary',
+                      )}
+                    >
+                      {required
+                        ? UI_MESSAGES.FOUNDATIONS_BADGE_REQUIRED
+                        : UI_MESSAGES.FOUNDATIONS_BADGE_OPTIONAL}
+                    </span>
+                    <span
+                      className={cn(
+                        'rounded-full px-2 py-0.5 text-xs font-medium',
+                        document
+                          ? 'bg-success-500/10 text-success-600'
+                          : 'bg-warning-500/15 text-warning-600',
+                      )}
+                    >
+                      {document
+                        ? UI_MESSAGES.FOUNDATIONS_BADGE_UPLOADED
+                        : UI_MESSAGES.FOUNDATIONS_BADGE_MISSING}
+                    </span>
+                  </div>
+                  <p className="text-xs text-text-muted">
                     {document?.fileName ?? UI_MESSAGES.FOUNDATIONS_NO_DOCUMENT}
                   </p>
                 </div>

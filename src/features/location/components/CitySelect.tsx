@@ -64,6 +64,7 @@ export function CitySelect({ countryIso, stateIso, value, onChange }: CitySelect
           : undefined
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
+      requiredMark
     />
   );
 }

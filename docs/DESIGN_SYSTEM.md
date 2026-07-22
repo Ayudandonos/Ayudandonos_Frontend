@@ -128,7 +128,7 @@ Ubicacion: `src/components/ui/`. Export central: `src/components/ui/index.ts`.
 | Select | — | PENDIENTE |
 | Table | — | PENDIENTE |
 | Modal / Dialog | — | PENDIENTE |
-| Alert | — | PENDIENTE |
+| Alert | `Alert.tsx` | IMPLEMENTADO |
 | Badge | — | PENDIENTE |
 | Breadcrumb | — | PENDIENTE |
 | Sidebar | — | PENDIENTE |

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -155,11 +156,7 @@ export function ContactFoundationModal({
               <p className="text-sm text-error-500">{errors.message.message}</p>
             )}
           </div>
-          {apiError && (
-            <p className="text-sm text-error-500" role="alert">
-              {apiError}
-            </p>
-          )}
+          {apiError && <Alert variant="danger">{apiError}</Alert>}
           <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
             <Button type="button" variant="secondary" onClick={onClose}>
               {UI_MESSAGES.COMMON_CANCEL}

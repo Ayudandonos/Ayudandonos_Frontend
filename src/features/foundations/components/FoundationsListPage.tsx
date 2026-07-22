@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useDebounce } from '@/hooks/useDebounce';
 import { FoundationCard } from '@/features/foundations/components/FoundationCard';
@@ -45,9 +46,7 @@ export function FoundationsListPage() {
       />
 
       {isLoading && <FoundationsLoadingSkeleton variant="cards" />}
-      {error && !isLoading && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>
-      )}
+      {error && !isLoading && <Alert variant="danger">{error}</Alert>}
 
       {!isLoading && !error && items.length === 0 && (
         <EmptyState message={UI_MESSAGES.FOUNDATIONS_EMPTY_PUBLIC} />

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -134,11 +135,7 @@ export function MyCampaignsPage() {
         </Link>
       </div>
 
-      {success && (
-        <p className="rounded-lg bg-success-500/10 px-3 py-2 text-sm text-success-600" role="status">
-          {success}
-        </p>
-      )}
+      {success && <Alert variant="success">{success}</Alert>}
 
       {isLoading && <CampaignsLoadingSkeleton variant="table" />}
 

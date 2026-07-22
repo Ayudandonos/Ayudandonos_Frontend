@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -108,21 +109,21 @@ export function HelpRequestsPage() {
       <h1 className="text-3xl font-bold text-text-primary">{UI_MESSAGES.NAV_REQUESTS}</h1>
 
       {accessError && (
-        <Card glass={false} className="space-y-4 border border-amber-200 bg-amber-50">
-          <p className="text-sm text-amber-900" role="alert">
+        <div className="space-y-4">
+          <Alert variant="warning">
             {accessError === 'profile'
               ? UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE
               : accessError === 'verification'
                 ? UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION
                 : errorMessage}
-          </p>
+          </Alert>
           <Link
             to="/foundation/profile"
             className={buttonLinkClass({ variant: 'primary', size: 'sm' })}
           >
             {UI_MESSAGES.FOUNDATIONS_REQUESTS_GO_TO_PROFILE}
           </Link>
-        </Card>
+        </div>
       )}
 
       {!accessError && isInDevelopment && (
@@ -134,11 +135,7 @@ export function HelpRequestsPage() {
       )}
 
       {!accessError && !isInDevelopment && errorMessage && (
-        <Card glass={false} className="border border-red-200 bg-red-50">
-          <p className="text-sm text-red-700" role="alert">
-            {errorMessage}
-          </p>
-        </Card>
+        <Alert variant="danger">{errorMessage}</Alert>
       )}
 
       {!accessError && !isInDevelopment && !errorMessage && requests.length === 0 && (

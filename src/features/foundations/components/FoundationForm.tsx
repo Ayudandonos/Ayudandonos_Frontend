@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -13,17 +14,23 @@ import type { FoundationSocialLink } from '@/features/foundations/types/foundati
 interface FoundationFormProps {
   defaultValues: UpdateFoundationFormData;
   apiError?: string;
+  successMessage?: string;
   onSubmit: (data: UpdateFoundationFormData) => Promise<void>;
 }
 
 const SOCIAL_NETWORKS = ['FACEBOOK', 'INSTAGRAM'] as const;
 
 /**
- * Entrada: defaultValues: datos iniciales; apiError: mensaje global; onSubmit: handler async.
- * Proceso: Renderiza formulario completo de perfil de fundacion con validacion Zod.
+ * Entrada: defaultValues, apiError, successMessage y onSubmit del perfil.
+ * Proceso: Renderiza formulario con marcas de obligatoriedad y guardado explicito.
  * Salida: Retorna el elemento JSX del formulario.
  */
-export function FoundationForm({ defaultValues, apiError, onSubmit }: FoundationFormProps) {
+export function FoundationForm({
+  defaultValues,
+  apiError,
+  successMessage,
+  onSubmit,
+}: FoundationFormProps) {
   const {
     register,
     handleSubmit,
@@ -64,12 +71,15 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
     socialLinks.find((link) => link.network === network)?.url ?? '';
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      {apiError && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-          {apiError}
-        </p>
-      )}
+    <form
+      id="foundation-profile-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-8"
+    >
+      {apiError && <Alert variant="danger">{apiError}</Alert>}
+      {successMessage && <Alert variant="success">{successMessage}</Alert>}
+
+      <Alert variant="info">{UI_MESSAGES.FOUNDATIONS_FORM_REQUIRED_LEGEND}</Alert>
 
       <section className="space-y-4">
         <h2 className="text-lg font-semibold text-text-primary">
@@ -80,21 +90,25 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
             label={UI_MESSAGES.FOUNDATIONS_FORM_NAME}
             placeholder={UI_MESSAGES.REGISTER_FOUNDATION_NAME_PLACEHOLDER}
             error={errors.name?.message}
+            requiredMark
             {...register('name')}
           />
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_ACRONYM}
             error={errors.acronym?.message}
+            optionalMark
             {...register('acronym')}
           />
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_NIT}
             error={errors.nit?.message}
+            requiredMark
             {...register('nit')}
           />
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_CATEGORY}
             error={errors.category?.message}
+            requiredMark
             {...register('category')}
           />
         </div>
@@ -124,6 +138,9 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
                 : field === 'vision'
                   ? UI_MESSAGES.FOUNDATIONS_FORM_VISION
                   : UI_MESSAGES.FOUNDATIONS_FORM_DESCRIPTION}
+              <span className="ms-1 text-error-500" aria-label="obligatorio">
+                *
+              </span>
             </label>
             <textarea
               rows={field === 'description' ? 4 : 3}
@@ -145,17 +162,20 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_INSTITUTIONAL_EMAIL}
             error={errors.institutionalEmail?.message}
+            requiredMark
             {...register('institutionalEmail')}
           />
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_PHONE}
             error={errors.phone?.message}
+            requiredMark
             {...register('phone')}
           />
           <div className="md:col-span-2">
             <Input
               label={UI_MESSAGES.FOUNDATIONS_FORM_WEBSITE}
               error={errors.website?.message}
+              optionalMark
               {...register('website')}
             />
           </div>
@@ -170,11 +190,13 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_LEGAL_REP_NAME}
             error={errors.legalRepresentativeName?.message}
+            requiredMark
             {...register('legalRepresentativeName')}
           />
           <Input
             label={UI_MESSAGES.FOUNDATIONS_FORM_LEGAL_REP_DOCUMENT}
             error={errors.legalRepresentativeDocument?.message}
+            requiredMark
             {...register('legalRepresentativeDocument')}
           />
         </div>
@@ -191,15 +213,19 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
               label={network === 'FACEBOOK' ? 'Facebook' : 'Instagram'}
               placeholder={UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL}
               value={getSocialUrl(network)}
+              optionalMark
               onChange={(event) => updateSocialUrl(network, event.target.value)}
             />
           ))}
         </div>
       </section>
 
-      <Button type="submit" isLoading={isSubmitting} fullWidth>
-        {UI_MESSAGES.FOUNDATIONS_SAVE_PROFILE}
-      </Button>
+      <div className="space-y-3">
+        <Alert variant="neutral">{UI_MESSAGES.FOUNDATIONS_FORM_SAVE_HINT}</Alert>
+        <Button type="submit" isLoading={isSubmitting} fullWidth>
+          {UI_MESSAGES.FOUNDATIONS_SAVE_PROFILE}
+        </Button>
+      </div>
     </form>
   );
 }

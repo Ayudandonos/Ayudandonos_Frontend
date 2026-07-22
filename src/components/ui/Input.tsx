@@ -9,6 +9,8 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   iconLeft?: IconName;
   iconRight?: ReactNode;
   filled?: boolean;
+  requiredMark?: boolean;
+  optionalMark?: boolean;
 }
 
 /**
@@ -17,7 +19,19 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
  * Salida: Retorna el elemento JSX del input.
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, error, hint, iconLeft, iconRight, filled = false, className, id, ...props },
+  {
+    label,
+    error,
+    hint,
+    iconLeft,
+    iconRight,
+    filled = false,
+    requiredMark = false,
+    optionalMark = false,
+    className,
+    id,
+    ...props
+  },
   ref,
 ) {
   const generatedId = useId();
@@ -30,6 +44,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       {label && (
         <label htmlFor={inputId} className="text-label">
           {label}
+          {requiredMark && (
+            <span className="ms-1 text-error-500" aria-label="obligatorio">
+              *
+            </span>
+          )}
+          {optionalMark && (
+            <span className="ms-2 text-xs font-normal text-text-muted">(opcional)</span>
+          )}
         </label>
       )}
       <div className="relative">

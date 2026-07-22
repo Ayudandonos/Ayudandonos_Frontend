@@ -60,6 +60,7 @@ export function StateSelect({ countryIso, value, onChange }: StateSelectProps) {
           : undefined
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
+      requiredMark
     />
   );
 }

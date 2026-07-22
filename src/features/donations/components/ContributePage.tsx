@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -201,11 +202,7 @@ export function ContributePage() {
             error={errors.estimatedDeliveryAt?.message}
             {...register('estimatedDeliveryAt')}
           />
-          {apiError && (
-            <p className="text-sm text-error-500" role="alert">
-              {apiError}
-            </p>
-          )}
+          {apiError && <Alert variant="danger">{apiError}</Alert>}
           <div className="flex flex-wrap gap-3">
             <Button type="submit" isLoading={isSubmitting}>
               {UI_MESSAGES.DONATIONS_SUBMIT}

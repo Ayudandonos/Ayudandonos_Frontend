@@ -126,6 +126,7 @@ export function LocationCascadingFields({
         <Input
           label={UI_MESSAGES.FOUNDATIONS_FORM_ADDRESS}
           error={errors.address?.message}
+          requiredMark
           {...register('address')}
         />
       </div>

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
@@ -8,17 +9,20 @@ import { FoundationForm } from '@/features/foundations/components/FoundationForm
 import { FoundationLogoUploader } from '@/features/foundations/components/FoundationLogoUploader';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
 import { FoundationObservationHistory } from '@/features/foundations/components/FoundationObservationHistory';
+import { FoundationProfileChecklistCard } from '@/features/foundations/components/FoundationProfileChecklistCard';
 import { FoundationStatusBadge } from '@/features/foundations/components/FoundationStatusBadge';
 import { foundationsService } from '@/features/foundations/services/foundations.service';
 import type {
   FoundationDetail,
   FoundationDocumentType,
 } from '@/features/foundations/types/foundations.types';
+import { buildFoundationProfileChecklist } from '@/features/foundations/utils/foundation-profile-checklist';
 import type { UpdateFoundationFormData } from '@/features/foundations/validations/foundations.validations';
 import { parseApiError } from '@/utils/api-error';
 import { downloadBlob } from '@/utils/file-download';
 
 type ProfileGateState = 'incomplete' | 'verification';
+type FeedbackSource = 'logo' | 'form' | 'document';
 
 /**
  * Entrada: foundation: detalle cargado desde la API.
@@ -59,10 +63,17 @@ export function FoundationProfilePage() {
   const [foundation, setFoundation] = useState<FoundationDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [feedback, setFeedback] = useState<{ source: FeedbackSource; message: string } | null>(
+    null,
+  );
   const [isUploadingLogo, setIsUploadingLogo] = useState(false);
   const [uploadingDocumentType, setUploadingDocumentType] =
     useState<FoundationDocumentType | null>(null);
+
+  const checklist = useMemo(
+    () => (foundation ? buildFoundationProfileChecklist(foundation) : null),
+    [foundation],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -110,12 +121,15 @@ export function FoundationProfilePage() {
     }
 
     setApiError('');
-    setSuccessMessage('');
+    setFeedback(null);
 
     try {
       const updated = await foundationsService.updateFoundation(foundation.id, data);
       setFoundation(updated);
-      setSuccessMessage(UI_MESSAGES.FOUNDATIONS_PROFILE_UPDATED);
+      setFeedback({
+        source: 'form',
+        message: UI_MESSAGES.FOUNDATIONS_PROFILE_UPDATED,
+      });
       await fetchMe();
     } catch (submitError) {
       setApiError(parseApiError(submitError).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
@@ -134,11 +148,15 @@ export function FoundationProfilePage() {
 
     setIsUploadingLogo(true);
     setApiError('');
+    setFeedback(null);
 
     try {
       const updated = await foundationsService.uploadLogo(foundation.id, file);
       setFoundation(updated);
-      setSuccessMessage(UI_MESSAGES.FOUNDATIONS_LOGO_UPLOADED);
+      setFeedback({
+        source: 'logo',
+        message: UI_MESSAGES.FOUNDATIONS_LOGO_UPLOADED,
+      });
       await fetchMe();
     } catch (uploadError) {
       setApiError(parseApiError(uploadError).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
@@ -159,11 +177,15 @@ export function FoundationProfilePage() {
 
     setUploadingDocumentType(type);
     setApiError('');
+    setFeedback(null);
 
     try {
       const updated = await foundationsService.uploadDocument(foundation.id, type, file);
       setFoundation(updated);
-      setSuccessMessage(UI_MESSAGES.FOUNDATIONS_DOCUMENT_UPLOADED);
+      setFeedback({
+        source: 'document',
+        message: UI_MESSAGES.FOUNDATIONS_DOCUMENT_UPLOADED,
+      });
       await fetchMe();
     } catch (uploadError) {
       setApiError(parseApiError(uploadError).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
@@ -208,10 +230,10 @@ export function FoundationProfilePage() {
     return <FoundationsLoadingSkeleton variant="profile" />;
   }
 
-  if (!foundation) {
+  if (!foundation || !checklist) {
     return (
       <Card glass={false} className="border border-border-default bg-white">
-        <p className="text-sm text-red-700">{apiError || UI_MESSAGES.FOUNDATIONS_NOT_FOUND}</p>
+        <Alert variant="danger">{apiError || UI_MESSAGES.FOUNDATIONS_NOT_FOUND}</Alert>
       </Card>
     );
   }
@@ -227,39 +249,26 @@ export function FoundationProfilePage() {
       </header>
 
       {gate === 'incomplete' && (
-        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800" role="alert">
-          {UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE}
-        </p>
+        <Alert variant="warning">{UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE}</Alert>
       )}
 
       {gate === 'verification' && (
-        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800" role="alert">
-          {UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}
-        </p>
-      )}
-
-      {foundation.status === 'PENDING' && (
-        <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          {foundation.isProfileComplete && foundation.hasRequiredDocuments
-            ? UI_MESSAGES.FOUNDATIONS_PROFILE_COMPLETE
-            : UI_MESSAGES.FOUNDATIONS_PROFILE_INCOMPLETE}
-        </p>
+        <Alert variant="warning">{UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}</Alert>
       )}
 
       {foundation.status === 'REJECTED' && foundation.rejectionReason && (
-        <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-          {UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}: {foundation.rejectionReason}
-        </p>
+        <Alert variant="danger" title={UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}>
+          {foundation.rejectionReason}
+        </Alert>
       )}
 
-      {successMessage && (
-        <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">{successMessage}</p>
-      )}
+      <FoundationProfileChecklistCard checklist={checklist} status={foundation.status} />
 
       <Card glass={false} className="border border-border-default bg-white">
         <FoundationLogoUploader
           logoUrl={foundation.logoUrl}
           isUploading={isUploadingLogo}
+          successMessage={feedback?.source === 'logo' ? feedback.message : undefined}
           onUpload={handleUploadLogo}
         />
       </Card>
@@ -268,6 +277,7 @@ export function FoundationProfilePage() {
         <FoundationForm
           defaultValues={buildDefaultValues(foundation)}
           apiError={apiError}
+          successMessage={feedback?.source === 'form' ? feedback.message : undefined}
           onSubmit={handleSubmit}
         />
       </Card>
@@ -277,6 +287,7 @@ export function FoundationProfilePage() {
           documents={foundation.documents}
           canManage
           isUploadingType={uploadingDocumentType}
+          successMessage={feedback?.source === 'document' ? feedback.message : undefined}
           onUpload={handleUploadDocument}
           onDownload={handleDownloadDocument}
           fetchDocumentBlob={fetchDocumentBlob}

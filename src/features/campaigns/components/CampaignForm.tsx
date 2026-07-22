@@ -1,6 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
 import type { ReactNode } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { DeliveryMap } from '@/components/ui/DeliveryMap';
@@ -152,11 +153,7 @@ export function CampaignForm({
         </div>
       </div>
       {children}
-      {apiError && (
-        <p className="text-sm text-error-500" role="alert">
-          {apiError}
-        </p>
-      )}
+      {apiError && <Alert variant="danger">{apiError}</Alert>}
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
         {secondaryAction && (
           <Button

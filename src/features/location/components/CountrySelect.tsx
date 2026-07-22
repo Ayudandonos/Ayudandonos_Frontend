@@ -23,7 +23,10 @@ export function CountrySelect({ value, onChange, disabled = false }: CountrySele
     () =>
       (data ?? []).map((country) => ({
         value: country.iso2,
-        label: [country.emoji, country.name, country.iso2].filter(Boolean).join(' '),
+        label: country.name,
+        prefix: country.emoji ?? undefined,
+        secondary: country.iso2,
+        searchText: [country.emoji, country.name, country.iso2].filter(Boolean).join(' '),
       })),
     [data],
   );
@@ -52,13 +55,14 @@ export function CountrySelect({ value, onChange, disabled = false }: CountrySele
       onChange={handleChange}
       disabled={disabled}
       loading={isLoading || (isFetching && !data)}
-      fallbackLabel={value?.name}
+      fallbackLabel={[value?.emoji, value?.name].filter(Boolean).join(' ')}
       error={
         isError
           ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR
           : undefined
       }
       onRetry={isError ? () => void refetch() : undefined}
+      requiredMark
     />
   );
 }

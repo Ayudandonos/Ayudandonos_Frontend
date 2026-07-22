@@ -14,6 +14,7 @@ import envelope from '@/assets/icons/envelope.svg?raw';
 import eye from '@/assets/icons/eye.svg?raw';
 import eyeCrossed from '@/assets/icons/eye-crossed.svg?raw';
 import home from '@/assets/icons/home.svg?raw';
+import info from '@/assets/icons/info.svg?raw';
 import menuBurger from '@/assets/icons/menu-burger.svg?raw';
 import search from '@/assets/icons/search.svg?raw';
 import telegram from '@/assets/icons/telegram.svg?raw';
@@ -43,6 +44,7 @@ const BASE_ICONS = {
   eye,
   'eye-crossed': eyeCrossed,
   home,
+  info,
   'menu-burger': menuBurger,
   search,
   telegram,

@@ -197,6 +197,43 @@ export const UI_MESSAGES = {
   DONATIONS_DELIVERY_TITLE: 'Entrega',
 
   EMPTY_STATE_RETRY: 'Reintentar',
+  ALERT_INFO: 'Informacion',
+  ALERT_DANGER: 'Error',
+  ALERT_SUCCESS: 'Exito',
+  ALERT_WARNING: 'Advertencia',
+  ALERT_NEUTRAL: 'Aviso',
+  FIELD_REQUIRED_MARK: 'Obligatorio',
+  FIELD_OPTIONAL_MARK: 'Opcional',
+  FOUNDATIONS_CHECKLIST_TITLE: 'Progreso para verificación',
+  FOUNDATIONS_CHECKLIST_INTRO:
+    'Completa estos pasos en orden. El logo, el formulario y los documentos se guardan por separado.',
+  FOUNDATIONS_CHECKLIST_STEP_DATA: 'Datos del perfil',
+  FOUNDATIONS_CHECKLIST_STEP_DOCS: 'Documentos legales',
+  FOUNDATIONS_CHECKLIST_STEP_REVIEW: 'Revisión del administrador',
+  FOUNDATIONS_CHECKLIST_DONE: 'Completado',
+  FOUNDATIONS_CHECKLIST_PENDING: 'Pendiente',
+  FOUNDATIONS_CHECKLIST_MISSING_FIELDS: 'Campos que aún faltan',
+  FOUNDATIONS_CHECKLIST_MISSING_DOCS: 'Documentos que aún faltan',
+  FOUNDATIONS_CHECKLIST_NEXT_SAVE:
+    'Siguiente paso: completa los campos obligatorios y pulsa Guardar cambios.',
+  FOUNDATIONS_CHECKLIST_NEXT_DOCS:
+    'Siguiente paso: sube los documentos legales obligatorios en la sección de abajo.',
+  FOUNDATIONS_CHECKLIST_NEXT_WAIT:
+    'Siguiente paso: espera. Un administrador revisará y verificará tu fundación. No necesitas hacer nada más por ahora.',
+  FOUNDATIONS_CHECKLIST_VERIFIED:
+    'Tu fundación ya está verificada. Ya puedes operar en la plataforma.',
+  FOUNDATIONS_LOGO_HINT:
+    'El logo se guarda al seleccionarlo. No reemplaza el botón Guardar cambios del formulario.',
+  FOUNDATIONS_FORM_SAVE_HINT:
+    'Este botón guarda solo los datos del formulario. Logo y documentos se suben en sus propias secciones.',
+  FOUNDATIONS_FORM_REQUIRED_LEGEND:
+    'Los campos marcados con * son obligatorios para la verificación.',
+  FOUNDATIONS_DOCS_INTRO:
+    'Sube al menos los tres documentos obligatorios. Cada archivo se guarda al subirlo.',
+  FOUNDATIONS_BADGE_REQUIRED: 'Obligatorio',
+  FOUNDATIONS_BADGE_OPTIONAL: 'Opcional',
+  FOUNDATIONS_BADGE_UPLOADED: 'Cargado',
+  FOUNDATIONS_BADGE_MISSING: 'Falta',
   LOCATION_COUNTRY_LABEL: 'País',
   LOCATION_COUNTRY_PLACEHOLDER: 'Seleccione un país...',
   LOCATION_COUNTRY_ARIA: 'Seleccionar país',
@@ -321,8 +358,10 @@ export const UI_MESSAGES = {
   FOUNDATIONS_VISION_MAX: 'La visión no puede superar los 1000 caracteres.',
   FOUNDATIONS_DESCRIPTION_MAX: 'La descripción no puede superar los 2000 caracteres.',
   FOUNDATIONS_URL_INVALID: 'URL inválida',
-  FOUNDATIONS_LOGO_UPLOADED: 'Logo actualizado correctamente.',
-  FOUNDATIONS_DOCUMENT_UPLOADED: 'Documento cargado correctamente.',
+  FOUNDATIONS_LOGO_UPLOADED:
+    'Logo actualizado correctamente. Si editaste el formulario, recuerda pulsar Guardar cambios.',
+  FOUNDATIONS_DOCUMENT_UPLOADED:
+    'Documento cargado correctamente. Revisa el checklist de arriba para ver si falta alguno.',
   FOUNDATIONS_TABLE_NIT: 'NIT',
   FOUNDATIONS_TABLE_CITY: 'Ciudad',
   FOUNDATIONS_KPI_TOTAL: 'Total registradas',
@@ -348,7 +387,8 @@ export const UI_MESSAGES = {
   FOUNDATIONS_PROFILE_DESCRIPTION: 'Actualiza la información pública de tu organización.',
   FOUNDATIONS_PENDING_NOTICE:
     'Tu fundación está pendiente de verificación. Un administrador revisará tu solicitud.',
-  FOUNDATIONS_PROFILE_UPDATED: 'Perfil de fundación actualizado correctamente.',
+  FOUNDATIONS_PROFILE_UPDATED:
+    'Perfil de fundación actualizado correctamente. Continúa con los documentos legales si aún faltan.',
   FOUNDATIONS_FORM_NAME: 'Nombre de la fundación',
   FOUNDATIONS_FORM_ACRONYM: 'Sigla',
   FOUNDATIONS_FORM_DESCRIPTION: 'Descripción',

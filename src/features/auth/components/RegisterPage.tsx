@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import {
   AuthFooter,
   AuthHeader,
@@ -199,15 +200,9 @@ export function RegisterPage() {
                 </span>
               </label>
               {userForm.formState.errors.acceptTerms && (
-                <p className="text-sm text-red-600" role="alert">
-                  {userForm.formState.errors.acceptTerms.message}
-                </p>
+                <Alert variant="danger">{userForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && (
-                <p className="text-sm text-red-600" role="alert">
-                  {apiError}
-                </p>
-              )}
+              {apiError && <Alert variant="danger">{apiError}</Alert>}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}
@@ -301,15 +296,9 @@ export function RegisterPage() {
                 </span>
               </label>
               {foundationForm.formState.errors.acceptTerms && (
-                <p className="text-sm text-red-600" role="alert">
-                  {foundationForm.formState.errors.acceptTerms.message}
-                </p>
+                <Alert variant="danger">{foundationForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && (
-                <p className="text-sm text-red-600" role="alert">
-                  {apiError}
-                </p>
-              )}
+              {apiError && <Alert variant="danger">{apiError}</Alert>}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}

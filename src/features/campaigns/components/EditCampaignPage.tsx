@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -118,11 +119,7 @@ export function EditCampaignPage() {
           {UI_MESSAGES.CAMPAIGNS_BACK}
         </Link>
       </div>
-      {success && (
-        <p className="rounded-lg bg-success-500/10 px-3 py-2 text-sm text-success-600" role="status">
-          {success}
-        </p>
-      )}
+      {success && <Alert variant="success">{success}</Alert>}
       <Card glass={false}>
         <CampaignForm
           key={campaign.updatedAt}
