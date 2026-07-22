@@ -202,6 +202,8 @@ export const UI_MESSAGES = {
   ALERT_SUCCESS: 'Exito',
   ALERT_WARNING: 'Advertencia',
   ALERT_NEUTRAL: 'Aviso',
+  TOAST_CONTEXT_ERROR: 'useToast debe usarse dentro de ToastProvider',
+  TOAST_REGION_LABEL: 'Notificaciones',
   FIELD_REQUIRED_MARK: 'Obligatorio',
   FIELD_OPTIONAL_MARK: 'Opcional',
   FOUNDATIONS_CHECKLIST_TITLE: 'Tu camino hacia la verificación',
@@ -233,6 +235,12 @@ export const UI_MESSAGES = {
     'Este botón guarda solo los datos del formulario. Logo y documentos se suben en sus propias secciones.',
   FOUNDATIONS_FORM_VALIDATION_ERROR:
     'No se pudo guardar. Revisa los campos marcados e intenta de nuevo.',
+  FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE: 'Cambios guardados',
+  FOUNDATIONS_FORM_SAVE_ERROR_TITLE: 'No se pudo guardar',
+  FOUNDATIONS_FORM_SAVE_NEXT_DOCS:
+    'Siguiente paso: sube los documentos legales obligatorios (RUT, certificado e identidad).',
+  FOUNDATIONS_FORM_SAVE_UNEXPECTED:
+    'Ocurrió un error inesperado al guardar. Intenta de nuevo.',
   FOUNDATIONS_FORM_REQUIRED_LEGEND:
     'Los campos marcados con * son obligatorios para la verificación.',
   FOUNDATIONS_FIELD_REQUIRED: 'Este campo es obligatorio.',

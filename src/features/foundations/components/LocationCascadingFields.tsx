@@ -60,7 +60,7 @@ function buildLocationFromNames(
 
 /**
  * Entrada: watch/setValue/register/errors del formulario de fundacion.
- * Proceso: Mantiene LocationValue local, sincroniza nombres al formulario y renderiza direccion.
+ * Proceso: Registra campos de ubicacion en RHF, sincroniza LocationSelector y direccion.
  * Salida: Retorna el bloque JSX de ubicacion.
  */
 export function LocationCascadingFields({
@@ -76,6 +76,12 @@ export function LocationCascadingFields({
   const [location, setLocation] = useState<LocationValue>(() =>
     buildLocationFromNames(countryName, departmentName, cityName),
   );
+
+  useEffect(() => {
+    register('country');
+    register('department');
+    register('city');
+  }, [register]);
 
   useEffect(() => {
     const currentCountry = location.country?.name ?? '';
@@ -121,9 +127,6 @@ export function LocationCascadingFields({
 
   return (
     <div className="space-y-4">
-      <input type="hidden" {...register('country')} />
-      <input type="hidden" {...register('department')} />
-      <input type="hidden" {...register('city')} />
       <LocationSelector
         value={location}
         onChange={handleLocationChange}

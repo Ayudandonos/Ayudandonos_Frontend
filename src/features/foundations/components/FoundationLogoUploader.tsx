@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
-import { Alert } from '@/components/ui/Alert';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { AppImage } from '@/components/ui/AppImage';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 
 interface FoundationLogoUploaderProps {
   logoUrl: string | null;
@@ -13,7 +13,7 @@ interface FoundationLogoUploaderProps {
 
 /**
  * Entrada: logoUrl, isUploading, successMessage y onUpload.
- * Proceso: Permite previsualizar/subir logo y aclara que no guarda el formulario.
+ * Proceso: Permite previsualizar/subir logo; confirma exito via toast.
  * Salida: Retorna el elemento JSX del uploader de logo.
  */
 export function FoundationLogoUploader({
@@ -22,8 +22,15 @@ export function FoundationLogoUploader({
   successMessage,
   onUpload,
 }: FoundationLogoUploaderProps) {
+  const { pushToast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (successMessage) {
+      pushToast({ variant: 'success', message: successMessage });
+    }
+  }, [successMessage, pushToast]);
 
   /**
    * Entrada: event: cambio del input file con imagen de logo.
@@ -60,8 +67,6 @@ export function FoundationLogoUploader({
         </p>
         <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_LOGO_HINT}</p>
       </div>
-
-      {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
       <div className="flex items-center gap-4">
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-xl border border-border-default bg-vivid-50">

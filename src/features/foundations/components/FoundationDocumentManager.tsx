@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import type {
   FoundationDocument,
   FoundationDocumentType,
@@ -35,7 +35,7 @@ interface FoundationDocumentManagerProps {
 
 /**
  * Entrada: documents, permisos, successMessage y callbacks documentales.
- * Proceso: Lista documentos con badges de obligatorio/opcional y estado cargado/faltante.
+ * Proceso: Lista documentos; feedback de carga/error via toast.
  * Salida: Retorna el elemento JSX del gestor documental.
  */
 export function FoundationDocumentManager({
@@ -47,12 +47,18 @@ export function FoundationDocumentManager({
   onDownload,
   fetchDocumentBlob,
 }: FoundationDocumentManagerProps) {
+  const { pushToast } = useToast();
   const inputRefs = useRef<Partial<Record<FoundationDocumentType, HTMLInputElement | null>>>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [previewError, setPreviewError] = useState('');
   const [previewLoadingType, setPreviewLoadingType] = useState<FoundationDocumentType | null>(null);
 
   const documentMap = new Map(documents.map((doc) => [doc.type, doc]));
+
+  useEffect(() => {
+    if (successMessage) {
+      pushToast({ variant: 'success', message: successMessage });
+    }
+  }, [successMessage, pushToast]);
 
   useEffect(() => {
     return () => {
@@ -88,14 +94,13 @@ export function FoundationDocumentManager({
   /**
    * Entrada: type: tipo documental a previsualizar.
    * Proceso: Obtiene blob autenticado y crea URL temporal para iframe o enlace.
-   * Salida: No retorna valor; actualiza previewUrl o previewError.
+   * Salida: No retorna valor; actualiza previewUrl o muestra toast de error.
    */
   const handlePreview = async (type: FoundationDocumentType) => {
     if (!fetchDocumentBlob) {
       return;
     }
 
-    setPreviewError('');
     setPreviewLoadingType(type);
 
     try {
@@ -105,7 +110,10 @@ export function FoundationDocumentManager({
       }
       setPreviewUrl(URL.createObjectURL(blob));
     } catch {
-      setPreviewError(UI_MESSAGES.FOUNDATIONS_DOCUMENT_PREVIEW_ERROR);
+      pushToast({
+        variant: 'danger',
+        message: UI_MESSAGES.FOUNDATIONS_DOCUMENT_PREVIEW_ERROR,
+      });
     } finally {
       setPreviewLoadingType(null);
     }
@@ -114,14 +122,13 @@ export function FoundationDocumentManager({
   /**
    * Entrada: Ninguna.
    * Proceso: Revoca URL de previsualizacion y limpia estado del modal de preview.
-   * Salida: No retorna valor; restablece previewUrl y previewError.
+   * Salida: No retorna valor; restablece previewUrl.
    */
   const closePreview = () => {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
     }
     setPreviewUrl(null);
-    setPreviewError('');
   };
 
   return (
@@ -132,9 +139,6 @@ export function FoundationDocumentManager({
         </p>
         <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_DOCS_INTRO}</p>
       </div>
-
-      {successMessage && <Alert variant="success">{successMessage}</Alert>}
-      {previewError && <Alert variant="danger">{previewError}</Alert>}
 
       <div className="space-y-3">
         {DOCUMENT_TYPES.map((type) => {

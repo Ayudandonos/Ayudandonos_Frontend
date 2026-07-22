@@ -128,7 +128,7 @@ export function FoundationProfilePage() {
    */
   const handleSubmit = async (data: UpdateFoundationFormData) => {
     if (!foundation) {
-      return;
+      throw new Error(UI_MESSAGES.FOUNDATIONS_NOT_FOUND);
     }
 
     setApiError('');
@@ -143,7 +143,10 @@ export function FoundationProfilePage() {
       });
       await fetchMe();
     } catch (submitError) {
-      setApiError(parseApiError(submitError).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
+      const parsed = parseApiError(submitError);
+      const message = parsed.message || UI_MESSAGES.AUTH_GENERIC_ERROR;
+      setApiError(message);
+      throw submitError;
     }
   };
 

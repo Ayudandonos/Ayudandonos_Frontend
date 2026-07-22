@@ -4,6 +4,7 @@ export { Input } from './Input';
 export { Card } from './Card';
 export { AppImage } from './AppImage';
 export { Alert } from './Alert';
+export { ToastViewport } from './Toast';
 export { ConfirmDialog } from './ConfirmDialog';
 export { EmptyState } from './EmptyState';
 export { ProgressBar } from './ProgressBar';
