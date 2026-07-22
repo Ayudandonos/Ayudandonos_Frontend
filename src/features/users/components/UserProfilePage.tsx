@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
+import { useToast } from '@/context/useToast';
 import { DonorStatsPanel } from '@/features/users/components/DonorStatsPanel';
 import { UserProfileSkeleton } from '@/features/users/components/UserProfileSkeleton';
 import { usersService } from '@/features/users/services/users.service';
@@ -34,17 +35,27 @@ function toFormDefaults(profile: UserProfile): UserProfileFormData {
 }
 
 /**
- * Entrada: Ninguna (usuario autenticado con rol USER).
- * Proceso: Carga GET /users/me, edita con PATCH y muestra estadisticas de donante.
- * Salida: Retorna el elemento JSX de perfil de donante.
+ * Entrada: Ninguna (usuario autenticado: USER o ADMIN).
+ * Proceso: Carga GET /users/me, edita con PATCH y muestra estadisticas solo a donantes.
+ * Salida: Retorna el elemento JSX de perfil editable.
  */
 export function UserProfilePage() {
   const { role, fetchMe } = useAuth();
+  const { pushToast } = useToast();
+  const isAdmin = role === 'ADMIN';
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
+  const pageTitle = isAdmin
+    ? UI_MESSAGES.ADMIN_PROFILE_PAGE_TITLE
+    : UI_MESSAGES.USER_PROFILE_TITLE;
+  const pageDescription = isAdmin
+    ? UI_MESSAGES.ADMIN_PROFILE_PAGE_DESCRIPTION
+    : UI_MESSAGES.USER_PROFILE_DESCRIPTION;
+  const savedMessage = isAdmin
+    ? UI_MESSAGES.ADMIN_PROFILE_SAVED
+    : UI_MESSAGES.USER_PROFILE_SAVED;
   const {
     register,
     handleSubmit,
@@ -95,7 +106,6 @@ export function UserProfilePage() {
    */
   async function onSubmit(data: UserProfileFormData) {
     setApiError('');
-    setSuccessMessage('');
     try {
       const updated = await usersService.updateMyProfile({
         fullName: data.fullName,
@@ -107,10 +117,12 @@ export function UserProfilePage() {
       });
       setProfile(updated);
       reset(toFormDefaults(updated));
-      setSuccessMessage(UI_MESSAGES.USER_PROFILE_SAVED);
+      pushToast({ variant: 'success', message: savedMessage });
       await fetchMe();
     } catch (error) {
-      setApiError(parseApiError(error).message || UI_MESSAGES.AUTH_GENERIC_ERROR);
+      const message = parseApiError(error).message || UI_MESSAGES.AUTH_GENERIC_ERROR;
+      setApiError(message);
+      pushToast({ variant: 'danger', message });
     }
   }
 
@@ -137,15 +149,9 @@ export function UserProfilePage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <header>
-        <h1 className="text-display text-text-primary">{UI_MESSAGES.USER_PROFILE_TITLE}</h1>
-        <p className="mt-2 text-body text-text-secondary">{UI_MESSAGES.USER_PROFILE_DESCRIPTION}</p>
+        <h1 className="text-display text-text-primary">{pageTitle}</h1>
+        <p className="mt-2 text-body text-text-secondary">{pageDescription}</p>
       </header>
-
-      {successMessage && (
-        <p className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700" role="status">
-          {successMessage}
-        </p>
-      )}
 
       {apiError && (
         <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">

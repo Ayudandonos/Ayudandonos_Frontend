@@ -1,17 +1,11 @@
-export { AdminDashboardPage } from './components/AdminDashboardPage';
 export { AdminReportsPage } from './components/AdminReportsPage';
-export {
-  AdminCampaignsPlaceholderPage,
-  AdminProfilePlaceholderPage,
-  AdminUsersPlaceholderPage,
-} from './components/AdminPlaceholderPages';
+export { AdminProfilePage } from './components/AdminProfilePage';
+export { AdminUsersPage } from './components/AdminUsersPage';
+export { AdminCampaignsPage } from './components/AdminCampaignsPage';
 export { AdminSectionPlaceholderPage } from './components/AdminSectionPlaceholderPage';
 export { adminService } from './services/admin.service';
 export type {
-  AdminDashboardData,
-  AdminDashboardKpis,
-  AdminFeaturedCampaignItem,
-  AdminLatestNeedItem,
+  AdminCampaignListItem,
   AdminReportsData,
   AdminReportsSummary,
 } from './types/admin.types';

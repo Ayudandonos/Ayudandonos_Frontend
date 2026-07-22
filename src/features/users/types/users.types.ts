@@ -34,3 +34,35 @@ export interface UpdateUserProfilePayload {
   bio?: string | null;
   avatarUrl?: string | null;
 }
+
+export interface AdminUserListItem {
+  id: string;
+  email: string;
+  fullName: string;
+  role: UserRole;
+  phone: string | null;
+  city: string | null;
+  department: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export interface AdminUserDetail extends AdminUserListItem {
+  updatedAt?: string;
+  donationStats?: DonationStats | null;
+  foundationName?: string | null;
+}
+
+export interface ListAdminUsersParams {
+  page?: number;
+  limit?: number;
+  role?: Extract<UserRole, 'USER' | 'FOUNDATION'>;
+  isActive?: boolean;
+  search?: string;
+}
+
+export interface PaginatedAdminUsers {
+  items: AdminUserListItem[];
+}

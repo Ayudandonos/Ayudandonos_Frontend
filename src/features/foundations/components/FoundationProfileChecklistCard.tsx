@@ -47,9 +47,12 @@ export function FoundationProfileChecklistCard({
         {checklist.nextStepMessage}
       </Alert>
     ) : checklist.nextStep === 'rejected' ? (
-      <Alert variant="danger" title={UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}>
-        {checklist.nextStepMessage}
-      </Alert>
+      <div className="rounded-xl border border-primary-100 bg-primary-50/60 p-4">
+        <p className="text-sm font-medium text-primary-800">
+          {UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}
+        </p>
+        <p className="mt-1 text-sm text-primary-700/90">{checklist.nextStepMessage}</p>
+      </div>
     ) : checklist.nextStep === 'wait' ? (
       <Alert variant="info" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
         {checklist.nextStepMessage}

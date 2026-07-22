@@ -1,6 +1,11 @@
 import { api } from '@/services/api';
 import type { ApiSuccessResponse } from '@/types';
-import type { AdminDashboardData, AdminReportsData } from '@/features/admin/types/admin.types';
+import type {
+  AdminDashboardData,
+  AdminReportsData,
+  ListAdminCampaignsParams,
+  PaginatedAdminCampaigns,
+} from '@/features/admin/types/admin.types';
 
 export interface AdminDashboardQuery {
   latestNeedsLimit?: number;
@@ -29,7 +34,27 @@ async function fetchReports(): Promise<AdminReportsData> {
   return data.data;
 }
 
+/**
+ * Entrada: params: paginacion y filtros opcionales.
+ * Proceso: Consulta GET /admin/campaigns con creador, fechas y donaciones.
+ * Salida: Retorna items y meta de paginacion.
+ */
+async function fetchCampaigns(params: ListAdminCampaignsParams = {}): Promise<{
+  data: PaginatedAdminCampaigns;
+  meta: NonNullable<ApiSuccessResponse['meta']>;
+}> {
+  const { data } = await api.get<ApiSuccessResponse<PaginatedAdminCampaigns>>('/admin/campaigns', {
+    params,
+  });
+
+  return {
+    data: data.data,
+    meta: data.meta ?? {},
+  };
+}
+
 export const adminService = {
   fetchDashboard,
   fetchReports,
+  fetchCampaigns,
 };

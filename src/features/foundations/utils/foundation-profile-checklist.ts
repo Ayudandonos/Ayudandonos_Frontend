@@ -131,9 +131,7 @@ export function buildFoundationProfileChecklist(
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_VERIFIED;
   } else if (foundation.status === 'REJECTED') {
     nextStep = 'rejected';
-    nextStepMessage = foundation.rejectionReason
-      ? `${UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}: ${foundation.rejectionReason}`
-      : UI_MESSAGES.FOUNDATIONS_PROFILE_INCOMPLETE;
+    nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_AFTER_REJECT;
   } else if (!isProfileComplete) {
     nextStep = 'save';
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_SAVE;

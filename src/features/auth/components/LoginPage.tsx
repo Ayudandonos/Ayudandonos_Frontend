@@ -50,7 +50,7 @@ export function LoginPage() {
       const { user, foundation } = await login(data.email, data.password, data.remember ?? true);
       const redirect =
         user.role === 'ADMIN'
-          ? '/admin/dashboard'
+          ? '/admin/reports'
           : user.role === 'FOUNDATION'
             ? canFoundationOperate(foundation)
               ? '/foundation/requests'

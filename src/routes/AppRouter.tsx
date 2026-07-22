@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AuthLayout, DashboardLayout } from '@/layouts';
 import { NotFoundPage } from '@/pages';
 import { LoginPage, RegisterPage } from '@/features/auth';
@@ -33,11 +33,10 @@ import {
 } from '@/features/legal';
 import { HomePage, ImpactPage, OrganizationsPage } from '@/features/marketing';
 import {
-  AdminCampaignsPlaceholderPage,
-  AdminDashboardPage,
-  AdminProfilePlaceholderPage,
+  AdminCampaignsPage,
+  AdminProfilePage,
   AdminReportsPage,
-  AdminUsersPlaceholderPage,
+  AdminUsersPage,
 } from '@/features/admin';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { FoundationDashboardGuard } from '@/routes/FoundationDashboardGuard';
@@ -172,16 +171,12 @@ export const router = createBrowserRouter([
           },
           {
             path: 'admin/dashboard',
-            element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
-                <AdminDashboardPage />
-              </RoleRoute>
-            ),
+            element: <Navigate to="/admin/reports" replace />,
           },
           {
             path: 'admin/foundations',
             element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/reports">
                 <AdminFoundationsPage />
               </RoleRoute>
             ),
@@ -189,23 +184,23 @@ export const router = createBrowserRouter([
           {
             path: 'admin/campaigns',
             element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
-                <AdminCampaignsPlaceholderPage />
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/reports">
+                <AdminCampaignsPage />
               </RoleRoute>
             ),
           },
           {
             path: 'admin/users',
             element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
-                <AdminUsersPlaceholderPage />
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/reports">
+                <AdminUsersPage />
               </RoleRoute>
             ),
           },
           {
             path: 'admin/reports',
             element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/campaigns">
                 <AdminReportsPage />
               </RoleRoute>
             ),
@@ -213,8 +208,8 @@ export const router = createBrowserRouter([
           {
             path: 'admin/profile',
             element: (
-              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
-                <AdminProfilePlaceholderPage />
+              <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/reports">
+                <AdminProfilePage />
               </RoleRoute>
             ),
           },

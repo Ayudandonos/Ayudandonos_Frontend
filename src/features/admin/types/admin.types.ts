@@ -67,3 +67,38 @@ export interface AdminReportsData {
   campaignsByStatus: AdminReportSeriesItem[];
   monthlyActivity: AdminReportMonthlyItem[];
 }
+
+export type AdminCampaignStatus = 'DRAFT' | 'PUBLISHED' | 'FINISHED' | 'CANCELLED';
+
+export interface AdminCampaignListItem {
+  id: string;
+  title: string;
+  status: AdminCampaignStatus;
+  imageUrl: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  createdAt: string;
+  donationsCount: number;
+  needsCount: number;
+  foundation: {
+    id: string;
+    name: string;
+    city: string | null;
+    department: string | null;
+  };
+  createdBy: {
+    fullName: string;
+    email: string;
+  };
+}
+
+export interface ListAdminCampaignsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  status?: AdminCampaignStatus;
+}
+
+export interface PaginatedAdminCampaigns {
+  items: AdminCampaignListItem[];
+}

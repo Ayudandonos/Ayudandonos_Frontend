@@ -37,11 +37,10 @@ const FOUNDATION_NAV: NavItem[] = [
 ];
 
 const ADMIN_NAV: NavItem[] = [
-  { label: UI_MESSAGES.NAV_ADMIN_DASHBOARD, path: '/admin/dashboard', roles: ['ADMIN'] },
+  { label: UI_MESSAGES.NAV_ADMIN_REPORTS, path: '/admin/reports', roles: ['ADMIN'] },
   { label: UI_MESSAGES.NAV_ADMIN_FOUNDATIONS, path: '/admin/foundations', roles: ['ADMIN'] },
   { label: UI_MESSAGES.NAV_ADMIN_CAMPAIGNS, path: '/admin/campaigns', roles: ['ADMIN'] },
   { label: UI_MESSAGES.NAV_ADMIN_USERS, path: '/admin/users', roles: ['ADMIN'] },
-  { label: UI_MESSAGES.NAV_ADMIN_REPORTS, path: '/admin/reports', roles: ['ADMIN'] },
   { label: UI_MESSAGES.NAV_ADMIN_PROFILE, path: '/admin/profile', roles: ['ADMIN'] },
 ];
 
@@ -104,7 +103,6 @@ export function SideNav() {
         )}
       </nav>
       <div className="border-t border-border-default p-4">
-        <p className="mb-2 px-4 py-2 text-sm text-text-secondary">{UI_MESSAGES.NAV_SETTINGS}</p>
         <button
           type="button"
           onClick={() => void logout()}

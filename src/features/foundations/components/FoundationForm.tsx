@@ -130,7 +130,6 @@ export function FoundationForm({
   const feedbackRef = useRef<HTMLDivElement>(null);
   const [clientError, setClientError] = useState('');
   const [validationItems, setValidationItems] = useState<string[]>([]);
-  const [localSuccess, setLocalSuccess] = useState('');
 
   const {
     register,
@@ -151,7 +150,6 @@ export function FoundationForm({
 
   const socialLinks = watch('socialLinks') ?? [];
   const displayError = apiError || clientError;
-  const displaySuccess = successMessage || localSuccess;
 
   const socialFieldErrors = useMemo(() => {
     const map: Partial<Record<(typeof SOCIAL_NETWORKS)[number], string>> = {};
@@ -178,11 +176,11 @@ export function FoundationForm({
   }, [errors.socialLinks, socialLinks]);
 
   useEffect(() => {
-    if (!displayError && !displaySuccess && validationItems.length === 0) {
+    if (!displayError && validationItems.length === 0) {
       return;
     }
     feedbackRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [displayError, displaySuccess, validationItems]);
+  }, [displayError, validationItems]);
 
   /**
    * Entrada: network: red social; url: enlace a persistir en el formulario.
@@ -213,7 +211,6 @@ export function FoundationForm({
    */
   const handleInvalid = (formErrors: FieldErrors<UpdateFoundationFormData>) => {
     const items = collectInvalidFieldLabels(formErrors, getValues('socialLinks') ?? []);
-    setLocalSuccess('');
     setClientError(UI_MESSAGES.FOUNDATIONS_FORM_VALIDATION_ERROR);
     setValidationItems(items);
     pushToast({
@@ -234,7 +231,6 @@ export function FoundationForm({
   const handleValidSubmit = async (data: UpdateFoundationFormData) => {
     setClientError('');
     setValidationItems([]);
-    setLocalSuccess('');
 
     try {
       await onSubmit({
@@ -250,7 +246,6 @@ export function FoundationForm({
       });
 
       const okMessage = successMessage || UI_MESSAGES.FOUNDATIONS_PROFILE_UPDATED;
-      setLocalSuccess(okMessage);
       pushToast({
         variant: 'success',
         title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE,
@@ -281,7 +276,6 @@ export function FoundationForm({
     event.preventDefault();
     setClientError('');
     setValidationItems([]);
-    setLocalSuccess('');
 
     try {
       await handleSubmit(handleValidSubmit, handleInvalid)(event);
@@ -458,15 +452,6 @@ export function FoundationForm({
               items={validationItems.length > 0 ? validationItems : undefined}
             >
               {validationItems.length === 0 ? displayError : null}
-            </Alert>
-          )}
-
-          {displaySuccess && (
-            <Alert variant="success" title={UI_MESSAGES.FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE}>
-              {displaySuccess}
-              <span className="mt-2 block text-sm">
-                {UI_MESSAGES.FOUNDATIONS_FORM_SAVE_NEXT_DOCS}
-              </span>
             </Alert>
           )}
         </div>
