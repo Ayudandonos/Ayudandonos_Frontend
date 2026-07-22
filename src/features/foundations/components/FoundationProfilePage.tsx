@@ -36,6 +36,7 @@ function buildDefaultValues(foundation: FoundationDetail): UpdateFoundationFormD
     description: foundation.description ?? '',
     city: foundation.city ?? '',
     department: foundation.department ?? '',
+    country: foundation.country ?? '',
     address: foundation.address ?? '',
     institutionalEmail: foundation.institutionalEmail ?? '',
     phone: foundation.phone ?? '',
