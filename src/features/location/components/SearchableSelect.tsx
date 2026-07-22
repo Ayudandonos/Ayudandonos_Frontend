@@ -14,6 +14,7 @@ export interface SearchableSelectOption {
   value: string;
   label: string;
   prefix?: string;
+  prefixImageUrl?: string;
   secondary?: string;
   searchText?: string;
 }
@@ -36,11 +37,11 @@ interface SearchableSelectProps {
 
 /**
  * Entrada: option: opcion del selector.
- * Proceso: Construye el texto visible del input (prefijo + etiqueta, sin codigo secundario).
+ * Proceso: Construye el texto visible del input (solo etiqueta, sin emoji ni codigo).
  * Salida: Retorna la cadena para mostrar en el campo.
  */
 function formatOptionDisplay(option: SearchableSelectOption): string {
-  return [option.prefix, option.label].filter(Boolean).join(' ');
+  return option.label;
 }
 
 /**
@@ -253,12 +254,23 @@ export function SearchableSelect({
                     onMouseEnter={() => setHighlightedIndex(index)}
                     onClick={() => selectOption(option.value)}
                   >
-                    {option.prefix ? (
+                    {option.prefixImageUrl || option.prefix ? (
                       <span
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-vivid-50 text-base leading-none"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-vivid-50 text-base leading-none"
                         aria-hidden="true"
                       >
-                        {option.prefix}
+                        {option.prefixImageUrl ? (
+                          <img
+                            src={option.prefixImageUrl}
+                            alt=""
+                            width={20}
+                            height={15}
+                            className="h-4 w-5 object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          option.prefix
+                        )}
                       </span>
                     ) : null}
                     <span className="min-w-0 flex-1">

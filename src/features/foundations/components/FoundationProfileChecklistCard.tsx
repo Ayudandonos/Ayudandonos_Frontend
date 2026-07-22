@@ -1,4 +1,5 @@
 import { Alert } from '@/components/ui/Alert';
+import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -12,7 +13,7 @@ interface FoundationProfileChecklistCardProps {
 
 /**
  * Entrada: checklist: progreso calculado; status: estado de la fundacion.
- * Proceso: Renderiza pasos, barra de progreso, faltantes y siguiente accion clara.
+ * Proceso: Muestra guia de onboarding con pasos clicables y pendientes como chips, sin alertas de error.
  * Salida: Retorna el bloque JSX de guia UX del perfil.
  */
 export function FoundationProfileChecklistCard({
@@ -40,17 +41,23 @@ export function FoundationProfileChecklistCard({
     },
   ];
 
-  const alertVariant =
-    checklist.nextStep === 'verified'
-      ? 'success'
-      : checklist.nextStep === 'rejected'
-        ? 'danger'
-        : checklist.nextStep === 'wait'
-          ? 'info'
-          : 'warning';
+  const statusAlert =
+    checklist.nextStep === 'verified' ? (
+      <Alert variant="success" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
+        {checklist.nextStepMessage}
+      </Alert>
+    ) : checklist.nextStep === 'rejected' ? (
+      <Alert variant="danger" title={UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}>
+        {checklist.nextStepMessage}
+      </Alert>
+    ) : checklist.nextStep === 'wait' ? (
+      <Alert variant="info" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
+        {checklist.nextStepMessage}
+      </Alert>
+    ) : null;
 
   return (
-    <Card glass={false} className="border border-border-default bg-white space-y-4">
+    <Card glass={false} className="space-y-5 border border-border-default bg-white">
       <div>
         <h2 className="text-lg font-semibold text-text-primary">
           {UI_MESSAGES.FOUNDATIONS_CHECKLIST_TITLE}
@@ -59,9 +66,9 @@ export function FoundationProfileChecklistCard({
       </div>
 
       <ProgressBar
-        value={checklist.completedSteps}
-        max={checklist.totalSteps}
-        label={`${checklist.completedSteps}/${checklist.totalSteps}`}
+        value={checklist.progressValue}
+        max={checklist.progressMax}
+        label={`${checklist.progressValue}/${checklist.progressMax}`}
       />
 
       <ol className="grid gap-3 sm:grid-cols-3">
@@ -73,7 +80,7 @@ export function FoundationProfileChecklistCard({
                   'flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold',
                   step.done
                     ? 'bg-success-500/15 text-success-600'
-                    : 'bg-secondary-100 text-text-secondary',
+                    : 'bg-primary-100 text-primary-700',
                 )}
               >
                 {index + 1}
@@ -94,12 +101,24 @@ export function FoundationProfileChecklistCard({
               {step.href ? (
                 <a
                   href={step.href}
-                  className="flex items-start gap-3 rounded-lg border border-border-default p-3 transition-smooth hover:border-primary-300 hover:bg-primary-50/40"
+                  className={cn(
+                    'flex items-start gap-3 rounded-xl border p-3 transition-smooth',
+                    step.done
+                      ? 'border-success-500/20 bg-success-500/5'
+                      : 'border-border-default hover:border-primary-300 hover:bg-primary-50/50',
+                  )}
                 >
                   {content}
                 </a>
               ) : (
-                <div className="flex items-start gap-3 rounded-lg border border-border-default p-3">
+                <div
+                  className={cn(
+                    'flex items-start gap-3 rounded-xl border p-3',
+                    step.done
+                      ? 'border-success-500/20 bg-success-500/5'
+                      : 'border-border-default bg-vivid-50/40',
+                  )}
+                >
                   {content}
                 </div>
               )}
@@ -108,24 +127,65 @@ export function FoundationProfileChecklistCard({
         })}
       </ol>
 
-      <Alert variant={alertVariant} title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_TITLE}>
-        {checklist.nextStepMessage}
-      </Alert>
+      {statusAlert}
 
-      {checklist.missingFields.length > 0 && (
-        <Alert
-          variant="warning"
-          title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_MISSING_FIELDS}
-          items={checklist.missingFields}
-        />
-      )}
+      {(checklist.nextStep === 'save' || checklist.nextStep === 'documents') && (
+        <div className="rounded-xl border border-primary-100 bg-primary-50/60 p-4">
+          <p className="text-sm font-medium text-primary-800">
+            {UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}
+          </p>
+          <p className="mt-1 text-sm text-primary-700/90">{checklist.nextStepMessage}</p>
 
-      {checklist.missingDocuments.length > 0 && (
-        <Alert
-          variant="warning"
-          title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_MISSING_DOCS}
-          items={checklist.missingDocuments}
-        />
+          {checklist.missingFields.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary-700">
+                {UI_MESSAGES.FOUNDATIONS_CHECKLIST_PENDING_FIELDS}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {checklist.missingFields.map((field) => (
+                  <a
+                    key={field}
+                    href="#foundation-profile-form"
+                    className="rounded-full border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-700 transition-smooth hover:border-primary-400 hover:bg-primary-50"
+                  >
+                    {field}
+                  </a>
+                ))}
+              </div>
+              <a
+                href="#foundation-profile-form"
+                className={cn(buttonLinkClass({ variant: 'primary', size: 'sm' }), 'mt-3')}
+              >
+                {UI_MESSAGES.FOUNDATIONS_CHECKLIST_GO_TO_FORM}
+              </a>
+            </div>
+          )}
+
+          {checklist.isProfileComplete && checklist.missingDocuments.length > 0 && (
+            <div className="mt-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-primary-700">
+                {UI_MESSAGES.FOUNDATIONS_CHECKLIST_PENDING_DOCS}
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {checklist.missingDocuments.map((document) => (
+                  <a
+                    key={document}
+                    href="#foundation-profile-documents"
+                    className="rounded-full border border-primary-200 bg-white px-3 py-1 text-xs font-medium text-primary-700 transition-smooth hover:border-primary-400 hover:bg-primary-50"
+                  >
+                    {document}
+                  </a>
+                ))}
+              </div>
+              <a
+                href="#foundation-profile-documents"
+                className={cn(buttonLinkClass({ variant: 'primary', size: 'sm' }), 'mt-3')}
+              >
+                {UI_MESSAGES.FOUNDATIONS_CHECKLIST_GO_TO_DOCS}
+              </a>
+            </div>
+          )}
+        </div>
       )}
     </Card>
   );

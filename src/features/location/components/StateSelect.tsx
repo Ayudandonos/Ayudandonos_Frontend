@@ -9,14 +9,15 @@ interface StateSelectProps {
   countryIso: string | null;
   value: State | null;
   onChange: (state: State | null) => void;
+  fieldError?: string;
 }
 
 /**
- * Entrada: countryIso: ISO del pais; value/onChange del estado.
+ * Entrada: countryIso: ISO del pais; value/onChange del estado; fieldError opcional.
  * Proceso: Carga estados solo si hay pais; deshabilita en caso contrario.
  * Salida: Retorna el selector de estado/departamento.
  */
-export function StateSelect({ countryIso, value, onChange }: StateSelectProps) {
+export function StateSelect({ countryIso, value, onChange, fieldError }: StateSelectProps) {
   const enabled = Boolean(countryIso);
   const { data, isLoading, isError, error, refetch, isFetching } = useStates(countryIso);
 
@@ -55,9 +56,10 @@ export function StateSelect({ countryIso, value, onChange }: StateSelectProps) {
       loading={enabled && (isLoading || (isFetching && !data))}
       fallbackLabel={value?.name}
       error={
-        enabled && isError
+        fieldError ||
+        (enabled && isError
           ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR
-          : undefined
+          : undefined)
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
       requiredMark

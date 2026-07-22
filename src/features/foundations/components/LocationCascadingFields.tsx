@@ -121,7 +121,18 @@ export function LocationCascadingFields({
 
   return (
     <div className="space-y-4">
-      <LocationSelector value={location} onChange={handleLocationChange} />
+      <input type="hidden" {...register('country')} />
+      <input type="hidden" {...register('department')} />
+      <input type="hidden" {...register('city')} />
+      <LocationSelector
+        value={location}
+        onChange={handleLocationChange}
+        fieldErrors={{
+          country: errors.country?.message,
+          department: errors.department?.message,
+          city: errors.city?.message,
+        }}
+      />
       <div>
         <Input
           label={UI_MESSAGES.FOUNDATIONS_FORM_ADDRESS}

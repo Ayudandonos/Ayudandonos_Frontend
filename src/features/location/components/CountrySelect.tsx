@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { SearchableSelect } from '@/features/location/components/SearchableSelect';
 import { useCountries } from '@/features/location/hooks/useCountries';
 import type { Country } from '@/features/location/types/location.types';
+import { getCountryFlagUrl } from '@/features/location/utils/country-flag';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { parseApiError } from '@/utils/api-error';
 
@@ -9,14 +10,20 @@ interface CountrySelectProps {
   value: Country | null;
   onChange: (country: Country | null) => void;
   disabled?: boolean;
+  fieldError?: string;
 }
 
 /**
- * Entrada: value/onChange del pais seleccionado; disabled opcional.
- * Proceso: Carga paises con useCountries y permite buscar/seleccionar.
+ * Entrada: value/onChange del pais seleccionado; disabled y fieldError opcionales.
+ * Proceso: Carga paises con useCountries y permite buscar/seleccionar con bandera por imagen.
  * Salida: Retorna el selector de pais.
  */
-export function CountrySelect({ value, onChange, disabled = false }: CountrySelectProps) {
+export function CountrySelect({
+  value,
+  onChange,
+  disabled = false,
+  fieldError,
+}: CountrySelectProps) {
   const { data, isLoading, isError, error, refetch, isFetching } = useCountries();
 
   const options = useMemo(
@@ -24,9 +31,9 @@ export function CountrySelect({ value, onChange, disabled = false }: CountrySele
       (data ?? []).map((country) => ({
         value: country.iso2,
         label: country.name,
-        prefix: country.emoji ?? undefined,
+        prefixImageUrl: getCountryFlagUrl(country.iso2),
         secondary: country.iso2,
-        searchText: [country.emoji, country.name, country.iso2].filter(Boolean).join(' '),
+        searchText: [country.name, country.iso2, country.emoji].filter(Boolean).join(' '),
       })),
     [data],
   );
@@ -55,11 +62,10 @@ export function CountrySelect({ value, onChange, disabled = false }: CountrySele
       onChange={handleChange}
       disabled={disabled}
       loading={isLoading || (isFetching && !data)}
-      fallbackLabel={[value?.emoji, value?.name].filter(Boolean).join(' ')}
+      fallbackLabel={value?.name}
       error={
-        isError
-          ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR
-          : undefined
+        fieldError ||
+        (isError ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR : undefined)
       }
       onRetry={isError ? () => void refetch() : undefined}
       requiredMark

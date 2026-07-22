@@ -204,30 +204,38 @@ export const UI_MESSAGES = {
   ALERT_NEUTRAL: 'Aviso',
   FIELD_REQUIRED_MARK: 'Obligatorio',
   FIELD_OPTIONAL_MARK: 'Opcional',
-  FOUNDATIONS_CHECKLIST_TITLE: 'Progreso para verificación',
+  FOUNDATIONS_CHECKLIST_TITLE: 'Tu camino hacia la verificación',
   FOUNDATIONS_CHECKLIST_INTRO:
-    'Completa estos pasos en orden. El logo, el formulario y los documentos se guardan por separado.',
+    'Bienvenido. Completa estos pasos a tu ritmo. Nada esta fallando: solo te guiamos para activar tu fundacion.',
   FOUNDATIONS_CHECKLIST_STEP_DATA: 'Datos del perfil',
   FOUNDATIONS_CHECKLIST_STEP_DOCS: 'Documentos legales',
   FOUNDATIONS_CHECKLIST_STEP_REVIEW: 'Revisión del administrador',
-  FOUNDATIONS_CHECKLIST_DONE: 'Completado',
-  FOUNDATIONS_CHECKLIST_PENDING: 'Pendiente',
+  FOUNDATIONS_CHECKLIST_DONE: 'Listo',
+  FOUNDATIONS_CHECKLIST_PENDING: 'Por completar',
+  FOUNDATIONS_CHECKLIST_PENDING_FIELDS: 'Pendientes en el formulario',
+  FOUNDATIONS_CHECKLIST_PENDING_DOCS: 'Documentos por subir',
   FOUNDATIONS_CHECKLIST_MISSING_FIELDS: 'Campos que aún faltan',
   FOUNDATIONS_CHECKLIST_MISSING_DOCS: 'Documentos que aún faltan',
+  FOUNDATIONS_CHECKLIST_GO_TO_FORM: 'Ir al formulario',
+  FOUNDATIONS_CHECKLIST_GO_TO_DOCS: 'Ir a documentos',
   FOUNDATIONS_CHECKLIST_NEXT_SAVE:
-    'Siguiente paso: completa los campos obligatorios y pulsa Guardar cambios.',
+    'Empieza por el formulario: completa los datos marcados como obligatorios y guarda los cambios.',
   FOUNDATIONS_CHECKLIST_NEXT_DOCS:
-    'Siguiente paso: sube los documentos legales obligatorios en la sección de abajo.',
+    'Ya tienes los datos. Ahora sube los documentos legales obligatorios.',
   FOUNDATIONS_CHECKLIST_NEXT_WAIT:
-    'Siguiente paso: espera. Un administrador revisará y verificará tu fundación. No necesitas hacer nada más por ahora.',
+    'Todo listo de tu lado. Un administrador revisara tu fundacion; te avisaremos cuando este verificada.',
   FOUNDATIONS_CHECKLIST_VERIFIED:
-    'Tu fundación ya está verificada. Ya puedes operar en la plataforma.',
+    'Tu fundacion ya esta verificada. Ya puedes operar en la plataforma.',
+  FOUNDATIONS_CHECKLIST_WELCOME_TITLE: 'Siguiente paso sugerido',
   FOUNDATIONS_LOGO_HINT:
     'El logo se guarda al seleccionarlo. No reemplaza el botón Guardar cambios del formulario.',
   FOUNDATIONS_FORM_SAVE_HINT:
     'Este botón guarda solo los datos del formulario. Logo y documentos se suben en sus propias secciones.',
+  FOUNDATIONS_FORM_VALIDATION_ERROR:
+    'No se pudo guardar. Revisa los campos marcados e intenta de nuevo.',
   FOUNDATIONS_FORM_REQUIRED_LEGEND:
     'Los campos marcados con * son obligatorios para la verificación.',
+  FOUNDATIONS_FIELD_REQUIRED: 'Este campo es obligatorio.',
   FOUNDATIONS_DOCS_INTRO:
     'Sube al menos los tres documentos obligatorios. Cada archivo se guarda al subirlo.',
   FOUNDATIONS_BADGE_REQUIRED: 'Obligatorio',
@@ -323,14 +331,14 @@ export const UI_MESSAGES = {
   FOUNDATIONS_ADD_SOCIAL_LINK: 'Agregar red social',
   FOUNDATIONS_UPLOAD_LOGO: 'Subir logo',
   FOUNDATIONS_UPLOAD_DOCUMENT: 'Subir documento',
-  FOUNDATIONS_DOCUMENT_RUT: 'RUT',
+  FOUNDATIONS_DOCUMENT_RUT: 'Registro unico tributario (RUT)',
   FOUNDATIONS_DOCUMENT_LEGAL_CERTIFICATE: 'Certificado de existencia y representación legal',
   FOUNDATIONS_DOCUMENT_REPRESENTATIVE_ID: 'Documento de identidad del representante legal',
   FOUNDATIONS_DOCUMENT_BANK_CERT: 'Certificación bancaria',
   FOUNDATIONS_GATE_INCOMPLETE:
-    'Completa todos los datos obligatorios y sube los documentos legales requeridos antes de continuar.',
+    'Para usar el resto de la plataforma, completa tu perfil y documentos. Usa la guia de abajo para avanzar paso a paso.',
   FOUNDATIONS_GATE_VERIFICATION:
-    'Un administrador debe verificar tu fundación antes de que puedas gestionar campañas, necesidades o solicitudes.',
+    'Tu perfil ya esta completo. Cuando un administrador verifique tu fundacion, podras gestionar campanas, necesidades y solicitudes.',
   FOUNDATIONS_REQUESTS_LOAD_ERROR: 'No fue posible cargar las solicitudes de ayuda.',
   FOUNDATIONS_REQUESTS_EMPTY: 'Aún no tienes solicitudes de ayuda pendientes.',
   FOUNDATIONS_REQUESTS_IN_DEVELOPMENT:

@@ -56,6 +56,10 @@ const DOCUMENT_LABELS: Record<FoundationDocumentType, string> = {
   BANK_CERTIFICATION: UI_MESSAGES.FOUNDATIONS_DOCUMENT_BANK_CERT,
 };
 
+/** Unidades extra de progreso: logo + revision admin. */
+const LOGO_PROGRESS_UNIT = 1;
+const REVIEW_PROGRESS_UNIT = 1;
+
 export type ProfileChecklistNextStep = 'save' | 'documents' | 'wait' | 'verified' | 'rejected';
 
 export interface FoundationProfileChecklist {
@@ -65,6 +69,8 @@ export interface FoundationProfileChecklist {
   hasRequiredDocuments: boolean;
   completedSteps: number;
   totalSteps: number;
+  progressValue: number;
+  progressMax: number;
   nextStep: ProfileChecklistNextStep;
   nextStepMessage: string;
 }
@@ -80,51 +86,67 @@ function hasText(value: string | null | undefined): boolean {
 
 /**
  * Entrada: foundation: detalle de fundacion del perfil.
- * Proceso: Calcula campos/documentos faltantes y el siguiente paso UX.
+ * Proceso: Calcula campos/documentos faltantes, pasos macro y progreso granular de la barra.
  * Salida: Retorna checklist tipado para la UI de progreso.
  */
 export function buildFoundationProfileChecklist(
   foundation: FoundationDetail,
 ): FoundationProfileChecklist {
+  const filledFieldsCount = REQUIRED_PROFILE_FIELDS.filter((field) =>
+    hasText(foundation[field.key]),
+  ).length;
   const missingFields = REQUIRED_PROFILE_FIELDS.filter(
     (field) => !hasText(foundation[field.key]),
   ).map((field) => field.label);
 
-  const uploadedTypes = new Set(foundation.documents.map((document) => document.type));
+  const uploadedTypes = new Set((foundation.documents ?? []).map((document) => document.type));
+  const uploadedRequiredDocsCount = REQUIRED_FOUNDATION_DOCUMENT_TYPES.filter((type) =>
+    uploadedTypes.has(type),
+  ).length;
   const missingDocuments = REQUIRED_FOUNDATION_DOCUMENT_TYPES.filter(
     (type) => !uploadedTypes.has(type),
   ).map((type) => DOCUMENT_LABELS[type]);
 
+  const hasLogo = Boolean(foundation.logoUrl?.trim());
+  const isVerified = foundation.status === 'VERIFIED';
   const isProfileComplete = missingFields.length === 0;
   const hasRequiredDocuments = missingDocuments.length === 0;
 
+  const progressMax =
+    REQUIRED_PROFILE_FIELDS.length +
+    LOGO_PROGRESS_UNIT +
+    REQUIRED_FOUNDATION_DOCUMENT_TYPES.length +
+    REVIEW_PROGRESS_UNIT;
+  const progressValue =
+    filledFieldsCount +
+    Number(hasLogo) +
+    uploadedRequiredDocsCount +
+    Number(isVerified);
+
   let nextStep: ProfileChecklistNextStep = 'save';
   let nextStepMessage: string = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_SAVE;
-  let completedSteps = 0;
 
-  if (foundation.status === 'VERIFIED') {
+  if (isVerified) {
     nextStep = 'verified';
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_VERIFIED;
-    completedSteps = 3;
   } else if (foundation.status === 'REJECTED') {
     nextStep = 'rejected';
     nextStepMessage = foundation.rejectionReason
       ? `${UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}: ${foundation.rejectionReason}`
       : UI_MESSAGES.FOUNDATIONS_PROFILE_INCOMPLETE;
-    completedSteps = Number(isProfileComplete) + Number(hasRequiredDocuments);
   } else if (!isProfileComplete) {
     nextStep = 'save';
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_SAVE;
-    completedSteps = 0;
   } else if (!hasRequiredDocuments) {
     nextStep = 'documents';
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_DOCS;
-    completedSteps = 1;
   } else {
     nextStep = 'wait';
     nextStepMessage = UI_MESSAGES.FOUNDATIONS_CHECKLIST_NEXT_WAIT;
-    completedSteps = 2;
   }
+
+  const completedSteps =
+    Number(isProfileComplete) + Number(hasRequiredDocuments) + Number(isVerified);
 
   return {
     missingFields,
@@ -133,6 +155,8 @@ export function buildFoundationProfileChecklist(
     hasRequiredDocuments,
     completedSteps,
     totalSteps: 3,
+    progressValue,
+    progressMax,
     nextStep,
     nextStepMessage,
   };

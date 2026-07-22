@@ -75,6 +75,17 @@ export function FoundationProfilePage() {
     [foundation],
   );
 
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Vuelve a consultar GET /foundations/me para sincronizar checklist y barra.
+   * Salida: Retorna el detalle actualizado o lanza el error de red/API.
+   */
+  const refreshProfile = async (): Promise<FoundationDetail> => {
+    const data = await foundationsService.fetchMyFoundation();
+    setFoundation(data);
+    return data;
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -124,8 +135,8 @@ export function FoundationProfilePage() {
     setFeedback(null);
 
     try {
-      const updated = await foundationsService.updateFoundation(foundation.id, data);
-      setFoundation(updated);
+      await foundationsService.updateFoundation(foundation.id, data);
+      await refreshProfile();
       setFeedback({
         source: 'form',
         message: UI_MESSAGES.FOUNDATIONS_PROFILE_UPDATED,
@@ -151,8 +162,8 @@ export function FoundationProfilePage() {
     setFeedback(null);
 
     try {
-      const updated = await foundationsService.uploadLogo(foundation.id, file);
-      setFoundation(updated);
+      await foundationsService.uploadLogo(foundation.id, file);
+      await refreshProfile();
       setFeedback({
         source: 'logo',
         message: UI_MESSAGES.FOUNDATIONS_LOGO_UPLOADED,
@@ -180,8 +191,8 @@ export function FoundationProfilePage() {
     setFeedback(null);
 
     try {
-      const updated = await foundationsService.uploadDocument(foundation.id, type, file);
-      setFoundation(updated);
+      await foundationsService.uploadDocument(foundation.id, type, file);
+      await refreshProfile();
       setFeedback({
         source: 'document',
         message: UI_MESSAGES.FOUNDATIONS_DOCUMENT_UPLOADED,
@@ -249,11 +260,15 @@ export function FoundationProfilePage() {
       </header>
 
       {gate === 'incomplete' && (
-        <Alert variant="warning">{UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE}</Alert>
+        <Alert variant="info" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
+          {UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE}
+        </Alert>
       )}
 
       {gate === 'verification' && (
-        <Alert variant="warning">{UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}</Alert>
+        <Alert variant="info" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
+          {UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}
+        </Alert>
       )}
 
       {foundation.status === 'REJECTED' && foundation.rejectionReason && (

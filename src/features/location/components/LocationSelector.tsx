@@ -16,14 +16,24 @@ interface LocationSelectorProps {
   value: LocationValue;
   onChange: (value: LocationValue) => void;
   className?: string;
+  fieldErrors?: {
+    country?: string;
+    department?: string;
+    city?: string;
+  };
 }
 
 /**
- * Entrada: value: ubicacion actual; onChange: callback de actualizacion.
+ * Entrada: value: ubicacion actual; onChange: callback; fieldErrors opcionales de formulario.
  * Proceso: Coordina selects en cascada y resuelve ISO cuando solo hay nombres previos.
  * Salida: Retorna el bloque reutilizable de seleccion de ubicacion.
  */
-function LocationSelectorComponent({ value, onChange, className }: LocationSelectorProps) {
+function LocationSelectorComponent({
+  value,
+  onChange,
+  className,
+  fieldErrors,
+}: LocationSelectorProps) {
   const countriesQuery = useCountries();
   const statesQuery = useStates(value.country?.iso2);
   const citiesQuery = useCities(value.country?.iso2, value.state?.iso2);
@@ -138,17 +148,23 @@ function LocationSelectorComponent({ value, onChange, className }: LocationSelec
 
   return (
     <div className={className ?? 'grid gap-4 md:grid-cols-2'}>
-      <CountrySelect value={value.country} onChange={handleCountryChange} />
+      <CountrySelect
+        value={value.country}
+        onChange={handleCountryChange}
+        fieldError={fieldErrors?.country}
+      />
       <StateSelect
         countryIso={value.country?.iso2 ?? null}
         value={value.state}
         onChange={handleStateChange}
+        fieldError={fieldErrors?.department}
       />
       <CitySelect
         countryIso={value.country?.iso2 ?? null}
         stateIso={value.state?.iso2 ?? null}
         value={value.city}
         onChange={handleCityChange}
+        fieldError={fieldErrors?.city}
       />
     </div>
   );

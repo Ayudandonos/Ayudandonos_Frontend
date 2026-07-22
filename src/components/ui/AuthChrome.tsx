@@ -146,11 +146,11 @@ export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldP
           <button
             type="button"
             onClick={onToggle}
-            className="rounded-md p-1 text-text-muted transition-smooth hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            className="inline-flex size-8 items-center justify-center rounded-md text-text-muted transition-smooth hover:bg-primary-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
             aria-label={showPassword ? UI_MESSAGES.LOGIN_HIDE_PASSWORD : UI_MESSAGES.LOGIN_SHOW_PASSWORD}
             aria-pressed={showPassword}
           >
-            <Icon name={showPassword ? 'eye-crossed' : 'eye'} size="sm" decorative />
+            <Icon name={showPassword ? 'eye-crossed' : 'eye'} size="md" decorative />
           </button>
         }
         {...props}

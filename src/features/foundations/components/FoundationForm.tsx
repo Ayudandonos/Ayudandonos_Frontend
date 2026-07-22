@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
@@ -22,7 +23,7 @@ const SOCIAL_NETWORKS = ['FACEBOOK', 'INSTAGRAM'] as const;
 
 /**
  * Entrada: defaultValues, apiError, successMessage y onSubmit del perfil.
- * Proceso: Renderiza formulario con marcas de obligatoriedad y guardado explicito.
+ * Proceso: Renderiza formulario con validacion visible y guardado explicito.
  * Salida: Retorna el elemento JSX del formulario.
  */
 export function FoundationForm({
@@ -31,6 +32,7 @@ export function FoundationForm({
   successMessage,
   onSubmit,
 }: FoundationFormProps) {
+  const [clientValidationError, setClientValidationError] = useState('');
   const {
     register,
     handleSubmit,
@@ -40,9 +42,11 @@ export function FoundationForm({
   } = useForm<UpdateFoundationFormData>({
     resolver: zodResolver(updateFoundationSchema),
     defaultValues,
+    mode: 'onSubmit',
   });
 
   const socialLinks = watch('socialLinks') ?? [];
+  const socialLinksError = errors.socialLinks?.message || errors.socialLinks?.root?.message;
 
   /**
    * Entrada: network: red social; url: enlace a persistir en el formulario.
@@ -70,13 +74,49 @@ export function FoundationForm({
   const getSocialUrl = (network: FoundationSocialLink['network']) =>
     socialLinks.find((link) => link.network === network)?.url ?? '';
 
+  /**
+   * Entrada: formErrors: mapa de errores de react-hook-form.
+   * Proceso: Muestra alerta global y enfoca el primer campo invalido.
+   * Salida: No retorna valor.
+   */
+  const handleInvalid = (formErrors: FieldErrors<UpdateFoundationFormData>) => {
+    setClientValidationError(UI_MESSAGES.FOUNDATIONS_FORM_VALIDATION_ERROR);
+    const firstKey = Object.keys(formErrors)[0];
+    if (!firstKey) {
+      return;
+    }
+    const element = document.querySelector<HTMLElement>(
+      `[name="${firstKey}"], #foundation-profile-form [aria-invalid="true"]`,
+    );
+    element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    element?.focus?.();
+  };
+
+  /**
+   * Entrada: data: valores ya validados por Zod.
+   * Proceso: Limpia alerta local y delega el guardado al contenedor.
+   * Salida: No retorna valor.
+   */
+  const handleValidSubmit = async (data: UpdateFoundationFormData) => {
+    setClientValidationError('');
+    await onSubmit({
+      ...data,
+      acronym: data.acronym ?? null,
+      website: data.website ?? null,
+      socialLinks: data.socialLinks ?? [],
+    });
+  };
+
   return (
     <form
       id="foundation-profile-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(handleValidSubmit, handleInvalid)}
       className="space-y-8"
+      noValidate
     >
-      {apiError && <Alert variant="danger">{apiError}</Alert>}
+      {(apiError || clientValidationError) && (
+        <Alert variant="danger">{apiError || clientValidationError}</Alert>
+      )}
       {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
       <Alert variant="info">{UI_MESSAGES.FOUNDATIONS_FORM_REQUIRED_LEGEND}</Alert>
@@ -145,10 +185,11 @@ export function FoundationForm({
             <textarea
               rows={field === 'description' ? 4 : 3}
               className="w-full rounded-lg border border-border-default bg-white px-4 py-3 text-sm focus:border-vivid-600 focus:outline-none"
+              aria-invalid={Boolean(errors[field])}
               {...register(field)}
             />
             {errors[field]?.message && (
-              <p className="mt-1 text-sm text-red-600">{errors[field]?.message}</p>
+              <p className="mt-1 text-sm text-error-500">{errors[field]?.message}</p>
             )}
           </div>
         ))}
@@ -218,6 +259,7 @@ export function FoundationForm({
             />
           ))}
         </div>
+        {socialLinksError && <p className="text-sm text-error-500">{socialLinksError}</p>}
       </section>
 
       <div className="space-y-3">

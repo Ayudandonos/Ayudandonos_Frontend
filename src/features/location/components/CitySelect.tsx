@@ -10,14 +10,21 @@ interface CitySelectProps {
   stateIso: string | null;
   value: City | null;
   onChange: (city: City | null) => void;
+  fieldError?: string;
 }
 
 /**
- * Entrada: countryIso/stateIso: contexto geografico; value/onChange de ciudad.
+ * Entrada: countryIso/stateIso: contexto geografico; value/onChange de ciudad; fieldError opcional.
  * Proceso: Carga ciudades solo si hay pais y estado; deshabilita en caso contrario.
  * Salida: Retorna el selector de ciudad.
  */
-export function CitySelect({ countryIso, stateIso, value, onChange }: CitySelectProps) {
+export function CitySelect({
+  countryIso,
+  stateIso,
+  value,
+  onChange,
+  fieldError,
+}: CitySelectProps) {
   const enabled = Boolean(countryIso && stateIso);
   const { data, isLoading, isError, error, refetch, isFetching } = useCities(
     countryIso,
@@ -59,9 +66,10 @@ export function CitySelect({ countryIso, stateIso, value, onChange }: CitySelect
       loading={enabled && (isLoading || (isFetching && !data))}
       fallbackLabel={value?.name}
       error={
-        enabled && isError
+        fieldError ||
+        (enabled && isError
           ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR
-          : undefined
+          : undefined)
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
       requiredMark
