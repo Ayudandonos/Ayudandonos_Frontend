@@ -33,6 +33,7 @@ interface SearchableSelectProps {
   onRetry?: () => void;
   fallbackLabel?: string;
   requiredMark?: boolean;
+  hideLabel?: boolean;
 }
 
 /**
@@ -73,6 +74,7 @@ export function SearchableSelect({
   onRetry,
   fallbackLabel,
   requiredMark = false,
+  hideLabel = false,
 }: SearchableSelectProps) {
   const generatedId = useId();
   const listboxId = `${generatedId}-listbox`;
@@ -174,14 +176,16 @@ export function SearchableSelect({
 
   return (
     <div ref={containerRef} className="relative flex w-full flex-col gap-1.5">
-      <label htmlFor={inputId} className="text-label">
-        {label}
-        {requiredMark && (
-          <span className="ms-1 text-error-500" aria-label="obligatorio">
-            *
-          </span>
-        )}
-      </label>
+      {!hideLabel ? (
+        <label htmlFor={inputId} className="text-label">
+          {label}
+          {requiredMark && (
+            <span className="ms-1 text-error-500" aria-label="obligatorio">
+              *
+            </span>
+          )}
+        </label>
+      ) : null}
 
       <div className="relative">
         <input
@@ -209,7 +213,9 @@ export function SearchableSelect({
             'h-11 w-full rounded-[var(--radius-sm)] border text-base text-text-primary transition-smooth',
             'focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            'glass-subtle border-border-default bg-white/60 px-4',
+            hideLabel
+              ? 'field-control border-border-default bg-white/70 px-4 text-sm'
+              : 'glass-subtle border-border-default bg-white/60 px-4',
             error && 'border-error-500 focus:border-error-500 focus:ring-error-500/20',
           )}
           autoComplete="off"
@@ -267,6 +273,7 @@ export function SearchableSelect({
                             height={15}
                             className="h-4 w-5 object-cover"
                             loading="lazy"
+                            referrerPolicy="no-referrer"
                           />
                         ) : (
                           option.prefix

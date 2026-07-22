@@ -240,18 +240,23 @@ export const UI_MESSAGES = {
   FOUNDATIONS_FORM_SAVE_HINT:
     'Este botón guarda solo los datos del formulario. Logo y documentos se suben en sus propias secciones.',
   FOUNDATIONS_FORM_VALIDATION_ERROR:
-    'No se pudo guardar. Revisa los campos marcados e intenta de nuevo.',
+    'No se pudo guardar. Corrige estos campos:',
   FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE: 'Cambios guardados',
   FOUNDATIONS_FORM_SAVE_ERROR_TITLE: 'No se pudo guardar',
   FOUNDATIONS_FORM_SAVE_NEXT_DOCS:
     'Siguiente paso: sube los documentos legales obligatorios (RUT, certificado e identidad).',
   FOUNDATIONS_FORM_SAVE_UNEXPECTED:
     'Ocurrió un error inesperado al guardar. Intenta de nuevo.',
+  FOUNDATIONS_FORM_SOCIAL_URL_HINT: 'Opcional. Ejemplo: https://facebook.com/tu-pagina',
+  FOUNDATIONS_FORM_SOCIAL_URL_INVALID:
+    'URL inválida. Usa el formato completo, por ejemplo https://instagram.com/tu-cuenta',
   FOUNDATIONS_FORM_REQUIRED_LEGEND:
     'Los campos marcados con * son obligatorios para la verificación.',
   FOUNDATIONS_FIELD_REQUIRED: 'Este campo es obligatorio.',
   FOUNDATIONS_DOCS_INTRO:
     'Sube al menos los tres documentos obligatorios. Cada archivo se guarda al subirlo.',
+  FOUNDATIONS_DOCS_INTRO_ADMIN:
+    'Estos documentos los subió la fundación. Puedes verlos o descargarlos para revisarlos.',
   FOUNDATIONS_BADGE_REQUIRED: 'Obligatorio',
   FOUNDATIONS_BADGE_OPTIONAL: 'Opcional',
   FOUNDATIONS_BADGE_UPLOADED: 'Cargado',
@@ -442,6 +447,9 @@ export const UI_MESSAGES = {
   FOUNDATIONS_FILTER_CATEGORY: 'Categoría',
   FOUNDATIONS_FILTER_CITY: 'Ciudad',
   FOUNDATIONS_FILTER_DEPARTMENT: 'Departamento',
+  FOUNDATIONS_FILTER_COUNTRY: 'País',
+  FOUNDATIONS_LOCATION_AUTODETECT_HINT:
+    'Detectamos tu país según tu ubicación. Puedes cambiarlo si es necesario.',
   FOUNDATIONS_VERIFIED_AT: 'Verificada el',
   FOUNDATIONS_REJECTED_AT: 'Rechazada el',
   FOUNDATIONS_TABLE_CATEGORY: 'Categoría',
@@ -561,7 +569,32 @@ export const UI_MESSAGES = {
     'Módulo reservado para administrar donantes y cuentas. Se integrará con el backend.',
   ADMIN_REPORTS_PAGE_TITLE: 'Reportes',
   ADMIN_REPORTS_PAGE_DESCRIPTION:
-    'Módulo reservado para exportación y métricas avanzadas. Se integrará con el backend.',
+    'Métricas de usuarios, fundaciones, donaciones y campañas con visualización gráfica.',
+  ADMIN_REPORTS_LOAD_ERROR: 'No fue posible cargar los reportes administrativos.',
+  ADMIN_REPORTS_ERROR_TITLE: 'Error al cargar reportes',
+  ADMIN_REPORTS_EMPTY_TITLE: 'Sin datos de reportes',
+  ADMIN_REPORTS_EMPTY_DESCRIPTION:
+    'Aún no hay información suficiente para generar reportes. Intenta más tarde.',
+  ADMIN_REPORTS_CHART_EMPTY: 'Sin datos para este gráfico',
+  ADMIN_REPORTS_SUMMARY_USERS: 'Usuarios registrados',
+  ADMIN_REPORTS_SUMMARY_ACTIVE_USERS: 'Usuarios activos',
+  ADMIN_REPORTS_SUMMARY_FOUNDATIONS: 'Fundaciones',
+  ADMIN_REPORTS_SUMMARY_VERIFIED_FOUNDATIONS: 'Fundaciones verificadas',
+  ADMIN_REPORTS_SUMMARY_DONATIONS: 'Donaciones',
+  ADMIN_REPORTS_SUMMARY_DELIVERED_DONATIONS: 'Donaciones entregadas',
+  ADMIN_REPORTS_SUMMARY_CAMPAIGNS: 'Campañas',
+  ADMIN_REPORTS_SUMMARY_NEEDS: 'Necesidades',
+  ADMIN_REPORTS_USERS_BY_ROLE: 'Usuarios por rol',
+  ADMIN_REPORTS_FOUNDATIONS_BY_STATUS: 'Fundaciones por estado',
+  ADMIN_REPORTS_DONATIONS_BY_STATUS: 'Donaciones por estado',
+  ADMIN_REPORTS_CAMPAIGNS_BY_STATUS: 'Campañas por estado',
+  ADMIN_REPORTS_MONTHLY_ACTIVITY: 'Actividad mensual (últimos 6 meses)',
+  ADMIN_REPORTS_MONTHLY_BARS: 'Altas mensuales comparadas',
+  ADMIN_REPORTS_SERIES_USERS: 'Usuarios',
+  ADMIN_REPORTS_SERIES_FOUNDATIONS: 'Fundaciones',
+  ADMIN_REPORTS_SERIES_DONATIONS: 'Donaciones',
+  ADMIN_REPORTS_SERIES_CAMPAIGNS: 'Campañas',
+  ADMIN_REPORTS_REFRESH: 'Actualizar',
   ADMIN_PROFILE_PAGE_TITLE: 'Perfil del administrador',
   ADMIN_PROFILE_PAGE_DESCRIPTION:
     'Módulo reservado para datos y preferencias del administrador. Se integrará con el backend.',

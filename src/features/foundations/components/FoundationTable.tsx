@@ -54,7 +54,8 @@ export function FoundationTable({ items, selectedId, onSelect }: FoundationTable
                 </div>
               </td>
               <td className="px-4 py-3 text-text-secondary">{foundation.representative.fullName}</td>
-              <td className="px-4 py-3 text-text-secondary">{foundation.city ?? '—'}</td>              <td className="px-4 py-3 text-text-muted">
+              <td className="px-4 py-3 text-text-secondary">{foundation.city ?? '—'}</td>
+              <td className="px-4 py-3 text-text-muted">
                 {new Date(foundation.createdAt).toLocaleDateString('es-CO')}
               </td>
               <td className="px-4 py-3">

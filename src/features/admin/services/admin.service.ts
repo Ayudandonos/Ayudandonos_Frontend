@@ -1,6 +1,6 @@
 import { api } from '@/services/api';
 import type { ApiSuccessResponse } from '@/types';
-import type { AdminDashboardData } from '@/features/admin/types/admin.types';
+import type { AdminDashboardData, AdminReportsData } from '@/features/admin/types/admin.types';
 
 export interface AdminDashboardQuery {
   latestNeedsLimit?: number;
@@ -19,6 +19,17 @@ async function fetchDashboard(query: AdminDashboardQuery = {}): Promise<AdminDas
   return data.data;
 }
 
+/**
+ * Entrada: Ninguna (token ADMIN en interceptor).
+ * Proceso: Consulta GET /admin/reports con resumen y series para graficos.
+ * Salida: Retorna el payload de reportes administrativos.
+ */
+async function fetchReports(): Promise<AdminReportsData> {
+  const { data } = await api.get<ApiSuccessResponse<AdminReportsData>>('/admin/reports');
+  return data.data;
+}
+
 export const adminService = {
   fetchDashboard,
+  fetchReports,
 };

@@ -10,14 +10,23 @@ interface StateSelectProps {
   value: State | null;
   onChange: (state: State | null) => void;
   fieldError?: string;
+  requiredMark?: boolean;
+  hideLabel?: boolean;
 }
 
 /**
- * Entrada: countryIso: ISO del pais; value/onChange del estado; fieldError opcional.
+ * Entrada: countryIso: ISO del pais; value/onChange; fieldError/requiredMark/hideLabel opcionales.
  * Proceso: Carga estados solo si hay pais; deshabilita en caso contrario.
  * Salida: Retorna el selector de estado/departamento.
  */
-export function StateSelect({ countryIso, value, onChange, fieldError }: StateSelectProps) {
+export function StateSelect({
+  countryIso,
+  value,
+  onChange,
+  fieldError,
+  requiredMark = true,
+  hideLabel = false,
+}: StateSelectProps) {
   const enabled = Boolean(countryIso);
   const { data, isLoading, isError, error, refetch, isFetching } = useStates(countryIso);
 
@@ -62,7 +71,8 @@ export function StateSelect({ countryIso, value, onChange, fieldError }: StateSe
           : undefined)
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
-      requiredMark
+      requiredMark={requiredMark}
+      hideLabel={hideLabel}
     />
   );
 }

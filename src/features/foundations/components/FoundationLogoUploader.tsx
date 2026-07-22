@@ -1,69 +1,69 @@
-import { useEffect, useRef, useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { AppImage } from '@/components/ui/AppImage';
-import { UI_MESSAGES } from '@/constants/messages.constants';
-import { useToast } from '@/context/useToast';
+  import { useEffect, useRef, useState } from 'react';
+  import { Button } from '@/components/ui/Button';
+  import { AppImage } from '@/components/ui/AppImage';
+  import { UI_MESSAGES } from '@/constants/messages.constants';
+  import { useToast } from '@/context/useToast';
 
-interface FoundationLogoUploaderProps {
-  logoUrl: string | null;
-  isUploading?: boolean;
-  successMessage?: string;
-  onUpload: (file: File) => Promise<void>;
-}
-
-/**
- * Entrada: logoUrl, isUploading, successMessage y onUpload.
- * Proceso: Permite previsualizar/subir logo; confirma exito via toast.
- * Salida: Retorna el elemento JSX del uploader de logo.
- */
-export function FoundationLogoUploader({
-  logoUrl,
-  isUploading = false,
-  successMessage,
-  onUpload,
-}: FoundationLogoUploaderProps) {
-  const { pushToast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (successMessage) {
-      pushToast({ variant: 'success', message: successMessage });
-    }
-  }, [successMessage, pushToast]);
+  interface FoundationLogoUploaderProps {
+    logoUrl: string | null;
+    isUploading?: boolean;
+    successMessage?: string;
+    onUpload: (file: File) => Promise<void>;
+  }
 
   /**
-   * Entrada: event: cambio del input file con imagen de logo.
-   * Proceso: Genera preview local y delega la subida al callback onUpload.
-   * Salida: No retorna valor; actualiza preview y limpia el input.
+   * Entrada: logoUrl, isUploading, successMessage y onUpload.
+   * Proceso: Permite previsualizar/subir logo; confirma exito via toast.
+   * Salida: Retorna el elemento JSX del uploader de logo.
    */
-  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
-    }
+  export function FoundationLogoUploader({
+    logoUrl,
+    isUploading = false,
+    successMessage,
+    onUpload,
+  }: FoundationLogoUploaderProps) {
+    const { pushToast } = useToast();
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-    setPreviewUrl(URL.createObjectURL(file));
-
-    try {
-      await onUpload(file);
-    } finally {
-      if (inputRef.current) {
-        inputRef.current.value = '';
+    useEffect(() => {
+      if (successMessage) {
+        pushToast({ variant: 'success', message: successMessage });
       }
-    }
-  };
+    }, [successMessage, pushToast]);
 
-  const displayUrl = previewUrl ?? logoUrl;
+    /**
+     * Entrada: event: cambio del input file con imagen de logo.
+     * Proceso: Genera preview local y delega la subida al callback onUpload.
+     * Salida: No retorna valor; actualiza preview y limpia el input.
+     */
+    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) {
+        return;
+      }
 
-  return (
-    <div className="space-y-3">
-      <div>
-        <p className="text-sm font-semibold text-text-primary">
-          {UI_MESSAGES.FOUNDATIONS_SECTION_LOGO}
-          <span className="ms-2 text-xs font-normal text-text-muted">
-            ({UI_MESSAGES.FOUNDATIONS_BADGE_OPTIONAL})
-          </span>
+      setPreviewUrl(URL.createObjectURL(file));
+
+      try {
+        await onUpload(file);
+      } finally {
+        if (inputRef.current) {
+          inputRef.current.value = '';
+        }
+      }
+    };
+
+    const displayUrl = previewUrl ?? logoUrl;
+
+    return (
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm font-semibold text-text-primary">
+            {UI_MESSAGES.FOUNDATIONS_SECTION_LOGO}
+            <span className="ms-2 text-xs font-normal text-text-muted">
+              ({UI_MESSAGES.FOUNDATIONS_BADGE_OPTIONAL})
+            </span>
         </p>
         <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_LOGO_HINT}</p>
       </div>

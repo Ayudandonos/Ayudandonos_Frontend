@@ -66,7 +66,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
             'focus:border-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-600/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
             filled
-              ? 'border-transparent bg-primary-50/80 py-3'
+              ? 'field-control border-transparent bg-primary-50/80 py-3'
               : 'glass-subtle border-border-default bg-white/60',
             iconLeft ? 'pl-10 pr-4' : 'px-4',
             iconRight ? 'pr-10' : '',

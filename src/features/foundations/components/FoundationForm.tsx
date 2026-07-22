@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '@/components/ui/Alert';
@@ -8,6 +8,7 @@ import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useToast } from '@/context/useToast';
 import { LocationCascadingFields } from '@/features/foundations/components/LocationCascadingFields';
 import {
+  normalizeOptionalUrl,
   updateFoundationSchema,
   type UpdateFoundationFormData,
 } from '@/features/foundations/validations/foundations.validations';
@@ -44,18 +45,58 @@ const FIELD_LABELS: Record<string, string> = {
 };
 
 /**
- * Entrada: formErrors: mapa de errores de react-hook-form.
- * Proceso: Extrae etiquetas legibles de los campos invalidos.
- * Salida: Retorna lista de textos para la alerta de validacion.
+ * Entrada: network: codigo de red social.
+ * Proceso: Obtiene etiqueta legible para la UI.
+ * Salida: Retorna el nombre visible de la red.
+ */
+function socialNetworkLabel(network: string): string {
+  if (network === 'FACEBOOK') return 'Facebook';
+  if (network === 'INSTAGRAM') return 'Instagram';
+  return network;
+}
+
+/**
+ * Entrada: formErrors: mapa de errores; socialLinks: valores actuales.
+ * Proceso: Recorre errores planos y anidados (incl. redes sociales por indice).
+ * Salida: Retorna lista clara de campos a corregir.
  */
 function collectInvalidFieldLabels(
   formErrors: FieldErrors<UpdateFoundationFormData>,
+  socialLinks: FoundationSocialLink[],
 ): string[] {
   const items: string[] = [];
 
-  Object.keys(formErrors).forEach((key) => {
-    const error = formErrors[key as keyof UpdateFoundationFormData];
+  Object.entries(formErrors).forEach(([key, error]) => {
     if (!error) {
+      return;
+    }
+
+    if (key === 'socialLinks' && typeof error === 'object') {
+      const socialErrors = error as Record<string, { url?: { message?: string }; message?: string }>;
+
+      if (typeof socialErrors.message === 'string') {
+        items.push(`${FIELD_LABELS.socialLinks}: ${socialErrors.message}`);
+      }
+
+      Object.entries(socialErrors).forEach(([index, itemError]) => {
+        if (index === 'message' || index === 'root' || index === 'type' || index === 'ref') {
+          return;
+        }
+        if (!itemError || typeof itemError !== 'object') {
+          return;
+        }
+
+        const network = socialLinks[Number(index)]?.network;
+        const label = network
+          ? socialNetworkLabel(network)
+          : `${FIELD_LABELS.socialLinks} (${Number(index) + 1})`;
+        const message =
+          itemError.url?.message ||
+          itemError.message ||
+          UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL_INVALID;
+
+        items.push(`${label}: ${message}`);
+      });
       return;
     }
 
@@ -76,7 +117,7 @@ function collectInvalidFieldLabels(
 
 /**
  * Entrada: defaultValues, apiError, successMessage y onSubmit del perfil.
- * Proceso: Guarda con try/catch; muestra toast y alerta junto al boton.
+ * Proceso: Guarda con try/catch; muestra toast y lista clara de campos invalidos.
  * Salida: Retorna el elemento JSX del formulario.
  */
 export function FoundationForm({
@@ -100,15 +141,41 @@ export function FoundationForm({
     formState: { errors, isSubmitting },
   } = useForm<UpdateFoundationFormData>({
     resolver: zodResolver(updateFoundationSchema),
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      socialLinks: defaultValues.socialLinks ?? [],
+    },
     mode: 'onSubmit',
     shouldFocusError: true,
   });
 
   const socialLinks = watch('socialLinks') ?? [];
-  const socialLinksError = errors.socialLinks?.message || errors.socialLinks?.root?.message;
   const displayError = apiError || clientError;
   const displaySuccess = successMessage || localSuccess;
+
+  const socialFieldErrors = useMemo(() => {
+    const map: Partial<Record<(typeof SOCIAL_NETWORKS)[number], string>> = {};
+    const socialErrors = errors.socialLinks;
+
+    if (!socialErrors || typeof socialErrors !== 'object') {
+      return map;
+    }
+
+    SOCIAL_NETWORKS.forEach((network) => {
+      const index = socialLinks.findIndex((link) => link.network === network);
+      if (index < 0) {
+        return;
+      }
+      const itemError = (socialErrors as Record<string, { url?: { message?: string } }>)[
+        String(index)
+      ];
+      if (itemError?.url?.message) {
+        map[network] = itemError.url.message;
+      }
+    });
+
+    return map;
+  }, [errors.socialLinks, socialLinks]);
 
   useEffect(() => {
     if (!displayError && !displaySuccess && validationItems.length === 0) {
@@ -117,29 +184,9 @@ export function FoundationForm({
     feedbackRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [displayError, displaySuccess, validationItems]);
 
-  useEffect(() => {
-    if (apiError) {
-      pushToast({
-        variant: 'danger',
-        title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_ERROR_TITLE,
-        message: apiError,
-      });
-    }
-  }, [apiError, pushToast]);
-
-  useEffect(() => {
-    if (successMessage && !localSuccess) {
-      pushToast({
-        variant: 'success',
-        title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE,
-        message: successMessage,
-      });
-    }
-  }, [successMessage, localSuccess, pushToast]);
-
   /**
    * Entrada: network: red social; url: enlace a persistir en el formulario.
-   * Proceso: Actualiza o elimina la URL vacia de la red social.
+   * Proceso: Normaliza URL y actualiza o elimina la entrada vacia.
    * Salida: No retorna valor; modifica socialLinks via setValue.
    */
   const updateSocialUrl = (network: FoundationSocialLink['network'], url: string) => {
@@ -148,7 +195,7 @@ export function FoundationForm({
     if (trimmed) {
       current.push({ network, url: trimmed });
     }
-    setValue('socialLinks', current, { shouldDirty: true, shouldValidate: true });
+    setValue('socialLinks', current, { shouldDirty: true, shouldValidate: false });
   };
 
   /**
@@ -161,11 +208,11 @@ export function FoundationForm({
 
   /**
    * Entrada: formErrors: mapa de errores de react-hook-form.
-   * Proceso: Muestra toast + alerta local con lista de campos invalidos.
+   * Proceso: Construye lista legible y muestra toast + alerta local.
    * Salida: No retorna valor.
    */
   const handleInvalid = (formErrors: FieldErrors<UpdateFoundationFormData>) => {
-    const items = collectInvalidFieldLabels(formErrors);
+    const items = collectInvalidFieldLabels(formErrors, getValues('socialLinks') ?? []);
     setLocalSuccess('');
     setClientError(UI_MESSAGES.FOUNDATIONS_FORM_VALIDATION_ERROR);
     setValidationItems(items);
@@ -174,7 +221,7 @@ export function FoundationForm({
       title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_ERROR_TITLE,
       message:
         items.length > 0
-          ? `${UI_MESSAGES.FOUNDATIONS_FORM_VALIDATION_ERROR} ${items.slice(0, 3).join(' · ')}`
+          ? items.slice(0, 4).join(' · ')
           : UI_MESSAGES.FOUNDATIONS_FORM_VALIDATION_ERROR,
     });
   };
@@ -193,8 +240,13 @@ export function FoundationForm({
       await onSubmit({
         ...data,
         acronym: data.acronym ?? null,
-        website: data.website ?? null,
-        socialLinks: (data.socialLinks ?? []).filter((link) => link.url.trim() !== ''),
+        website: data.website ? normalizeOptionalUrl(data.website) : null,
+        socialLinks: (data.socialLinks ?? [])
+          .map((link) => ({
+            ...link,
+            url: normalizeOptionalUrl(link.url),
+          }))
+          .filter((link) => link.url !== ''),
       });
 
       const okMessage = successMessage || UI_MESSAGES.FOUNDATIONS_PROFILE_UPDATED;
@@ -207,16 +259,15 @@ export function FoundationForm({
     } catch (submitError) {
       const parsed = parseApiError(submitError);
       const message = parsed.message || UI_MESSAGES.FOUNDATIONS_FORM_SAVE_UNEXPECTED;
-      setClientError(message);
-      setValidationItems(
-        Object.entries(parsed.fieldErrors).map(
-          ([field, fieldMessage]) => `${FIELD_LABELS[field] ?? field}: ${fieldMessage}`,
-        ),
+      const fieldItems = Object.entries(parsed.fieldErrors).map(
+        ([field, fieldMessage]) => `${FIELD_LABELS[field] ?? field}: ${fieldMessage}`,
       );
+      setClientError(message);
+      setValidationItems(fieldItems);
       pushToast({
         variant: 'danger',
         title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_ERROR_TITLE,
-        message,
+        message: fieldItems.length > 0 ? fieldItems.slice(0, 4).join(' · ') : message,
       });
     }
   };
@@ -236,12 +287,11 @@ export function FoundationForm({
       await handleSubmit(handleValidSubmit, handleInvalid)(event);
     } catch (unexpectedError) {
       console.error('[FoundationForm] submit failed', unexpectedError, getValues());
-      const message = UI_MESSAGES.FOUNDATIONS_FORM_SAVE_UNEXPECTED;
-      setClientError(message);
+      setClientError(UI_MESSAGES.FOUNDATIONS_FORM_SAVE_UNEXPECTED);
       pushToast({
         variant: 'danger',
         title: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_ERROR_TITLE,
-        message,
+        message: UI_MESSAGES.FOUNDATIONS_FORM_SAVE_UNEXPECTED,
       });
     }
   };
@@ -381,19 +431,20 @@ export function FoundationForm({
         <h2 className="text-lg font-semibold text-text-primary">
           {UI_MESSAGES.FOUNDATIONS_SECTION_SOCIAL}
         </h2>
+        <p className="text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL_HINT}</p>
         <div className="grid gap-4 md:grid-cols-2">
           {SOCIAL_NETWORKS.map((network) => (
             <Input
               key={network}
-              label={network === 'FACEBOOK' ? 'Facebook' : 'Instagram'}
+              label={socialNetworkLabel(network)}
               placeholder={UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL}
               value={getSocialUrl(network)}
               optionalMark
+              error={socialFieldErrors[network]}
               onChange={(event) => updateSocialUrl(network, event.target.value)}
             />
           ))}
         </div>
-        {socialLinksError && <p className="text-sm text-error-500">{socialLinksError}</p>}
       </section>
 
       <div className="space-y-3">

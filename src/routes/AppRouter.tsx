@@ -36,7 +36,7 @@ import {
   AdminCampaignsPlaceholderPage,
   AdminDashboardPage,
   AdminProfilePlaceholderPage,
-  AdminReportsPlaceholderPage,
+  AdminReportsPage,
   AdminUsersPlaceholderPage,
 } from '@/features/admin';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
@@ -206,7 +206,7 @@ export const router = createBrowserRouter([
             path: 'admin/reports',
             element: (
               <RoleRoute allowedRoles={['ADMIN']} fallback="/admin/dashboard">
-                <AdminReportsPlaceholderPage />
+                <AdminReportsPage />
               </RoleRoute>
             ),
           },

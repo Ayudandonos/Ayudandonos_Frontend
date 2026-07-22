@@ -1,8 +1,8 @@
 export { AdminDashboardPage } from './components/AdminDashboardPage';
+export { AdminReportsPage } from './components/AdminReportsPage';
 export {
   AdminCampaignsPlaceholderPage,
   AdminProfilePlaceholderPage,
-  AdminReportsPlaceholderPage,
   AdminUsersPlaceholderPage,
 } from './components/AdminPlaceholderPages';
 export { AdminSectionPlaceholderPage } from './components/AdminSectionPlaceholderPage';
@@ -12,4 +12,6 @@ export type {
   AdminDashboardKpis,
   AdminFeaturedCampaignItem,
   AdminLatestNeedItem,
+  AdminReportsData,
+  AdminReportsSummary,
 } from './types/admin.types';

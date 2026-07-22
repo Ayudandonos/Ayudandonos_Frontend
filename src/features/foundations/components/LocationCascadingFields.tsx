@@ -127,9 +127,15 @@ export function LocationCascadingFields({
 
   return (
     <div className="space-y-4">
+      {!countryName ? (
+        <p className="text-caption text-text-muted">
+          {UI_MESSAGES.FOUNDATIONS_LOCATION_AUTODETECT_HINT}
+        </p>
+      ) : null}
       <LocationSelector
         value={location}
         onChange={handleLocationChange}
+        autoDetectCountry={!countryName}
         fieldErrors={{
           country: errors.country?.message,
           department: errors.department?.message,

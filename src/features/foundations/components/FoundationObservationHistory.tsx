@@ -7,14 +7,12 @@ interface FoundationObservationHistoryProps {
 
 /**
  * Entrada: observations: historial de observaciones administrativas.
- * Proceso: Renderiza linea de tiempo con observaciones del administrador.
- * Salida: Retorna el elemento JSX del historial.
+ * Proceso: Renderiza linea de tiempo con observaciones; no muestra nada si esta vacio.
+ * Salida: Retorna el historial o null.
  */
 export function FoundationObservationHistory({ observations }: FoundationObservationHistoryProps) {
   if (observations.length === 0) {
-    return (
-      <p className="text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_NO_OBSERVATIONS}</p>
-    );
+    return null;
   }
 
   return (

@@ -11,10 +11,12 @@ interface CitySelectProps {
   value: City | null;
   onChange: (city: City | null) => void;
   fieldError?: string;
+  requiredMark?: boolean;
+  hideLabel?: boolean;
 }
 
 /**
- * Entrada: countryIso/stateIso: contexto geografico; value/onChange de ciudad; fieldError opcional.
+ * Entrada: countryIso/stateIso; value/onChange; fieldError/requiredMark/hideLabel opcionales.
  * Proceso: Carga ciudades solo si hay pais y estado; deshabilita en caso contrario.
  * Salida: Retorna el selector de ciudad.
  */
@@ -24,6 +26,8 @@ export function CitySelect({
   value,
   onChange,
   fieldError,
+  requiredMark = true,
+  hideLabel = false,
 }: CitySelectProps) {
   const enabled = Boolean(countryIso && stateIso);
   const { data, isLoading, isError, error, refetch, isFetching } = useCities(
@@ -72,7 +76,8 @@ export function CitySelect({
           : undefined)
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
-      requiredMark
+      requiredMark={requiredMark}
+      hideLabel={hideLabel}
     />
   );
 }

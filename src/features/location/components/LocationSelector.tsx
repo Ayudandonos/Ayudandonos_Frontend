@@ -3,6 +3,7 @@ import { CountrySelect } from '@/features/location/components/CountrySelect';
 import { StateSelect } from '@/features/location/components/StateSelect';
 import { CitySelect } from '@/features/location/components/CitySelect';
 import { useCountries } from '@/features/location/hooks/useCountries';
+import { useDetectedCountry } from '@/features/location/hooks/useDetectedCountry';
 import { useStates } from '@/features/location/hooks/useStates';
 import { useCities } from '@/features/location/hooks/useCities';
 import type {
@@ -21,11 +22,13 @@ interface LocationSelectorProps {
     department?: string;
     city?: string;
   };
+  /** Prefija el pais del visitante cuando aun no hay pais seleccionado. */
+  autoDetectCountry?: boolean;
 }
 
 /**
- * Entrada: value: ubicacion actual; onChange: callback; fieldErrors opcionales de formulario.
- * Proceso: Coordina selects en cascada y resuelve ISO cuando solo hay nombres previos.
+ * Entrada: value: ubicacion actual; onChange; fieldErrors/autoDetectCountry opcionales.
+ * Proceso: Coordina selects en cascada, hidrata ISO y opcionalmente detecta pais inicial.
  * Salida: Retorna el bloque reutilizable de seleccion de ubicacion.
  */
 function LocationSelectorComponent({
@@ -33,11 +36,38 @@ function LocationSelectorComponent({
   onChange,
   className,
   fieldErrors,
+  autoDetectCountry = false,
 }: LocationSelectorProps) {
   const countriesQuery = useCountries();
   const statesQuery = useStates(value.country?.iso2);
   const citiesQuery = useCities(value.country?.iso2, value.state?.iso2);
+  const detected = useDetectedCountry();
   const hydratedRef = useRef(false);
+  const autoDetectedRef = useRef(false);
+
+  useEffect(() => {
+    if (!autoDetectCountry || autoDetectedRef.current) {
+      return;
+    }
+    if (value.country?.name || value.country?.iso2) {
+      autoDetectedRef.current = true;
+      return;
+    }
+    if (detected.isDetecting || !detected.country) {
+      return;
+    }
+
+    autoDetectedRef.current = true;
+    hydratedRef.current = true;
+    onChange({ country: detected.country, state: null, city: null });
+  }, [
+    autoDetectCountry,
+    detected.country,
+    detected.isDetecting,
+    onChange,
+    value.country?.iso2,
+    value.country?.name,
+  ]);
 
   useEffect(() => {
     if (hydratedRef.current) return;
@@ -96,7 +126,11 @@ function LocationSelectorComponent({
       onChange(next);
     }
 
-    if (next.country?.iso2 && (!value.state?.name || next.state?.iso2) && (!value.city?.name || next.city?.name)) {
+    if (
+      next.country?.iso2 &&
+      (!value.state?.name || next.state?.iso2) &&
+      (!value.city?.name || next.city?.name)
+    ) {
       hydratedRef.current = true;
     }
   }, [
@@ -115,6 +149,7 @@ function LocationSelectorComponent({
   const handleCountryChange = useCallback(
     (country: Country | null) => {
       hydratedRef.current = true;
+      autoDetectedRef.current = true;
       onChange({ country, state: null, city: null });
     },
     [onChange],

@@ -12,6 +12,7 @@ import type {
 import type { UpdateFoundationStatusFormData } from '@/features/foundations/validations/foundations.validations';
 import { downloadBlob } from '@/utils/file-download';
 import { parseApiError } from '@/utils/api-error';
+import { FOUNDATIONS_ADMIN_PAGE_SIZE } from '@/features/foundations/components/PaginationControls';
 
 interface UseAdminFoundationsResult {
   items: FoundationListItem[];
@@ -23,6 +24,7 @@ interface UseAdminFoundationsResult {
   search: string;
   statusFilter: 'all' | FoundationStatus;
   category: string;
+  country: string;
   city: string;
   department: string;
   isLoading: boolean;
@@ -31,6 +33,7 @@ interface UseAdminFoundationsResult {
   setSearch: (value: string) => void;
   setStatusFilter: (value: 'all' | FoundationStatus) => void;
   setCategory: (value: string) => void;
+  setCountry: (value: string) => void;
   setCity: (value: string) => void;
   setDepartment: (value: string) => void;
   setPage: (page: number) => void;
@@ -56,6 +59,7 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | FoundationStatus>('all');
   const [category, setCategory] = useState('');
+  const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [department, setDepartment] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -64,6 +68,7 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
 
   const debouncedSearch = useDebounce(search, 400);
   const debouncedCategory = useDebounce(category, 400);
+  const debouncedCountry = useDebounce(country, 400);
   const debouncedCity = useDebounce(city, 400);
   const debouncedDepartment = useDebounce(department, 400);
 
@@ -82,10 +87,11 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
       try {
         const result = await foundationsService.fetchFoundations({
           page,
-          limit: 10,
+          limit: FOUNDATIONS_ADMIN_PAGE_SIZE,
           search: debouncedSearch || undefined,
           status: statusFilter === 'all' ? undefined : statusFilter,
           category: debouncedCategory || undefined,
+          country: debouncedCountry || undefined,
           city: debouncedCity || undefined,
           department: debouncedDepartment || undefined,
         });
@@ -94,7 +100,7 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
           setItems(result.data.items);
           setStats(result.data.stats ?? null);
           setTotalPages(result.meta.totalPages ?? 1);
-          setTotal(result.meta.total ?? 0);
+          setTotal(result.meta.total ?? result.data.items.length);
         }
       } catch (loadError) {
         if (!cancelled) {
@@ -112,11 +118,26 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     return () => {
       cancelled = true;
     };
-  }, [page, debouncedSearch, statusFilter, debouncedCategory, debouncedCity, debouncedDepartment]);
+  }, [
+    page,
+    debouncedSearch,
+    statusFilter,
+    debouncedCategory,
+    debouncedCountry,
+    debouncedCity,
+    debouncedDepartment,
+  ]);
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, statusFilter, debouncedCategory, debouncedCity, debouncedDepartment]);
+  }, [
+    debouncedSearch,
+    statusFilter,
+    debouncedCategory,
+    debouncedCountry,
+    debouncedCity,
+    debouncedDepartment,
+  ]);
 
   /**
    * Entrada: foundation: item del listado seleccionado por el administrador.
@@ -227,6 +248,7 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     search,
     statusFilter,
     category,
+    country,
     city,
     department,
     isLoading,
@@ -235,6 +257,7 @@ export function useAdminFoundations(): UseAdminFoundationsResult {
     setSearch,
     setStatusFilter,
     setCategory,
+    setCountry,
     setCity,
     setDepartment,
     setPage,

@@ -11,10 +11,12 @@ interface CountrySelectProps {
   onChange: (country: Country | null) => void;
   disabled?: boolean;
   fieldError?: string;
+  requiredMark?: boolean;
+  hideLabel?: boolean;
 }
 
 /**
- * Entrada: value/onChange del pais seleccionado; disabled y fieldError opcionales.
+ * Entrada: value/onChange; disabled, fieldError, requiredMark y hideLabel opcionales.
  * Proceso: Carga paises con useCountries y permite buscar/seleccionar con bandera por imagen.
  * Salida: Retorna el selector de pais.
  */
@@ -23,6 +25,8 @@ export function CountrySelect({
   onChange,
   disabled = false,
   fieldError,
+  requiredMark = true,
+  hideLabel = false,
 }: CountrySelectProps) {
   const { data, isLoading, isError, error, refetch, isFetching } = useCountries();
 
@@ -68,7 +72,8 @@ export function CountrySelect({
         (isError ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR : undefined)
       }
       onRetry={isError ? () => void refetch() : undefined}
-      requiredMark
+      requiredMark={requiredMark}
+      hideLabel={hideLabel}
     />
   );
 }

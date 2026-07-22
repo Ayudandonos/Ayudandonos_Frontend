@@ -7,7 +7,7 @@ import { FoundationKpiCards } from '@/features/foundations/components/Foundation
 import { FoundationReviewModal } from '@/features/foundations/components/FoundationReviewModal';
 import { FoundationTable } from '@/features/foundations/components/FoundationTable';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
-import { PaginationControls } from '@/features/foundations/components/PaginationControls';
+import { PaginationControls, FOUNDATIONS_ADMIN_PAGE_SIZE } from '@/features/foundations/components/PaginationControls';
 
 /**
  * Entrada: Ninguna (usuario autenticado con rol ADMIN).
@@ -24,7 +24,6 @@ export function AdminFoundationsPage() {
     total,
     search,
     statusFilter,
-    category,
     city,
     department,
     isLoading,
@@ -32,7 +31,7 @@ export function AdminFoundationsPage() {
     error,
     setSearch,
     setStatusFilter,
-    setCategory,
+    setCountry,
     setCity,
     setDepartment,
     setPage,
@@ -55,16 +54,15 @@ export function AdminFoundationsPage() {
       <FoundationFilters
         search={search}
         statusFilter={statusFilter}
-        category={category}
         city={city}
         department={department}
         onSearchChange={setSearch}
         onStatusFilterChange={setStatusFilter}
-        onCategoryChange={setCategory}
+        onCountryChange={setCountry}
         onCityChange={setCity}
         onDepartmentChange={setDepartment}
         showStatusFilter
-        showExtendedFilters
+        showLocationCascadingFilters
       />
 
       {isLoading && <FoundationsLoadingSkeleton variant="table" />}
@@ -85,7 +83,7 @@ export function AdminFoundationsPage() {
             page={page}
             totalPages={totalPages}
             total={total}
-            limit={10}
+            limit={FOUNDATIONS_ADMIN_PAGE_SIZE}
             onPageChange={setPage}
           />
         </div>

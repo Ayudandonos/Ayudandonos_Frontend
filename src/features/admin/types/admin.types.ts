@@ -32,3 +32,38 @@ export interface AdminDashboardData {
   latestNeeds: AdminLatestNeedItem[];
   featuredCampaigns?: AdminFeaturedCampaignItem[];
 }
+
+export interface AdminReportSeriesItem {
+  key: string;
+  label: string;
+  value: number;
+}
+
+export interface AdminReportMonthlyItem {
+  monthKey: string;
+  label: string;
+  users: number;
+  foundations: number;
+  donations: number;
+  campaigns: number;
+}
+
+export interface AdminReportsSummary {
+  totalUsers: number;
+  totalFoundations: number;
+  totalDonations: number;
+  totalCampaigns: number;
+  totalNeeds: number;
+  activeUsers: number;
+  verifiedFoundations: number;
+  deliveredDonations: number;
+}
+
+export interface AdminReportsData {
+  summary: AdminReportsSummary;
+  usersByRole: AdminReportSeriesItem[];
+  foundationsByStatus: AdminReportSeriesItem[];
+  donationsByStatus: AdminReportSeriesItem[];
+  campaignsByStatus: AdminReportSeriesItem[];
+  monthlyActivity: AdminReportMonthlyItem[];
+}

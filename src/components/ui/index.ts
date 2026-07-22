@@ -1,3 +1,4 @@
+export { FilterBar, FilterSearchInput, FilterSelect, filterFieldClassName } from './FilterBar';
 export { Button } from './Button';
 export { buttonLinkClass } from './button-link-class';
 export { Input } from './Input';

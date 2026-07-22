@@ -14,6 +14,22 @@ function emptyToUndefined(value: unknown): unknown {
 }
 
 /**
+ * Entrada: url: texto de enlace.
+ * Proceso: Agrega https:// si el usuario omite el protocolo.
+ * Salida: Retorna URL normalizada o cadena vacia.
+ */
+function normalizeOptionalUrl(url: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return '';
+  }
+  if (/^https?:\/\//i.test(trimmed)) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+}
+
+/**
  * Entrada: min/max/message de validacion de texto requerido.
  * Proceso: Construye esquema de texto obligatorio con trim y longitudes.
  * Salida: Retorna el esquema Zod.
@@ -26,15 +42,16 @@ const requiredText = (min: number, message: string, max?: number) => {
   return schema;
 };
 
-const optionalUrl = z.preprocess(
-  emptyToUndefined,
-  z
-    .string()
-    .trim()
-    .url(UI_MESSAGES.FOUNDATIONS_URL_INVALID)
-    .nullable()
-    .optional(),
-);
+const optionalUrl = z.preprocess((value) => {
+  if (value === '' || value === null || value === undefined) {
+    return undefined;
+  }
+  if (typeof value === 'string') {
+    const normalized = normalizeOptionalUrl(value);
+    return normalized === '' ? undefined : normalized;
+  }
+  return emptyToUndefined(value);
+}, z.string().trim().url(UI_MESSAGES.FOUNDATIONS_URL_INVALID).nullable().optional());
 
 const optionalAcronym = z.preprocess(
   emptyToUndefined,
@@ -46,6 +63,16 @@ const optionalAcronym = z.preprocess(
     .nullable()
     .optional(),
 );
+
+const socialNetworkEnum = z.enum([
+  'FACEBOOK',
+  'INSTAGRAM',
+  'X',
+  'LINKEDIN',
+  'YOUTUBE',
+  'TIKTOK',
+  'OTHER',
+]);
 
 export const updateFoundationSchema = z.object({
   name: requiredText(2, UI_MESSAGES.FOUNDATIONS_NAME_MIN),
@@ -69,23 +96,34 @@ export const updateFoundationSchema = z.object({
       if (!Array.isArray(value)) {
         return [];
       }
-      return value.filter(
-        (item) =>
-          item &&
-          typeof item === 'object' &&
-          'url' in item &&
-          typeof (item as { url: unknown }).url === 'string' &&
-          (item as { url: string }).url.trim() !== '',
-      );
+
+      return value
+        .map((item) => {
+          if (!item || typeof item !== 'object') {
+            return null;
+          }
+          const network = (item as { network?: unknown }).network;
+          const rawUrl = (item as { url?: unknown }).url;
+          if (typeof network !== 'string' || typeof rawUrl !== 'string') {
+            return null;
+          }
+          const url = normalizeOptionalUrl(rawUrl);
+          if (!url) {
+            return null;
+          }
+          return { network, url };
+        })
+        .filter((item): item is { network: string; url: string } => item !== null);
     },
     z
       .array(
         z.object({
-          network: z.enum(['FACEBOOK', 'INSTAGRAM', 'X', 'LINKEDIN', 'YOUTUBE', 'TIKTOK', 'OTHER']),
-          url: z.string().trim().url(UI_MESSAGES.FOUNDATIONS_URL_INVALID),
+          network: socialNetworkEnum,
+          url: z.string().trim().url(UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL_INVALID),
         }),
       )
-      .max(10),
+      .max(10)
+      .default([]),
   ),
 });
 
@@ -107,3 +145,5 @@ export const updateFoundationStatusSchema = z
 
 export type UpdateFoundationFormData = z.infer<typeof updateFoundationSchema>;
 export type UpdateFoundationStatusFormData = z.infer<typeof updateFoundationStatusSchema>;
+
+export { normalizeOptionalUrl };

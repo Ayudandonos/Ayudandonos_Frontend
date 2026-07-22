@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/Button';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 
@@ -7,12 +8,13 @@ interface ConfirmDialogProps {
   confirmLabel: string;
   cancelLabel?: string;
   isProcessing?: boolean;
+  children?: ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
 /**
- * Entrada: title, description, labels y callbacks de confirmacion/cancelacion.
+ * Entrada: title, description, labels, children opcionales y callbacks.
  * Proceso: Renderiza dialogo modal accesible para confirmar acciones destructivas.
  * Salida: Retorna el elemento JSX del dialogo de confirmacion.
  */
@@ -22,6 +24,7 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel = UI_MESSAGES.COMMON_CANCEL,
   isProcessing = false,
+  children,
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -37,6 +40,7 @@ export function ConfirmDialog({
           {title}
         </h3>
         <p className="mt-2 text-sm text-text-secondary">{description}</p>
+        {children ? <div className="mt-4">{children}</div> : null}
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
           <Button type="button" variant="secondary" onClick={onCancel} disabled={isProcessing}>
             {cancelLabel}

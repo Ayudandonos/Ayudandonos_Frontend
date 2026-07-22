@@ -137,7 +137,11 @@ export function FoundationDocumentManager({
         <p className="text-sm font-semibold text-text-primary">
           {UI_MESSAGES.FOUNDATIONS_SECTION_DOCUMENTS}
         </p>
-        <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_DOCS_INTRO}</p>
+        <p className="mt-1 text-sm text-text-secondary">
+          {canManage
+            ? UI_MESSAGES.FOUNDATIONS_DOCS_INTRO
+            : UI_MESSAGES.FOUNDATIONS_DOCS_INTRO_ADMIN}
+        </p>
       </div>
 
       <div className="space-y-3">
