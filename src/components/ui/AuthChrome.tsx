@@ -77,14 +77,16 @@ export function AuthHeader({ variant = 'login' }: AuthHeaderProps) {
 
 interface AuthFooterProps {
   variant?: 'full' | 'simple';
+  /** Reduce opacidad del glass para dejar ver un fondo ilustrado. */
+  translucent?: boolean;
 }
 
 /**
- * Entrada: variant: pie de pagina completo o simplificado.
+ * Entrada: variant: pie de pagina completo o simplificado; translucent: glass mas permeable.
  * Proceso: Renderiza footer glass con enlaces legales.
  * Salida: Retorna el elemento JSX del footer.
  */
-export function AuthFooter({ variant = 'full' }: AuthFooterProps) {
+export function AuthFooter({ variant = 'full', translucent = false }: AuthFooterProps) {
   const year = new Date().getFullYear();
   const linkClass =
     'text-xs font-semibold tracking-wide text-text-muted transition-smooth hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600';
@@ -98,7 +100,14 @@ export function AuthFooter({ variant = 'full' }: AuthFooterProps) {
   }
 
   return (
-    <footer className="glass-header mt-auto px-6 py-6">
+    <footer
+      className={cn(
+        'relative z-10 mt-auto px-6 py-6',
+        translucent
+          ? 'border-t border-primary-100/50 bg-surface-page/40 backdrop-blur-[14px]'
+          : 'glass-header',
+      )}
+    >
       <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4">
         <Link to="/legal/secure-platform" className={cn(linkClass, 'flex items-center gap-2')}>
           <Icon name="browsers" size="sm" className="text-primary-600" decorative />

@@ -4,6 +4,7 @@
  */
 export const FIGMA_ASSETS = {
   HERO_ILLUSTRATION: '/assets/figma/hero-illustration.png',
+  HERO_ILLUSTRATION_SVG: '/assets/figma/hero-illustration.svg',
   LOGO: '/assets/figma/logo.svg',
   LOGO_REGISTER: '/assets/figma/logo-register.svg',
 } as const;

@@ -874,12 +874,11 @@ export const UI_MESSAGES = {
   IMPACT_TITLE: 'Impacto que se puede medir',
   IMPACT_SUBTITLE:
     'Cada donación en Ayudandonos deja un registro. Creemos en la transparencia como base de la confianza entre donantes y organizaciones.',
-  IMPACT_STATS: [
-    { value: '+120', label: 'Organizaciones verificadas' },
-    { value: '+850', label: 'Donantes activos' },
-    { value: '+2.400', label: 'Aportes registrados' },
-    { value: '94%', label: 'Entregas confirmadas' },
-  ],
+  IMPACT_STAT_VERIFIED_FOUNDATIONS: 'Organizaciones verificadas',
+  IMPACT_STAT_ACTIVE_DONORS: 'Donantes registrados',
+  IMPACT_STAT_REGISTERED_DONATIONS: 'Aportes registrados',
+  IMPACT_STAT_CONFIRMED_RATE: 'Entregas confirmadas',
+  IMPACT_LOAD_ERROR: 'No se pudieron cargar las estadísticas de impacto.',
   IMPACT_SECTIONS: [
     {
       title: 'Trazabilidad completa',
@@ -896,16 +895,13 @@ export const UI_MESSAGES = {
   ],
   IMPACT_CTA: 'Quiero generar impacto',
 
-  HOME_HERO_TITLE: 'Conecta con quienes',
+  HOME_HERO_TITLE: 'Dona a quienes',
   HOME_HERO_HIGHLIGHT: 'más lo necesitan',
   HOME_HERO_DESCRIPTION:
-    'Ayudandonos conecta fundaciones verificadas con personas que desean donar en especie. Publica necesidades, comprométete y haz seguimiento de cada entrega.',
-  HOME_CTA_CARD_TITLE: 'Empieza hoy',
-  HOME_CTA_CARD_SUBTITLE: 'Regístrate como donante o fundación y forma parte de la red.',
+    'Cada gesto cuenta. Acerca lo que sobra en tu casa a fundaciones de confianza y ayuda a transformar una necesidad en esperanza.',
   HOME_CTA_DONATE: 'Comenzar a donar',
   HOME_CTA_FOUNDATION: 'Soy una fundación',
   HOME_HAS_ACCOUNT: '¿Ya tienes cuenta?',
-  HOME_FEATURES_TITLE: '¿Cómo funciona Ayudandonos?',
   HOME_API_CONNECTED: (version: string, environment: string) =>
     `API conectada — v${version} (${environment})`,
   HOME_API_ERROR: 'No se pudo conectar con el servidor',
@@ -921,7 +917,13 @@ export const UI_MESSAGES = {
   LOGIN_PASSWORD_LABEL: 'Contraseña',
   LOGIN_PASSWORD_PLACEHOLDER: '••••••••',
   LOGIN_FORGOT_PASSWORD: '¿Olvidaste tu contraseña?',
-  LOGIN_FORGOT_PASSWORD_ARIA: 'Recuperación de contraseña no disponible aún',
+  LOGIN_FORGOT_PASSWORD_ARIA: 'Abrir recuperación de contraseña',
+  LOGIN_FORGOT_TITLE: 'Recuperar contraseña',
+  LOGIN_FORGOT_SUBTITLE: 'Te enviaremos un código a tu correo para restablecer el acceso.',
+  LOGIN_FORGOT_SUBMIT: 'Enviar código',
+  LOGIN_FORGOT_BACK: 'Volver a iniciar sesión',
+  LOGIN_FORGOT_UNAVAILABLE:
+    'En este momento no se puede recuperar la contraseña. Inténtalo más tarde.',
   LOGIN_SHOW_PASSWORD: 'Mostrar contraseña',
   LOGIN_HIDE_PASSWORD: 'Ocultar contraseña',
   LOGIN_PASSWORD_TOGGLE_SHOW: 'Mostrar',
@@ -1022,18 +1024,4 @@ export const UI_MESSAGES = {
   VALIDATION_FOUNDATION_NAME: 'El nombre de la fundación debe tener al menos 2 caracteres',
   VALIDATION_PASSWORD_MATCH: 'Las contraseñas no coinciden',
 
-  HOME_FEATURES: [
-    {
-      title: 'Publicación',
-      description: 'Las fundaciones publican campañas y necesidades específicas.',
-    },
-    {
-      title: 'Compromiso',
-      description: 'Los donantes se comprometen a realizar entregas en especie.',
-    },
-    {
-      title: 'Seguimiento',
-      description: 'Todo el ciclo de vida de la donación queda registrado.',
-    },
-  ],
 } as const;

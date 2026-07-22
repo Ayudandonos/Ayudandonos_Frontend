@@ -17,6 +17,10 @@ export const loginSchema = z.object({
   remember: z.boolean().optional(),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: emailField,
+});
+
 export const registerUserSchema = z
   .object({
     fullName: fullNameField,
@@ -52,5 +56,6 @@ export const registerFoundationSchema = z
   });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 export type RegisterUserFormData = z.infer<typeof registerUserSchema>;
 export type RegisterFoundationFormData = z.infer<typeof registerFoundationSchema>;

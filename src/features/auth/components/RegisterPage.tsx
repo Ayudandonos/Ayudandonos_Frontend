@@ -9,6 +9,7 @@ import {
   AuthPasswordField,
   AuthSubmitButton,
 } from '@/components/ui/AuthChrome';
+import { BrandIllustrationBackground } from '@/components/ui/BrandIllustrationBackground';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -101,21 +102,22 @@ export function RegisterPage() {
   };
 
   return (
-    <div className="auth-register-bg flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col">
+      <BrandIllustrationBackground tone="soft" fixed />
       <AuthHeader variant="register" />
-      <div className="flex flex-1 animate-fade-in items-center justify-center px-6 py-12">
+      <div className="relative flex flex-1 animate-fade-in items-center justify-center px-6 py-12">
         <div className="w-full max-w-[672px]">
         <Card padding="none" className="overflow-hidden" hover={false}>
           <div className="space-y-2 px-8 pb-4 pt-8 text-center">
-            <h1 className="text-display">{UI_MESSAGES.REGISTER_TITLE}</h1>
-            <p className="text-base text-text-secondary">
+            <h1 className="text-display text-text-primary">{UI_MESSAGES.REGISTER_TITLE}</h1>
+            <p className="text-base text-text-primary/90">
               {UI_MESSAGES.REGISTER_SUBTITLE_1}
               <br />
               {UI_MESSAGES.REGISTER_SUBTITLE_2}
             </p>
           </div>
           <div className="px-8 pb-4">
-            <p className="mb-3 text-xs font-bold uppercase tracking-widest text-text-muted">
+            <p className="mb-3 text-xs font-bold uppercase tracking-widest text-text-primary/70">
               {UI_MESSAGES.REGISTER_PROFILE_LABEL}
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
@@ -202,7 +204,7 @@ export function RegisterPage() {
               {userForm.formState.errors.acceptTerms && (
                 <Alert variant="danger">{userForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && <Alert variant="danger">{apiError}</Alert>}
+              {apiError ? <Alert variant="danger">{apiError}</Alert> : null}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}
@@ -298,7 +300,7 @@ export function RegisterPage() {
               {foundationForm.formState.errors.acceptTerms && (
                 <Alert variant="danger">{foundationForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && <Alert variant="danger">{apiError}</Alert>}
+              {apiError ? <Alert variant="danger">{apiError}</Alert> : null}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}
@@ -307,7 +309,7 @@ export function RegisterPage() {
             </form>
           )}
           <div className="border-t border-border-default bg-primary-50/50 px-4 py-4 text-center">
-            <p className="text-base text-text-secondary">
+            <p className="text-base text-text-primary/85">
               {UI_MESSAGES.REGISTER_HAS_ACCOUNT}{' '}
               <Link
                 to="/login"
@@ -320,7 +322,7 @@ export function RegisterPage() {
         </Card>
         </div>
       </div>
-      <AuthFooter variant="simple" />
+      <AuthFooter variant="full" translucent />
     </div>
   );
 }
