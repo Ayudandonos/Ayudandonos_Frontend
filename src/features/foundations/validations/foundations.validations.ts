@@ -34,6 +34,7 @@ export const updateFoundationSchema = z.object({
   description: optionalNullableText(2000, UI_MESSAGES.FOUNDATIONS_DESCRIPTION_MAX),
   city: z.string().trim().min(2, UI_MESSAGES.FOUNDATIONS_CITY_MIN).optional(),
   department: z.string().trim().min(2, UI_MESSAGES.FOUNDATIONS_DEPARTMENT_MIN).optional(),
+  country: z.string().trim().min(2, UI_MESSAGES.FOUNDATIONS_COUNTRY_MIN).optional(),
   address: z.string().trim().min(5, UI_MESSAGES.FOUNDATIONS_ADDRESS_MIN).optional(),
   institutionalEmail: z.string().trim().email(UI_MESSAGES.VALIDATION_EMAIL).optional(),
   phone: z

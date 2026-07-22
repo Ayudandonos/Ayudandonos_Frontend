@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { LocationCascadingFields } from '@/features/foundations/components/LocationCascadingFields';
 import {
   updateFoundationSchema,
   type UpdateFoundationFormData,
@@ -103,25 +104,12 @@ export function FoundationForm({ defaultValues, apiError, onSubmit }: Foundation
         <h2 className="text-lg font-semibold text-text-primary">
           {UI_MESSAGES.FOUNDATIONS_SECTION_LOCATION}
         </h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          <Input
-            label={UI_MESSAGES.FOUNDATIONS_FORM_CITY}
-            error={errors.city?.message}
-            {...register('city')}
-          />
-          <Input
-            label={UI_MESSAGES.FOUNDATIONS_FORM_DEPARTMENT}
-            error={errors.department?.message}
-            {...register('department')}
-          />
-          <div className="md:col-span-2">
-            <Input
-              label={UI_MESSAGES.FOUNDATIONS_FORM_ADDRESS}
-              error={errors.address?.message}
-              {...register('address')}
-            />
-          </div>
-        </div>
+        <LocationCascadingFields
+          watch={watch}
+          setValue={setValue}
+          register={register}
+          errors={errors}
+        />
       </section>
 
       <section className="space-y-4">

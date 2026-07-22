@@ -50,6 +50,7 @@ export interface FoundationListItem {
   category: string | null;
   city: string | null;
   department: string | null;
+  country: string | null;
   description: string | null;
   logoUrl: string | null;
   status: FoundationStatus;
@@ -113,6 +114,7 @@ export interface UpdateFoundationPayload {
   description?: string | null;
   city?: string;
   department?: string;
+  country?: string;
   address?: string;
   institutionalEmail?: string;
   phone?: string;
