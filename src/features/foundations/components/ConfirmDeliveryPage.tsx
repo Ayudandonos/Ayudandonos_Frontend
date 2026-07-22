@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { DonationStatusBadge } from '@/features/donations/components/DonationStatusBadge';
 import { donationsService } from '@/features/donations/services/donations.service';
 import type { Donation } from '@/features/donations/types/donations.types';
@@ -22,12 +22,12 @@ import { formatDate } from '@/utils/date-format';
 export function ConfirmDeliveryPage() {
   const [searchParams] = useSearchParams();
   const donationId = searchParams.get('donationId') ?? '';
+  const { pushToast } = useToast();
 
   const [donation, setDonation] = useState<Donation | null>(null);
   const [candidates, setCandidates] = useState<Donation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
   /**
@@ -72,9 +72,15 @@ export function ConfirmDeliveryPage() {
     try {
       const updated = await donationsService.updateDonationStatus(donationId, status);
       setDonation(updated);
-      setSuccess(UI_MESSAGES.FOUNDATION_REQUEST_STATUS_UPDATED);
+      pushToast({
+        variant: 'success',
+        message: UI_MESSAGES.FOUNDATION_REQUEST_STATUS_UPDATED,
+      });
     } catch (updateError) {
-      setError(parseApiError(updateError).message || UI_MESSAGES.FOUNDATION_REQUEST_NOT_FOUND);
+      const message =
+        parseApiError(updateError).message || UI_MESSAGES.FOUNDATION_REQUEST_NOT_FOUND;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsUpdating(false);
     }
@@ -92,7 +98,11 @@ export function ConfirmDeliveryPage() {
         </h1>
         <p className="text-text-secondary">{UI_MESSAGES.FOUNDATION_DELIVERY_SELECT_DONATION}</p>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error ? (
+          <p className="text-sm text-error-600" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         {candidates.length === 0 ? (
           <EmptyState title={UI_MESSAGES.FOUNDATION_DELIVERY_NO_DONATIONS} />
@@ -147,8 +157,11 @@ export function ConfirmDeliveryPage() {
 
       <p className="text-text-secondary">{UI_MESSAGES.FOUNDATION_DELIVERY_CONFIRM_DESC}</p>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error ? (
+        <p className="text-sm text-error-600" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <Card glass={false} className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">

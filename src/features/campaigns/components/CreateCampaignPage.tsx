@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { CampaignForm } from '@/features/campaigns/components/CampaignForm';
 import { campaignsService } from '@/features/campaigns/services/campaigns.service';
 import { campaignFormToPayload } from '@/features/campaigns/utils/campaign-payload';
@@ -27,6 +28,7 @@ type DraftNeed = CampaignNeedFormData & { localId: string };
  */
 export function CreateCampaignPage() {
   const navigate = useNavigate();
+  const { pushToast } = useToast();
   const [apiError, setApiError] = useState('');
   const [draftNeeds, setDraftNeeds] = useState<DraftNeed[]>([]);
   const [isSaving, setIsSaving] = useState(false);
@@ -114,6 +116,13 @@ export function CreateCampaignPage() {
         });
       }
 
+      pushToast({
+        variant: 'success',
+        message: publish
+          ? UI_MESSAGES.CAMPAIGNS_PUBLISHED
+          : UI_MESSAGES.CAMPAIGNS_CREATED,
+      });
+
       if (publish) {
         navigate(`/campaigns/${created.id}`);
       } else {
@@ -123,7 +132,10 @@ export function CreateCampaignPage() {
       if (redirectFoundationOnForbidden(submitError, navigate)) {
         return;
       }
-      setApiError(parseApiError(submitError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
+      const message =
+        parseApiError(submitError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
+      setApiError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsSaving(false);
     }

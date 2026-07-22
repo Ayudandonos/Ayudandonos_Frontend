@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -8,6 +7,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { DonationChatPanel } from '@/features/donations/components/DonationChatPanel';
 import {
   DonationStatusBadge,
@@ -25,10 +25,10 @@ import { formatDate } from '@/utils/date-format';
  */
 export function DonationDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { pushToast } = useToast();
   const [donation, setDonation] = useState<Donation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [showCancel, setShowCancel] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
@@ -68,10 +68,12 @@ export function DonationDetailPage() {
     try {
       const updated = await donationsService.updateDonationStatus(id, 'CANCELLED');
       setDonation(updated);
-      setSuccess(UI_MESSAGES.DONATIONS_STATUS_CANCELLED);
+      pushToast({ variant: 'success', message: UI_MESSAGES.DONATIONS_STATUS_CANCELLED });
       setShowCancel(false);
     } catch (cancelError) {
-      setError(parseApiError(cancelError).message || UI_MESSAGES.DONATIONS_LOAD_ERROR);
+      const message = parseApiError(cancelError).message || UI_MESSAGES.DONATIONS_LOAD_ERROR;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsCancelling(false);
     }
@@ -100,8 +102,11 @@ export function DonationDetailPage() {
         </Link>
       </div>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error ? (
+        <p className="text-sm text-error-600" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <Card glass={false} className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">

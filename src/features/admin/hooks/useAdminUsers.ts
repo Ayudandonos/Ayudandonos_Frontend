@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
+import { useToast } from '@/context/useToast';
 import { usersService } from '@/features/users/services/users.service';
 import type {
   AdminUserDetail,
@@ -26,7 +27,6 @@ interface UseAdminUsersResult {
   isLoading: boolean;
   isProcessing: boolean;
   error: string;
-  successMessage: string;
   currentUserId: string | null;
   setSearch: (value: string) => void;
   setRoleFilter: (value: RoleFilter) => void;
@@ -38,7 +38,6 @@ interface UseAdminUsersResult {
   suspendUser: (user: AdminUserListItem) => Promise<void>;
   reactivateUser: (user: AdminUserListItem) => Promise<void>;
   reload: () => Promise<void>;
-  clearFeedback: () => void;
 }
 
 /**
@@ -48,6 +47,7 @@ interface UseAdminUsersResult {
  */
 export function useAdminUsers(): UseAdminUsersResult {
   const { user } = useAuth();
+  const { pushToast } = useToast();
   const [items, setItems] = useState<AdminUserListItem[]>([]);
   const [selected, setSelected] = useState<AdminUserDetail | null>(null);
   const [page, setPage] = useState(1);
@@ -61,7 +61,6 @@ export function useAdminUsers(): UseAdminUsersResult {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -153,13 +152,14 @@ export function useAdminUsers(): UseAdminUsersResult {
    */
   const selectUser = async (listItem: AdminUserListItem) => {
     setError('');
-    setSuccessMessage('');
     setIsProcessing(true);
     try {
       const detail = await usersService.fetchUserById(listItem.id);
       setSelected(detail);
     } catch (loadError) {
-      setError(parseApiError(loadError).message || UI_MESSAGES.ADMIN_USERS_DETAIL_ERROR);
+      const message =
+        parseApiError(loadError).message || UI_MESSAGES.ADMIN_USERS_DETAIL_ERROR;
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsProcessing(false);
     }
@@ -175,32 +175,26 @@ export function useAdminUsers(): UseAdminUsersResult {
   };
 
   /**
-   * Entrada: Ninguna.
-   * Proceso: Limpia mensajes de feedback temporales.
-   * Salida: No retorna valor.
-   */
-  const clearFeedback = () => {
-    setError('');
-    setSuccessMessage('');
-  };
-
-  /**
    * Entrada: target: usuario a suspender.
-   * Proceso: Desactiva el login y refresca listado/detalle.
+   * Proceso: Desactiva el login, notifica por toast y refresca listado/detalle.
    * Salida: No retorna valor.
    */
   const suspendUser = async (target: AdminUserListItem) => {
     if (target.role === 'ADMIN') {
-      setError(UI_MESSAGES.ADMIN_USERS_CANNOT_SUSPEND_ADMIN);
+      pushToast({
+        variant: 'warning',
+        message: UI_MESSAGES.ADMIN_USERS_CANNOT_SUSPEND_ADMIN,
+      });
       return;
     }
 
     setIsProcessing(true);
-    setError('');
-    setSuccessMessage('');
     try {
       const updated = await usersService.deactivateUser(target.id);
-      setSuccessMessage(UI_MESSAGES.ADMIN_USERS_SUSPEND_SUCCESS);
+      pushToast({
+        variant: 'success',
+        message: UI_MESSAGES.ADMIN_USERS_SUSPEND_SUCCESS,
+      });
       setItems((current) =>
         current.map((item) => (item.id === updated.id ? updated : item)),
       );
@@ -209,7 +203,10 @@ export function useAdminUsers(): UseAdminUsersResult {
       }
       await reload();
     } catch (actionError) {
-      setError(parseApiError(actionError).message || UI_MESSAGES.ADMIN_USERS_ACTION_ERROR);
+      pushToast({
+        variant: 'danger',
+        message: parseApiError(actionError).message || UI_MESSAGES.ADMIN_USERS_ACTION_ERROR,
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -217,16 +214,17 @@ export function useAdminUsers(): UseAdminUsersResult {
 
   /**
    * Entrada: target: usuario a reactivar.
-   * Proceso: Reactiva el login y refresca listado/detalle.
+   * Proceso: Reactiva el login, notifica por toast y refresca listado/detalle.
    * Salida: No retorna valor.
    */
   const reactivateUserAction = async (target: AdminUserListItem) => {
     setIsProcessing(true);
-    setError('');
-    setSuccessMessage('');
     try {
       const updated = await usersService.reactivateUser(target.id);
-      setSuccessMessage(UI_MESSAGES.ADMIN_USERS_REACTIVATE_SUCCESS);
+      pushToast({
+        variant: 'success',
+        message: UI_MESSAGES.ADMIN_USERS_REACTIVATE_SUCCESS,
+      });
       setItems((current) =>
         current.map((item) => (item.id === updated.id ? updated : item)),
       );
@@ -235,7 +233,10 @@ export function useAdminUsers(): UseAdminUsersResult {
       }
       await reload();
     } catch (actionError) {
-      setError(parseApiError(actionError).message || UI_MESSAGES.ADMIN_USERS_ACTION_ERROR);
+      pushToast({
+        variant: 'danger',
+        message: parseApiError(actionError).message || UI_MESSAGES.ADMIN_USERS_ACTION_ERROR,
+      });
     } finally {
       setIsProcessing(false);
     }
@@ -254,7 +255,6 @@ export function useAdminUsers(): UseAdminUsersResult {
     isLoading,
     isProcessing,
     error,
-    successMessage,
     currentUserId: user?.id ?? null,
     setSearch,
     setRoleFilter,
@@ -266,6 +266,5 @@ export function useAdminUsers(): UseAdminUsersResult {
     suspendUser,
     reactivateUser: reactivateUserAction,
     reload,
-    clearFeedback,
   };
 }

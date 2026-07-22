@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { DonationChatPanel } from '@/features/donations/components/DonationChatPanel';
 import { DonationStatusBadge } from '@/features/donations/components/DonationStatusBadge';
 import { donationsService } from '@/features/donations/services/donations.service';
@@ -21,10 +21,10 @@ import { formatDate } from '@/utils/date-format';
  */
 export function ReviewRequestPage() {
   const { id } = useParams<{ id: string }>();
+  const { pushToast } = useToast();
   const [donation, setDonation] = useState<Donation | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [showCancel, setShowCancel] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -64,10 +64,16 @@ export function ReviewRequestPage() {
     try {
       const updated = await donationsService.updateDonationStatus(id, status);
       setDonation(updated);
-      setSuccess(UI_MESSAGES.FOUNDATION_REQUEST_STATUS_UPDATED);
+      pushToast({
+        variant: 'success',
+        message: UI_MESSAGES.FOUNDATION_REQUEST_STATUS_UPDATED,
+      });
       setShowCancel(false);
     } catch (updateError) {
-      setError(parseApiError(updateError).message || UI_MESSAGES.FOUNDATION_REQUEST_NOT_FOUND);
+      const message =
+        parseApiError(updateError).message || UI_MESSAGES.FOUNDATION_REQUEST_NOT_FOUND;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsUpdating(false);
     }
@@ -98,8 +104,11 @@ export function ReviewRequestPage() {
 
       <p className="text-text-secondary">{UI_MESSAGES.FOUNDATION_REQUEST_REVIEW_DESC}</p>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error ? (
+        <p className="text-sm text-error-600" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       <Card glass={false} className="space-y-3">
         <div className="flex flex-wrap items-center gap-3">

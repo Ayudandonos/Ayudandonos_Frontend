@@ -33,7 +33,6 @@ export function AdminUsersPage() {
     isLoading,
     isProcessing,
     error,
-    successMessage,
     currentUserId,
     setSearch,
     setRoleFilter,
@@ -77,7 +76,6 @@ export function AdminUsersPage() {
         </p>
       </header>
 
-      {successMessage ? <Alert variant="success">{successMessage}</Alert> : null}
       {error && !isLoading ? <Alert variant="danger">{error}</Alert> : null}
 
       <AdminUsersFilters

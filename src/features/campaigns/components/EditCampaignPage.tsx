@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { CampaignForm } from '@/features/campaigns/components/CampaignForm';
 import { CampaignNeedsManager } from '@/features/campaigns/components/CampaignNeedsManager';
 import { CampaignsLoadingSkeleton } from '@/features/campaigns/components/CampaignsLoadingSkeleton';
@@ -22,10 +22,10 @@ import { toDateTimeLocalValue } from '@/utils/date-format';
  */
 export function EditCampaignPage() {
   const { id } = useParams<{ id: string }>();
+  const { pushToast } = useToast();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [apiError, setApiError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loadError, setLoadError] = useState('');
 
   /**
@@ -60,13 +60,14 @@ export function EditCampaignPage() {
   async function handleUpdate(data: CampaignFormData) {
     if (!id) return;
     setApiError('');
-    setSuccess('');
     try {
       const updated = await campaignsService.updateCampaign(id, campaignFormToPayload(data));
       setCampaign(updated);
-      setSuccess(UI_MESSAGES.CAMPAIGNS_UPDATED);
+      pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_UPDATED });
     } catch (error) {
-      setApiError(parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
+      const message = parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
+      setApiError(message);
+      pushToast({ variant: 'danger', message });
     }
   }
 
@@ -78,14 +79,15 @@ export function EditCampaignPage() {
   async function handlePublish(data: CampaignFormData) {
     if (!id) return;
     setApiError('');
-    setSuccess('');
     try {
       await campaignsService.updateCampaign(id, campaignFormToPayload(data));
       const published = await campaignsService.publishCampaign(id);
       setCampaign(published);
-      setSuccess(UI_MESSAGES.CAMPAIGNS_PUBLISHED);
+      pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_PUBLISHED });
     } catch (error) {
-      setApiError(parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
+      const message = parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
+      setApiError(message);
+      pushToast({ variant: 'danger', message });
     }
   }
 
@@ -119,7 +121,6 @@ export function EditCampaignPage() {
           {UI_MESSAGES.CAMPAIGNS_BACK}
         </Link>
       </div>
-      {success && <Alert variant="success">{success}</Alert>}
       <Card glass={false}>
         <CampaignForm
           key={campaign.updatedAt}

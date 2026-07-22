@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { CampaignStatusBadge } from '@/features/campaigns/components/CampaignStatusBadge';
 import { CampaignsLoadingSkeleton } from '@/features/campaigns/components/CampaignsLoadingSkeleton';
 import { campaignsService } from '@/features/campaigns/services/campaigns.service';
@@ -65,10 +65,10 @@ async function withNeedsCounts(items: Campaign[]): Promise<CampaignRow[]> {
  */
 export function MyCampaignsPage() {
   const navigate = useNavigate();
+  const { pushToast } = useToast();
   const [campaigns, setCampaigns] = useState<CampaignRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [confirm, setConfirm] = useState<ConfirmAction>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -104,20 +104,21 @@ export function MyCampaignsPage() {
   async function handleConfirm() {
     if (!confirm) return;
     setIsProcessing(true);
-    setSuccess('');
     setError('');
     try {
       if (confirm.type === 'delete') {
         await campaignsService.deleteCampaign(confirm.campaign.id);
-        setSuccess(UI_MESSAGES.CAMPAIGNS_DELETED);
+        pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_DELETED });
       } else {
         await campaignsService.publishCampaign(confirm.campaign.id);
-        setSuccess(UI_MESSAGES.CAMPAIGNS_PUBLISHED);
+        pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_PUBLISHED });
       }
       setConfirm(null);
       await loadCampaigns();
     } catch (actionError) {
-      setError(parseApiError(actionError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
+      const message = parseApiError(actionError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsProcessing(false);
     }
@@ -134,8 +135,6 @@ export function MyCampaignsPage() {
           {UI_MESSAGES.CAMPAIGNS_CREATE_TITLE}
         </Link>
       </div>
-
-      {success && <Alert variant="success">{success}</Alert>}
 
       {isLoading && <CampaignsLoadingSkeleton variant="table" />}
 

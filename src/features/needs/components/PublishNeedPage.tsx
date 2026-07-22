@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { needsService } from '@/features/needs/services/needs.service';
 import {
   needFormSchema,
@@ -28,11 +28,11 @@ interface CampaignOption {
  */
 export function PublishNeedPage() {
   const navigate = useNavigate();
+  const { pushToast } = useToast();
   const [campaigns, setCampaigns] = useState<CampaignOption[]>([]);
   const [campaignId, setCampaignId] = useState('');
   const [isLoadingCampaigns, setIsLoadingCampaigns] = useState(true);
   const [apiError, setApiError] = useState('');
-  const [success, setSuccess] = useState('');
 
   const {
     register,
@@ -85,7 +85,6 @@ export function PublishNeedPage() {
       return;
     }
     setApiError('');
-    setSuccess('');
     try {
       await needsService.createNeed({
         campaignId,
@@ -95,10 +94,12 @@ export function PublishNeedPage() {
         unit: data.unit,
         priority: data.priority,
       });
-      setSuccess(UI_MESSAGES.NEEDS_CREATED);
+      pushToast({ variant: 'success', message: UI_MESSAGES.NEEDS_CREATED });
       navigate(`/foundation/campaigns/${campaignId}/edit`);
     } catch (error) {
-      setApiError(parseApiError(error).message || UI_MESSAGES.NEEDS_LOAD_ERROR);
+      const message = parseApiError(error).message || UI_MESSAGES.NEEDS_LOAD_ERROR;
+      setApiError(message);
+      pushToast({ variant: 'danger', message });
     }
   }
 
@@ -120,8 +121,6 @@ export function PublishNeedPage() {
         <h1 className="text-3xl font-bold text-text-primary">{UI_MESSAGES.NEEDS_PUBLISH_TITLE}</h1>
         <p className="mt-2 text-text-secondary">{UI_MESSAGES.NEEDS_PUBLISH_DESC}</p>
       </header>
-
-      {success && <Alert variant="success">{success}</Alert>}
 
       <Card glass={false}>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -179,7 +178,11 @@ export function PublishNeedPage() {
               </select>
             </div>
           </div>
-          {apiError && <Alert variant="danger">{apiError}</Alert>}
+          {apiError ? (
+            <p className="text-sm text-error-600" role="alert">
+              {apiError}
+            </p>
+          ) : null}
           <Button type="submit" isLoading={isSubmitting}>
             {UI_MESSAGES.NEEDS_ADD}
           </Button>

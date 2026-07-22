@@ -1,4 +1,3 @@
-import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -42,21 +41,34 @@ export function FoundationProfileChecklistCard({
   ];
 
   const statusAlert =
-    checklist.nextStep === 'verified' ? (
-      <Alert variant="success" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
-        {checklist.nextStepMessage}
-      </Alert>
-    ) : checklist.nextStep === 'rejected' ? (
-      <div className="rounded-xl border border-primary-100 bg-primary-50/60 p-4">
-        <p className="text-sm font-medium text-primary-800">
+    checklist.nextStep === 'verified' ||
+    checklist.nextStep === 'rejected' ||
+    checklist.nextStep === 'wait' ? (
+      <div
+        className={cn(
+          'rounded-xl border p-4',
+          checklist.nextStep === 'verified'
+            ? 'border-success-500/20 bg-success-500/5'
+            : 'border-primary-100 bg-primary-50/60',
+        )}
+      >
+        <p
+          className={cn(
+            'text-sm font-medium',
+            checklist.nextStep === 'verified' ? 'text-success-600' : 'text-primary-800',
+          )}
+        >
           {UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}
         </p>
-        <p className="mt-1 text-sm text-primary-700/90">{checklist.nextStepMessage}</p>
+        <p
+          className={cn(
+            'mt-1 text-sm',
+            checklist.nextStep === 'verified' ? 'text-success-600/90' : 'text-primary-700/90',
+          )}
+        >
+          {checklist.nextStepMessage}
+        </p>
       </div>
-    ) : checklist.nextStep === 'wait' ? (
-      <Alert variant="info" title={UI_MESSAGES.FOUNDATIONS_CHECKLIST_WELCOME_TITLE}>
-        {checklist.nextStepMessage}
-      </Alert>
     ) : null;
 
   return (

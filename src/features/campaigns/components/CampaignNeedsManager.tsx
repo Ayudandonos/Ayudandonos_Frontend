@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Input } from '@/components/ui/Input';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 import { campaignsService } from '@/features/campaigns/services/campaigns.service';
 import type { CampaignNeed } from '@/features/campaigns/types/campaigns.types';
 import {
@@ -33,10 +33,10 @@ const PRIORITY_LABELS = {
  * Salida: Retorna el elemento JSX del gestor de necesidades.
  */
 export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) {
+  const { pushToast } = useToast();
   const [needs, setNeeds] = useState<CampaignNeed[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -86,7 +86,6 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
    * Salida: No retorna valor.
    */
   function openForm(need?: CampaignNeed) {
-    setSuccess('');
     setError('');
     if (need) {
       setEditingId(need.id);
@@ -117,7 +116,6 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
    */
   async function onSubmit(data: CampaignNeedFormData) {
     setError('');
-    setSuccess('');
     try {
       const payload = {
         name: data.name,
@@ -128,16 +126,18 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
       };
       if (editingId) {
         await campaignsService.updateCampaignNeed(editingId, payload);
-        setSuccess(UI_MESSAGES.NEEDS_UPDATED);
+        pushToast({ variant: 'success', message: UI_MESSAGES.NEEDS_UPDATED });
       } else {
         await campaignsService.createCampaignNeed({ ...payload, campaignId });
-        setSuccess(UI_MESSAGES.NEEDS_CREATED);
+        pushToast({ variant: 'success', message: UI_MESSAGES.NEEDS_CREATED });
       }
       setShowForm(false);
       setEditingId(null);
       await loadNeeds();
     } catch (submitError) {
-      setError(parseApiError(submitError).message || UI_MESSAGES.NEEDS_LOAD_ERROR);
+      const message = parseApiError(submitError).message || UI_MESSAGES.NEEDS_LOAD_ERROR;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     }
   }
 
@@ -152,11 +152,13 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
     setError('');
     try {
       await campaignsService.deleteCampaignNeed(deleteId);
-      setSuccess(UI_MESSAGES.NEEDS_DELETED);
+      pushToast({ variant: 'success', message: UI_MESSAGES.NEEDS_DELETED });
       setDeleteId(null);
       await loadNeeds();
     } catch (deleteError) {
-      setError(parseApiError(deleteError).message || UI_MESSAGES.NEEDS_LOAD_ERROR);
+      const message = parseApiError(deleteError).message || UI_MESSAGES.NEEDS_LOAD_ERROR;
+      setError(message);
+      pushToast({ variant: 'danger', message });
     } finally {
       setIsDeleting(false);
     }
@@ -171,8 +173,11 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
         </Button>
       </div>
 
-      {success && <Alert variant="success">{success}</Alert>}
-      {error && <Alert variant="danger">{error}</Alert>}
+      {error ? (
+        <p className="text-sm text-error-600" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       {showForm && (
         <form className="space-y-4 rounded-lg border border-border-default bg-vivid-50/50 p-4" onSubmit={handleSubmit(onSubmit)} noValidate>
