@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { AppImage } from '@/components/ui/AppImage';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { DeliveryMap } from '@/components/ui/DeliveryMap';
@@ -9,6 +10,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { CampaignStatusBadge } from '@/features/campaigns/components/CampaignStatusBadge';
 import { CampaignsLoadingSkeleton } from '@/features/campaigns/components/CampaignsLoadingSkeleton';
+import { ContactFoundationModal } from '@/features/campaigns/components/ContactFoundationModal';
 import { campaignsService } from '@/features/campaigns/services/campaigns.service';
 import type { Campaign, CampaignNeed } from '@/features/campaigns/types/campaigns.types';
 import { useAuth } from '@/context/useAuth';
@@ -18,7 +20,7 @@ import { buildGoogleMapsDirectionsUrl } from '@/utils/maps';
 
 /**
  * Entrada: Ninguna (id desde useParams).
- * Proceso: Carga campana y necesidades; muestra mapa, CTAs de aporte y listado de needs.
+ * Proceso: Carga campana y necesidades; muestra mapa, CTAs de aporte/contacto y listado de needs.
  * Salida: Retorna el elemento JSX del detalle de campana.
  */
 export function CampaignDetailPage() {
@@ -28,6 +30,7 @@ export function CampaignDetailPage() {
   const [needs, setNeeds] = useState<CampaignNeed[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   /**
    * Entrada: Ninguna.
@@ -114,12 +117,17 @@ export function CampaignDetailPage() {
 
           <div className="flex flex-wrap gap-3">
             {canContribute ? (
-              <Link
-                to={`/campaigns/${campaign.id}/contribute`}
-                className={buttonLinkClass({ variant: 'primary' })}
-              >
-                {UI_MESSAGES.CAMPAIGNS_DONATE}
-              </Link>
+              <>
+                <Link
+                  to={`/campaigns/${campaign.id}/contribute`}
+                  className={buttonLinkClass({ variant: 'primary' })}
+                >
+                  {UI_MESSAGES.CAMPAIGNS_DONATE}
+                </Link>
+                <Button type="button" variant="secondary" onClick={() => setIsContactOpen(true)}>
+                  {UI_MESSAGES.CAMPAIGNS_CONTACT}
+                </Button>
+              </>
             ) : (
               <Link to="/login" className={buttonLinkClass({ variant: 'primary' })}>
                 {UI_MESSAGES.DONATIONS_LOGIN_REQUIRED}
@@ -206,6 +214,15 @@ export function CampaignDetailPage() {
           </ul>
         )}
       </Card>
+
+      {isContactOpen && (
+        <ContactFoundationModal
+          foundationName={campaign.foundation.name}
+          campaignId={campaign.id}
+          needs={needs}
+          onClose={() => setIsContactOpen(false)}
+        />
+      )}
     </div>
   );
 }

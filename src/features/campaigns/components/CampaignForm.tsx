@@ -1,4 +1,5 @@
 import { useForm, Controller } from 'react-hook-form';
+import type { ReactNode } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,10 +14,13 @@ interface CampaignFormProps {
   defaultValues?: Partial<CampaignFormData>;
   apiError?: string;
   submitLabel: string;
+  isLoading?: boolean;
+  children?: ReactNode;
   onSubmit: (data: CampaignFormData) => Promise<void>;
   secondaryAction?: {
     label: string;
     onClick: (data: CampaignFormData) => Promise<void>;
+    disabled?: boolean;
   };
 }
 
@@ -29,6 +33,8 @@ export function CampaignForm({
   defaultValues,
   apiError,
   submitLabel,
+  isLoading = false,
+  children,
   onSubmit,
   secondaryAction,
 }: CampaignFormProps) {
@@ -52,6 +58,8 @@ export function CampaignForm({
       ...defaultValues,
     },
   });
+
+  const busy = isSubmitting || isLoading;
 
   return (
     <form className="space-y-5" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -143,6 +151,7 @@ export function CampaignForm({
           />
         </div>
       </div>
+      {children}
       {apiError && (
         <p className="text-sm text-error-500" role="alert">
           {apiError}
@@ -153,13 +162,14 @@ export function CampaignForm({
           <Button
             type="button"
             variant="secondary"
-            isLoading={isSubmitting}
+            isLoading={busy}
+            disabled={secondaryAction.disabled || busy}
             onClick={() => void handleSubmit(secondaryAction.onClick)()}
           >
             {secondaryAction.label}
           </Button>
         )}
-        <Button type="submit" isLoading={isSubmitting}>
+        <Button type="submit" isLoading={busy} disabled={busy}>
           {submitLabel}
         </Button>
       </div>

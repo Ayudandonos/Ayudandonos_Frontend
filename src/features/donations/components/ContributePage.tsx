@@ -46,6 +46,7 @@ export function ContributePage() {
       quantity: 1,
       notes: '',
       estimatedDeliveryAt: '',
+      initialMessage: '',
     },
   });
 
@@ -94,6 +95,7 @@ export function ContributePage() {
         quantity: data.quantity,
         notes: data.notes || undefined,
         estimatedDeliveryAt: toIsoDateTime(data.estimatedDeliveryAt) ?? undefined,
+        initialMessage: data.initialMessage || undefined,
       });
       navigate(`/my-donations/${created.id}`);
     } catch (error) {
@@ -175,6 +177,22 @@ export function ContributePage() {
             />
             {errors.notes?.message && (
               <p className="text-sm text-error-500">{errors.notes.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-label" htmlFor="donation-initial-message">
+              {UI_MESSAGES.DONATIONS_INITIAL_MESSAGE}
+            </label>
+            <p className="text-xs text-text-muted">{UI_MESSAGES.DONATIONS_INITIAL_MESSAGE_HINT}</p>
+            <textarea
+              id="donation-initial-message"
+              rows={3}
+              className="w-full rounded-[var(--radius-sm)] border border-border-default bg-white/60 px-4 py-3 text-base"
+              placeholder={UI_MESSAGES.CAMPAIGNS_CONTACT_MESSAGE_PLACEHOLDER}
+              {...register('initialMessage')}
+            />
+            {errors.initialMessage?.message && (
+              <p className="text-sm text-error-500">{errors.initialMessage.message}</p>
             )}
           </div>
           <Input

@@ -69,6 +69,7 @@ export interface CreateDonationPayload {
   quantity: number;
   notes?: string;
   estimatedDeliveryAt?: string;
+  initialMessage?: string;
 }
 
 export interface UpdateDonationDeliveryPayload {

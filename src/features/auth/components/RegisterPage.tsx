@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   AuthFooter,
   AuthHeader,
+  AuthPasswordField,
   AuthSubmitButton,
 } from '@/components/ui/AuthChrome';
 import { Card } from '@/components/ui/Card';
@@ -30,6 +31,8 @@ export function RegisterPage() {
   const { registerUser, registerFoundation } = useAuth();
   const [role, setRole] = useState<ProfileRole>('USER');
   const [apiError, setApiError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const userForm = useForm<RegisterUserFormData>({
     resolver: zodResolver(registerUserSchema),
@@ -159,19 +162,21 @@ export function RegisterPage() {
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showPassword}
+                  onToggle={() => setShowPassword((value) => !value)}
                   error={userForm.formState.errors.password?.message}
                   {...userForm.register('password')}
                 />
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_CONFIRM_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showConfirmPassword}
+                  onToggle={() => setShowConfirmPassword((value) => !value)}
                   error={userForm.formState.errors.confirmPassword?.message}
                   {...userForm.register('confirmPassword')}
                 />
@@ -259,19 +264,21 @@ export function RegisterPage() {
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showPassword}
+                  onToggle={() => setShowPassword((value) => !value)}
                   error={foundationForm.formState.errors.password?.message}
                   {...foundationForm.register('password')}
                 />
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_CONFIRM_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showConfirmPassword}
+                  onToggle={() => setShowConfirmPassword((value) => !value)}
                   error={foundationForm.formState.errors.confirmPassword?.message}
                   {...foundationForm.register('confirmPassword')}
                 />

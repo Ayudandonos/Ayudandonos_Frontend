@@ -173,7 +173,7 @@ export function ReviewRequestPage() {
         </div>
       </Card>
 
-      {donation.conversationId && <DonationChatPanel donationId={donation.id} />}
+      <DonationChatPanel donationId={donation.id} />
 
       {showCancel && (
         <ConfirmDialog

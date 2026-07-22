@@ -11,6 +11,8 @@ import appsAdd from '@/assets/icons/apps-add.svg?raw';
 import bell from '@/assets/icons/bell.svg?raw';
 import browsers from '@/assets/icons/browsers.svg?raw';
 import envelope from '@/assets/icons/envelope.svg?raw';
+import eye from '@/assets/icons/eye.svg?raw';
+import eyeCrossed from '@/assets/icons/eye-crossed.svg?raw';
 import home from '@/assets/icons/home.svg?raw';
 import menuBurger from '@/assets/icons/menu-burger.svg?raw';
 import search from '@/assets/icons/search.svg?raw';
@@ -38,6 +40,8 @@ const BASE_ICONS = {
   bell,
   browsers,
   envelope,
+  eye,
+  'eye-crossed': eyeCrossed,
   home,
   'menu-burger': menuBurger,
   search,

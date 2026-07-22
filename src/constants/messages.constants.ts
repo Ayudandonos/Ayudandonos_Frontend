@@ -100,16 +100,16 @@ export const UI_MESSAGES = {
   CAMPAIGNS_ADDRESS_MIN: 'La dirección debe tener al menos 5 caracteres.',
   CAMPAIGNS_END_BEFORE_START: 'La fecha final debe ser posterior a la de inicio.',
   CAMPAIGNS_COORDS_INCOMPLETE: 'Debes indicar latitud y longitud juntas.',
-  CAMPAIGNS_CONTACT_TITLE: 'Contactar fundación',
+  CAMPAIGNS_CONTACT_TITLE: 'Contactar para donar',
   CAMPAIGNS_CONTACT_DESC:
-    'El envío de mensajes de contacto aún no está disponible en el backend. Puedes preparar el mensaje aquí.',
-  CAMPAIGNS_CONTACT_NAME: 'Nombre',
-  CAMPAIGNS_CONTACT_EMAIL: 'Correo',
-  CAMPAIGNS_CONTACT_PHONE: 'Teléfono',
-  CAMPAIGNS_CONTACT_MESSAGE: 'Mensaje',
-  CAMPAIGNS_CONTACT_SUBMIT: 'Enviar mensaje',
-  CAMPAIGNS_CONTACT_UNAVAILABLE:
-    'El endpoint de contacto no está disponible. Usa el perfil de la fundación o sus redes cuando estén publicadas.',
+    'Elige qué aportar y escribe un mensaje. Se creará tu compromiso y se abrirá el chat con la fundación.',
+  CAMPAIGNS_CONTACT_MESSAGE: 'Mensaje para la fundación',
+  CAMPAIGNS_CONTACT_MESSAGE_PLACEHOLDER:
+    'Hola, quiero aportar. ¿Cómo coordinamos la entrega?',
+  CAMPAIGNS_CONTACT_SUBMIT: 'Contactar y abrir chat',
+  CAMPAIGNS_CONTACT_ERROR: 'No fue posible contactar a la fundación. Intenta de nuevo.',
+  CAMPAIGNS_CONTACT_NO_NEEDS:
+    'No hay necesidades disponibles para aportar en esta campaña.',
   CAMPAIGNS_CONTACT_NAME_MIN: 'El nombre debe tener al menos 2 caracteres.',
   CAMPAIGNS_CONTACT_PHONE_MIN: 'El teléfono debe tener al menos 7 caracteres.',
   CAMPAIGNS_CONTACT_MESSAGE_MIN: 'El mensaje debe tener al menos 10 caracteres.',
@@ -203,10 +203,19 @@ export const UI_MESSAGES = {
   MAP_COORDS: (latitude: number, longitude: number) =>
     `Coordenadas: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
   CAMPAIGNS_CREATE_NEEDS_HINT:
-    'Agrega al menos las necesidades iniciales. Se crearan en el backend despues de guardar la campana.',
-  CAMPAIGNS_NEED_DRAFT_EMPTY: 'Agrega al menos una necesidad o continua desde edicion.',
+    'Agrega al menos una necesidad. Sin ellas los donantes no pueden aportar ni contactarte.',
+  CAMPAIGNS_NEED_DRAFT_EMPTY: 'Agrega al menos una necesidad para publicar la campaña.',
+  CAMPAIGNS_PUBLISH_DATES_REQUIRED:
+    'Para publicar debes indicar fecha de inicio y fecha de fin.',
+  CAMPAIGNS_CREATE_STEP_CAMPAIGN: '1. Datos de la campaña',
+  CAMPAIGNS_CREATE_STEP_NEEDS: '2. Necesidades para donar',
+  CAMPAIGNS_CREATE_SUCCESS_HINT:
+    'Campana lista. Si la publicaste, los donantes ya pueden verla y aportar.',
   CAMPAIGNS_CONTACT_VIA_DONATION:
-    'El contacto con la fundacion se realiza en el chat de cada donacion tras aportar.',
+    'Al contactar o donar se abre un chat directo con la fundación para coordinar la entrega.',
+  DONATIONS_INITIAL_MESSAGE: 'Mensaje inicial para la fundación (opcional)',
+  DONATIONS_INITIAL_MESSAGE_HINT:
+    'Si escribes un mensaje, la fundación lo recibirá en el chat al crear tu compromiso.',
 
   FOUNDATIONS_TITLE: 'Fundaciones verificadas',
   FOUNDATIONS_DESCRIPTION:
