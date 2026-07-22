@@ -7,6 +7,8 @@ import type {
   RegisterUserPayload,
 } from '@/features/auth/services/auth.service';
 import { saveAccessToken, clearAccessToken, getAccessToken } from '@/utils/auth-storage';
+import { parseApiError } from '@/utils/api-error';
+import { activateRateLimitBackoff } from '@/utils/rate-limit';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -59,11 +61,20 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(me.user);
       setFoundation(me.foundation ?? null);
       setAccessToken(token);
-    } catch {
-      clearAccessToken();
-      setUser(null);
-      setFoundation(null);
-      setAccessToken(null);
+    } catch (error) {
+      const status = parseApiError(error).status;
+      // 429: no cerrar sesion ni reintentar en loop; el token sigue siendo valido.
+      if (status === 429) {
+        activateRateLimitBackoff(120_000);
+        return;
+      }
+      // Solo invalidar sesion ante 401 u error de autenticacion real.
+      if (status === 401 || status == null) {
+        clearAccessToken();
+        setUser(null);
+        setFoundation(null);
+        setAccessToken(null);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +82,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     void fetchMe();
-  }, [fetchMe]);
+    // Solo al montar el proveedor: evita reconsultar /auth/me en cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intencional: una sola restauracion de sesion
+  }, []);
 
   /**
    * Entrada: email, password, remember: credenciales y preferencia de sesion.

@@ -5,6 +5,7 @@ import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
 import { FoundationDocumentManager } from '@/features/foundations/components/FoundationDocumentManager';
 import { FoundationForm } from '@/features/foundations/components/FoundationForm';
+import { FoundationReadinessChecklist } from '@/features/foundations/components/FoundationReadinessChecklist';
 import { FoundationLogoUploader } from '@/features/foundations/components/FoundationLogoUploader';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
 import { FoundationObservationHistory } from '@/features/foundations/components/FoundationObservationHistory';
@@ -236,6 +237,8 @@ export function FoundationProfilePage() {
           {UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION}
         </p>
       )}
+
+      <FoundationReadinessChecklist foundation={foundation} />
 
       {foundation.status === 'PENDING' && (
         <p className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">

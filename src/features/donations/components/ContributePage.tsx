@@ -45,6 +45,7 @@ export function ContributePage() {
       needId: preselectedNeedId,
       quantity: 1,
       notes: '',
+      initialMessage: '',
       estimatedDeliveryAt: '',
     },
   });
@@ -93,6 +94,7 @@ export function ContributePage() {
         needId: data.needId,
         quantity: data.quantity,
         notes: data.notes || undefined,
+        initialMessage: data.initialMessage || undefined,
         estimatedDeliveryAt: toIsoDateTime(data.estimatedDeliveryAt) ?? undefined,
       });
       navigate(`/my-donations/${created.id}`);
@@ -135,6 +137,10 @@ export function ContributePage() {
         <p className="mt-1 text-sm font-medium text-vivid-700">{campaign.title}</p>
       </header>
 
+      <Card glass={false} className="border border-primary-200 bg-primary-50/50 p-4">
+        <p className="text-sm text-text-secondary">{UI_MESSAGES.DONATIONS_INITIAL_MESSAGE_HINT}</p>
+      </Card>
+
       <Card glass={false}>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="flex flex-col gap-1.5">
@@ -175,6 +181,20 @@ export function ContributePage() {
             />
             {errors.notes?.message && (
               <p className="text-sm text-error-500">{errors.notes.message}</p>
+            )}
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-label" htmlFor="donation-initial-message">
+              {UI_MESSAGES.DONATIONS_INITIAL_MESSAGE}
+            </label>
+            <textarea
+              id="donation-initial-message"
+              rows={3}
+              className="w-full rounded-[var(--radius-sm)] border border-border-default bg-white/60 px-4 py-3 text-base"
+              {...register('initialMessage')}
+            />
+            {errors.initialMessage?.message && (
+              <p className="text-sm text-error-500">{errors.initialMessage.message}</p>
             )}
           </div>
           <Input

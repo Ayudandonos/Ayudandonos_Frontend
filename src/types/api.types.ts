@@ -29,6 +29,11 @@ export interface User {
   email: string;
   fullName: string;
   role: UserRole;
+  phone?: string | null;
+  city?: string | null;
+  department?: string | null;
+  bio?: string | null;
+  avatarUrl?: string | null;
 }
 
 export interface Foundation {
@@ -41,6 +46,8 @@ export interface Foundation {
   description: string | null;
   isProfileComplete: boolean;
   hasRequiredDocuments: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface AuthTokenData {

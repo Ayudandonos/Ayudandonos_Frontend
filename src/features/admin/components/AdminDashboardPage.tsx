@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
+import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { AdminDashboardSkeleton } from '@/features/admin/components/AdminDashboardSkeleton';
 import { AdminFeaturedCampaignsPanel } from '@/features/admin/components/AdminFeaturedCampaignsPanel';
@@ -15,7 +16,16 @@ import { useAdminDashboard } from '@/features/admin/hooks/useAdminDashboard';
  * Salida: Retorna el elemento JSX del panel de control administrativo.
  */
 export function AdminDashboardPage() {
-  const { data, isLoading, error, reload } = useAdminDashboard();
+  const {
+    data,
+    isLoading,
+    error,
+    reload,
+    latestNeedsLimit,
+    featuredCampaignsLimit,
+    setLatestNeedsLimit,
+    setFeaturedCampaignsLimit,
+  } = useAdminDashboard();
 
   if (isLoading) {
     return <AdminDashboardSkeleton />;
@@ -57,6 +67,30 @@ export function AdminDashboardPage() {
           {UI_MESSAGES.ADMIN_EXPORT_REPORT}
         </Button>
       </header>
+
+      <Card glass={false} className="border border-border-default bg-white p-6">
+        <div className="flex flex-wrap items-end gap-4">
+          <Input
+            label={UI_MESSAGES.ADMIN_DASHBOARD_NEEDS_LIMIT}
+            type="number"
+            min={1}
+            max={50}
+            value={latestNeedsLimit}
+            onChange={(event) => setLatestNeedsLimit(Number(event.target.value) || 10)}
+          />
+          <Input
+            label={UI_MESSAGES.ADMIN_DASHBOARD_CAMPAIGNS_LIMIT}
+            type="number"
+            min={1}
+            max={10}
+            value={featuredCampaignsLimit}
+            onChange={(event) => setFeaturedCampaignsLimit(Number(event.target.value) || 3)}
+          />
+          <Button type="button" variant="secondary" onClick={() => void reload()}>
+            {UI_MESSAGES.ADMIN_DASHBOARD_APPLY_LIMITS}
+          </Button>
+        </div>
+      </Card>
 
       <AdminKpiCards kpis={data.kpis} />
 

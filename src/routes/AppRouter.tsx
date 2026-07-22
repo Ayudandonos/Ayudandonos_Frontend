@@ -21,7 +21,10 @@ import {
   FoundationDetailPage,
   FoundationProfilePage,
   AdminFoundationsPage,
+  NearbyFoundationsPage,
 } from '@/features/foundations';
+import { UserProfilePage } from '@/features/users';
+import { NotificationsPage } from '@/features/notifications';
 import {
   HelpPage,
   PrivacyPolicyPage,
@@ -96,6 +99,26 @@ export const router = createBrowserRouter([
             element: (
               <RoleRoute allowedRoles={['USER']}>
                 <DonationDetailPage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'profile',
+            element: (
+              <RoleRoute allowedRoles={['USER']}>
+                <UserProfilePage />
+              </RoleRoute>
+            ),
+          },
+          {
+            path: 'notifications',
+            element: <NotificationsPage />,
+          },
+          {
+            path: 'foundations/nearby',
+            element: (
+              <RoleRoute allowedRoles={['USER']}>
+                <NearbyFoundationsPage />
               </RoleRoute>
             ),
           },

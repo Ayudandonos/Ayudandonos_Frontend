@@ -8,6 +8,10 @@ interface UseAdminDashboardResult {
   data: AdminDashboardData | null;
   isLoading: boolean;
   error: string;
+  latestNeedsLimit: number;
+  featuredCampaignsLimit: number;
+  setLatestNeedsLimit: (value: number) => void;
+  setFeaturedCampaignsLimit: (value: number) => void;
   reload: () => Promise<void>;
 }
 
@@ -20,6 +24,8 @@ export function useAdminDashboard(): UseAdminDashboardResult {
   const [data, setData] = useState<AdminDashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [latestNeedsLimit, setLatestNeedsLimit] = useState(10);
+  const [featuredCampaignsLimit, setFeaturedCampaignsLimit] = useState(3);
 
   /**
    * Entrada: Ninguna.
@@ -31,7 +37,10 @@ export function useAdminDashboard(): UseAdminDashboardResult {
     setError('');
 
     try {
-      const dashboard = await adminService.fetchDashboard();
+      const dashboard = await adminService.fetchDashboard({
+        latestNeedsLimit,
+        featuredCampaignsLimit,
+      });
       setData(dashboard);
     } catch (loadError) {
       setData(null);
@@ -39,11 +48,20 @@ export function useAdminDashboard(): UseAdminDashboardResult {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [latestNeedsLimit, featuredCampaignsLimit]);
 
   useEffect(() => {
     void reload();
   }, [reload]);
 
-  return { data, isLoading, error, reload };
+  return {
+    data,
+    isLoading,
+    error,
+    latestNeedsLimit,
+    featuredCampaignsLimit,
+    setLatestNeedsLimit,
+    setFeaturedCampaignsLimit,
+    reload,
+  };
 }

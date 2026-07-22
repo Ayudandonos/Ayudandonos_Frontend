@@ -4,6 +4,7 @@ import { AppImage } from '@/components/ui/AppImage';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
+import { NotificationBell } from '@/features/notifications/components/NotificationBell';
 import { cn } from '@/utils/cn';
 import { canFoundationOperate } from '@/utils/foundation-access';
 
@@ -17,7 +18,8 @@ const USER_NAV: NavItem[] = [
   { label: UI_MESSAGES.NAV_CAMPAIGNS, path: '/campaigns', roles: ['USER', 'FOUNDATION', 'ADMIN'] },
   { label: UI_MESSAGES.NAV_MY_COMMITMENTS, path: '/my-donations', roles: ['USER'] },
   { label: UI_MESSAGES.NAV_FOUNDATIONS, path: '/foundations', roles: ['USER', 'ADMIN'] },
-  { label: UI_MESSAGES.NAV_PROFILE, path: '/campaigns', roles: ['USER', 'ADMIN'] },
+  { label: UI_MESSAGES.NAV_FOUNDATIONS_NEARBY, path: '/foundations/nearby', roles: ['USER'] },
+  { label: UI_MESSAGES.NAV_PROFILE, path: '/profile', roles: ['USER'] },
 ];
 
 const FOUNDATION_NAV: NavItem[] = [
@@ -121,7 +123,7 @@ export function SideNav() {
  * Salida: Retorna el elemento JSX del header del dashboard.
  */
 export function DashboardHeader() {
-  const { user, role } = useAuth();
+  const { user, role, isAuthenticated } = useAuth();
 
   /**
    * Entrada: Ninguna.
@@ -145,7 +147,11 @@ export function DashboardHeader() {
       ? '/admin/profile'
       : role === 'FOUNDATION'
         ? '/foundation/profile'
-        : null;
+        : role === 'USER'
+          ? '/profile'
+          : null;
+
+  const showNotifications = isAuthenticated && role !== null;
 
   const avatar = (
     <div className="flex h-9 w-9 items-center justify-center rounded-full bg-vivid-200 text-sm font-semibold text-vivid-700">
@@ -164,6 +170,7 @@ export function DashboardHeader() {
         />
       </div>
       <div className="flex items-center gap-4">
+        <NotificationBell enabled={showNotifications} />
         <div className="hidden text-right sm:block">
           <p className="text-sm font-medium text-text-primary">{user?.fullName ?? '—'}</p>
           {roleLabel && <p className="text-xs text-text-muted">{roleLabel}</p>}
