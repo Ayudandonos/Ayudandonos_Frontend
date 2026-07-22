@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -120,11 +121,7 @@ export function PublishNeedPage() {
         <p className="mt-2 text-text-secondary">{UI_MESSAGES.NEEDS_PUBLISH_DESC}</p>
       </header>
 
-      {success && (
-        <p className="rounded-lg bg-success-500/10 px-3 py-2 text-sm text-success-600" role="status">
-          {success}
-        </p>
-      )}
+      {success && <Alert variant="success">{success}</Alert>}
 
       <Card glass={false}>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -182,11 +179,7 @@ export function PublishNeedPage() {
               </select>
             </div>
           </div>
-          {apiError && (
-            <p className="text-sm text-error-500" role="alert">
-              {apiError}
-            </p>
-          )}
+          {apiError && <Alert variant="danger">{apiError}</Alert>}
           <Button type="submit" isLoading={isSubmitting}>
             {UI_MESSAGES.NEEDS_ADD}
           </Button>

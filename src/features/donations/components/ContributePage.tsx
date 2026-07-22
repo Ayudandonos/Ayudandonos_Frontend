@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -137,10 +138,6 @@ export function ContributePage() {
         <p className="mt-1 text-sm font-medium text-vivid-700">{campaign.title}</p>
       </header>
 
-      <Card glass={false} className="border border-primary-200 bg-primary-50/50 p-4">
-        <p className="text-sm text-text-secondary">{UI_MESSAGES.DONATIONS_INITIAL_MESSAGE_HINT}</p>
-      </Card>
-
       <Card glass={false}>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="flex flex-col gap-1.5">
@@ -187,10 +184,12 @@ export function ContributePage() {
             <label className="text-label" htmlFor="donation-initial-message">
               {UI_MESSAGES.DONATIONS_INITIAL_MESSAGE}
             </label>
+            <p className="text-xs text-text-muted">{UI_MESSAGES.DONATIONS_INITIAL_MESSAGE_HINT}</p>
             <textarea
               id="donation-initial-message"
               rows={3}
               className="w-full rounded-[var(--radius-sm)] border border-border-default bg-white/60 px-4 py-3 text-base"
+              placeholder={UI_MESSAGES.CAMPAIGNS_CONTACT_MESSAGE_PLACEHOLDER}
               {...register('initialMessage')}
             />
             {errors.initialMessage?.message && (
@@ -203,11 +202,7 @@ export function ContributePage() {
             error={errors.estimatedDeliveryAt?.message}
             {...register('estimatedDeliveryAt')}
           />
-          {apiError && (
-            <p className="text-sm text-error-500" role="alert">
-              {apiError}
-            </p>
-          )}
+          {apiError && <Alert variant="danger">{apiError}</Alert>}
           <div className="flex flex-wrap gap-3">
             <Button type="submit" isLoading={isSubmitting}>
               {UI_MESSAGES.DONATIONS_SUBMIT}

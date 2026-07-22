@@ -102,16 +102,16 @@ export const UI_MESSAGES = {
   CAMPAIGNS_ADDRESS_MIN: 'La dirección debe tener al menos 5 caracteres.',
   CAMPAIGNS_END_BEFORE_START: 'La fecha final debe ser posterior a la de inicio.',
   CAMPAIGNS_COORDS_INCOMPLETE: 'Debes indicar latitud y longitud juntas.',
-  CAMPAIGNS_CONTACT_TITLE: 'Contactar fundación',
+  CAMPAIGNS_CONTACT_TITLE: 'Contactar para donar',
   CAMPAIGNS_CONTACT_DESC:
-    'El envío de mensajes de contacto aún no está disponible en el backend. Puedes preparar el mensaje aquí.',
-  CAMPAIGNS_CONTACT_NAME: 'Nombre',
-  CAMPAIGNS_CONTACT_EMAIL: 'Correo',
-  CAMPAIGNS_CONTACT_PHONE: 'Teléfono',
-  CAMPAIGNS_CONTACT_MESSAGE: 'Mensaje',
-  CAMPAIGNS_CONTACT_SUBMIT: 'Enviar mensaje',
-  CAMPAIGNS_CONTACT_UNAVAILABLE:
-    'El endpoint de contacto no está disponible. Usa el perfil de la fundación o sus redes cuando estén publicadas.',
+    'Elige qué aportar y escribe un mensaje. Se creará tu compromiso y se abrirá el chat con la fundación.',
+  CAMPAIGNS_CONTACT_MESSAGE: 'Mensaje para la fundación',
+  CAMPAIGNS_CONTACT_MESSAGE_PLACEHOLDER:
+    'Hola, quiero aportar. ¿Cómo coordinamos la entrega?',
+  CAMPAIGNS_CONTACT_SUBMIT: 'Contactar y abrir chat',
+  CAMPAIGNS_CONTACT_ERROR: 'No fue posible contactar a la fundación. Intenta de nuevo.',
+  CAMPAIGNS_CONTACT_NO_NEEDS:
+    'No hay necesidades disponibles para aportar en esta campaña.',
   CAMPAIGNS_CONTACT_NAME_MIN: 'El nombre debe tener al menos 2 caracteres.',
   CAMPAIGNS_CONTACT_PHONE_MIN: 'El teléfono debe tener al menos 7 caracteres.',
   CAMPAIGNS_CONTACT_MESSAGE_MIN: 'El mensaje debe tener al menos 10 caracteres.',
@@ -173,7 +173,7 @@ export const UI_MESSAGES = {
   DONATIONS_NEED: 'Necesidad',
   DONATIONS_QUANTITY: 'Cantidad',
   DONATIONS_NOTES: 'Mensaje / notas',
-  DONATIONS_INITIAL_MESSAGE: 'Mensaje inicial al fundación',
+  DONATIONS_INITIAL_MESSAGE: 'Mensaje inicial para la fundación (opcional)',
   DONATIONS_INITIAL_MESSAGE_HINT:
     'Opcional. Al confirmar tu compromiso se abrirá una conversación con la fundación; este texto será el primer mensaje.',
   DONATIONS_INITIAL_MESSAGE_MAX: 'El mensaje inicial no puede superar los 1000 caracteres.',
@@ -203,16 +203,87 @@ export const UI_MESSAGES = {
   DONATIONS_DELIVERY_TITLE: 'Entrega',
 
   EMPTY_STATE_RETRY: 'Reintentar',
+  ALERT_INFO: 'Informacion',
+  ALERT_DANGER: 'Error',
+  ALERT_SUCCESS: 'Exito',
+  ALERT_WARNING: 'Advertencia',
+  ALERT_NEUTRAL: 'Aviso',
+  TOAST_CONTEXT_ERROR: 'useToast debe usarse dentro de ToastProvider',
+  TOAST_REGION_LABEL: 'Notificaciones',
+  FIELD_REQUIRED_MARK: 'Obligatorio',
+  FIELD_OPTIONAL_MARK: 'Opcional',
+  FOUNDATIONS_CHECKLIST_TITLE: 'Tu camino hacia la verificación',
+  FOUNDATIONS_CHECKLIST_INTRO:
+    'Bienvenido. Completa estos pasos a tu ritmo. Nada esta fallando: solo te guiamos para activar tu fundacion.',
+  FOUNDATIONS_CHECKLIST_STEP_DATA: 'Datos del perfil',
+  FOUNDATIONS_CHECKLIST_STEP_DOCS: 'Documentos legales',
+  FOUNDATIONS_CHECKLIST_STEP_REVIEW: 'Revisión del administrador',
+  FOUNDATIONS_CHECKLIST_DONE: 'Listo',
+  FOUNDATIONS_CHECKLIST_PENDING: 'Por completar',
+  FOUNDATIONS_CHECKLIST_PENDING_FIELDS: 'Pendientes en el formulario',
+  FOUNDATIONS_CHECKLIST_PENDING_DOCS: 'Documentos por subir',
+  FOUNDATIONS_CHECKLIST_MISSING_FIELDS: 'Campos que aún faltan',
+  FOUNDATIONS_CHECKLIST_MISSING_DOCS: 'Documentos que aún faltan',
+  FOUNDATIONS_CHECKLIST_GO_TO_FORM: 'Ir al formulario',
+  FOUNDATIONS_CHECKLIST_GO_TO_DOCS: 'Ir a documentos',
+  FOUNDATIONS_CHECKLIST_NEXT_SAVE:
+    'Empieza por el formulario: completa los datos marcados como obligatorios y guarda los cambios.',
+  FOUNDATIONS_CHECKLIST_NEXT_DOCS:
+    'Ya tienes los datos. Ahora sube los documentos legales obligatorios.',
+  FOUNDATIONS_CHECKLIST_NEXT_WAIT:
+    'Todo listo de tu lado. Un administrador revisara tu fundacion; te avisaremos cuando este verificada.',
+  FOUNDATIONS_CHECKLIST_VERIFIED:
+    'Tu fundacion ya esta verificada. Ya puedes operar en la plataforma.',
+  FOUNDATIONS_CHECKLIST_WELCOME_TITLE: 'Siguiente paso sugerido',
+  FOUNDATIONS_LOGO_HINT:
+    'El logo se guarda al seleccionarlo. No reemplaza el botón Guardar cambios del formulario.',
+  FOUNDATIONS_FORM_SAVE_HINT:
+    'Este botón guarda solo los datos del formulario. Logo y documentos se suben en sus propias secciones.',
+  FOUNDATIONS_FORM_VALIDATION_ERROR:
+    'No se pudo guardar. Revisa los campos marcados e intenta de nuevo.',
+  FOUNDATIONS_FORM_SAVE_SUCCESS_TITLE: 'Cambios guardados',
+  FOUNDATIONS_FORM_SAVE_ERROR_TITLE: 'No se pudo guardar',
+  FOUNDATIONS_FORM_SAVE_NEXT_DOCS:
+    'Siguiente paso: sube los documentos legales obligatorios (RUT, certificado e identidad).',
+  FOUNDATIONS_FORM_SAVE_UNEXPECTED:
+    'Ocurrió un error inesperado al guardar. Intenta de nuevo.',
+  FOUNDATIONS_FORM_REQUIRED_LEGEND:
+    'Los campos marcados con * son obligatorios para la verificación.',
+  FOUNDATIONS_FIELD_REQUIRED: 'Este campo es obligatorio.',
+  FOUNDATIONS_DOCS_INTRO:
+    'Sube al menos los tres documentos obligatorios. Cada archivo se guarda al subirlo.',
+  FOUNDATIONS_BADGE_REQUIRED: 'Obligatorio',
+  FOUNDATIONS_BADGE_OPTIONAL: 'Opcional',
+  FOUNDATIONS_BADGE_UPLOADED: 'Cargado',
+  FOUNDATIONS_BADGE_MISSING: 'Falta',
+  LOCATION_COUNTRY_LABEL: 'País',
+  LOCATION_COUNTRY_PLACEHOLDER: 'Seleccione un país...',
+  LOCATION_COUNTRY_ARIA: 'Seleccionar país',
+  LOCATION_STATE_LABEL: 'Estado / Departamento',
+  LOCATION_STATE_PLACEHOLDER: 'Seleccione un estado o departamento...',
+  LOCATION_STATE_ARIA: 'Seleccionar estado o departamento',
+  LOCATION_CITY_LABEL: 'Ciudad',
+  LOCATION_CITY_PLACEHOLDER: 'Seleccione una ciudad...',
+  LOCATION_CITY_ARIA: 'Seleccionar ciudad',
+  LOCATION_LOADING: 'Cargando...',
+  LOCATION_NO_RESULTS: 'Sin resultados',
+  LOCATION_LOAD_ERROR: 'No fue posible cargar las ubicaciones. Intenta de nuevo.',
   AUTH_EMAIL_INVALID: 'Correo electrónico inválido.',
   MAP_UNAVAILABLE:
     'Mapa no disponible. Configura VITE_GOOGLE_MAPS_API_KEY para ver el mapa interactivo.',
   MAP_COORDS: (latitude: number, longitude: number) =>
     `Coordenadas: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
   CAMPAIGNS_CREATE_NEEDS_HINT:
-    'Agrega al menos las necesidades iniciales. Se crearan en el backend despues de guardar la campana.',
-  CAMPAIGNS_NEED_DRAFT_EMPTY: 'Agrega al menos una necesidad o continua desde edicion.',
+    'Agrega al menos una necesidad. Sin ellas los donantes no pueden aportar ni contactarte.',
+  CAMPAIGNS_NEED_DRAFT_EMPTY: 'Agrega al menos una necesidad para publicar la campaña.',
+  CAMPAIGNS_PUBLISH_DATES_REQUIRED:
+    'Para publicar debes indicar fecha de inicio y fecha de fin.',
+  CAMPAIGNS_CREATE_STEP_CAMPAIGN: '1. Datos de la campaña',
+  CAMPAIGNS_CREATE_STEP_NEEDS: '2. Necesidades para donar',
+  CAMPAIGNS_CREATE_SUCCESS_HINT:
+    'Campana lista. Si la publicaste, los donantes ya pueden verla y aportar.',
   CAMPAIGNS_CONTACT_VIA_DONATION:
-    'El contacto con la fundacion se realiza en el chat de cada donacion tras aportar.',
+    'Al contactar o donar se abre un chat directo con la fundación para coordinar la entrega.',
 
   FOUNDATIONS_TITLE: 'Fundaciones verificadas',
   FOUNDATIONS_DESCRIPTION:
@@ -253,6 +324,10 @@ export const UI_MESSAGES = {
   FOUNDATIONS_FORM_VISION: 'Visión',
   FOUNDATIONS_FORM_CITY: 'Ciudad',
   FOUNDATIONS_FORM_DEPARTMENT: 'Departamento',
+  FOUNDATIONS_FORM_COUNTRY: 'País',
+  FOUNDATIONS_FORM_COUNTRY_PLACEHOLDER: 'Selecciona un país',
+  FOUNDATIONS_FORM_DEPARTMENT_PLACEHOLDER: 'Selecciona un departamento',
+  FOUNDATIONS_FORM_CITY_PLACEHOLDER: 'Selecciona una ciudad',
   FOUNDATIONS_FORM_ADDRESS: 'Dirección',
   FOUNDATIONS_FORM_INSTITUTIONAL_EMAIL: 'Correo institucional',
   FOUNDATIONS_FORM_PHONE: 'Teléfono',
@@ -267,14 +342,14 @@ export const UI_MESSAGES = {
   FOUNDATIONS_ADD_SOCIAL_LINK: 'Agregar red social',
   FOUNDATIONS_UPLOAD_LOGO: 'Subir logo',
   FOUNDATIONS_UPLOAD_DOCUMENT: 'Subir documento',
-  FOUNDATIONS_DOCUMENT_RUT: 'RUT',
+  FOUNDATIONS_DOCUMENT_RUT: 'Registro unico tributario (RUT)',
   FOUNDATIONS_DOCUMENT_LEGAL_CERTIFICATE: 'Certificado de existencia y representación legal',
   FOUNDATIONS_DOCUMENT_REPRESENTATIVE_ID: 'Documento de identidad del representante legal',
   FOUNDATIONS_DOCUMENT_BANK_CERT: 'Certificación bancaria',
   FOUNDATIONS_GATE_INCOMPLETE:
-    'Completa todos los datos obligatorios y sube los documentos legales requeridos antes de continuar.',
+    'Para usar el resto de la plataforma, completa tu perfil y documentos. Usa la guia de abajo para avanzar paso a paso.',
   FOUNDATIONS_GATE_VERIFICATION:
-    'Un administrador debe verificar tu fundación antes de que puedas gestionar campañas, necesidades o solicitudes.',
+    'Tu perfil ya esta completo. Cuando un administrador verifique tu fundacion, podras gestionar campanas, necesidades y solicitudes.',
   FOUNDATIONS_READINESS_TITLE: 'Requisitos para operar',
   FOUNDATIONS_READINESS_PROFILE: 'Perfil completo',
   FOUNDATIONS_READINESS_DOCUMENTS: 'Documentos obligatorios cargados',
@@ -312,6 +387,7 @@ export const UI_MESSAGES = {
   FOUNDATIONS_CATEGORY_MIN: 'La categoría debe tener al menos 2 caracteres.',
   FOUNDATIONS_CITY_MIN: 'La ciudad debe tener al menos 2 caracteres.',
   FOUNDATIONS_DEPARTMENT_MIN: 'El departamento debe tener al menos 2 caracteres.',
+  FOUNDATIONS_COUNTRY_MIN: 'El país debe tener al menos 2 caracteres.',
   FOUNDATIONS_ADDRESS_MIN: 'La dirección debe tener al menos 5 caracteres.',
   FOUNDATIONS_PHONE_MIN: 'El teléfono debe tener al menos 7 caracteres.',
   FOUNDATIONS_PHONE_MAX: 'El teléfono no puede superar los 20 caracteres.',
@@ -320,8 +396,10 @@ export const UI_MESSAGES = {
   FOUNDATIONS_VISION_MAX: 'La visión no puede superar los 1000 caracteres.',
   FOUNDATIONS_DESCRIPTION_MAX: 'La descripción no puede superar los 2000 caracteres.',
   FOUNDATIONS_URL_INVALID: 'URL inválida',
-  FOUNDATIONS_LOGO_UPLOADED: 'Logo actualizado correctamente.',
-  FOUNDATIONS_DOCUMENT_UPLOADED: 'Documento cargado correctamente.',
+  FOUNDATIONS_LOGO_UPLOADED:
+    'Logo actualizado correctamente. Si editaste el formulario, recuerda pulsar Guardar cambios.',
+  FOUNDATIONS_DOCUMENT_UPLOADED:
+    'Documento cargado correctamente. Revisa el checklist de arriba para ver si falta alguno.',
   FOUNDATIONS_TABLE_NIT: 'NIT',
   FOUNDATIONS_TABLE_CITY: 'Ciudad',
   FOUNDATIONS_KPI_TOTAL: 'Total registradas',
@@ -347,7 +425,8 @@ export const UI_MESSAGES = {
   FOUNDATIONS_PROFILE_DESCRIPTION: 'Actualiza la información pública de tu organización.',
   FOUNDATIONS_PENDING_NOTICE:
     'Tu fundación está pendiente de verificación. Un administrador revisará tu solicitud.',
-  FOUNDATIONS_PROFILE_UPDATED: 'Perfil de fundación actualizado correctamente.',
+  FOUNDATIONS_PROFILE_UPDATED:
+    'Perfil de fundación actualizado correctamente. Continúa con los documentos legales si aún faltan.',
   FOUNDATIONS_FORM_NAME: 'Nombre de la fundación',
   FOUNDATIONS_FORM_ACRONYM: 'Sigla',
   FOUNDATIONS_FORM_DESCRIPTION: 'Descripción',

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -113,11 +114,7 @@ export function DonationChatPanel({ donationId }: DonationChatPanelProps) {
         <div ref={bottomRef} />
       </div>
 
-      {error && (
-        <p className="text-sm text-error-500" role="alert">
-          {error}
-        </p>
-      )}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       <div className="flex gap-3">
         <textarea

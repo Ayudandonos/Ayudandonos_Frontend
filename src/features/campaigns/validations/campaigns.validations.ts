@@ -66,9 +66,8 @@ export const campaignFormSchema = z
 export type CampaignFormData = z.infer<typeof campaignFormSchema>;
 
 export const contactFoundationSchema = z.object({
-  name: z.string().trim().min(2, UI_MESSAGES.CAMPAIGNS_CONTACT_NAME_MIN),
-  email: z.string().trim().email(UI_MESSAGES.AUTH_EMAIL_INVALID),
-  phone: z.string().trim().min(7, UI_MESSAGES.CAMPAIGNS_CONTACT_PHONE_MIN).optional().or(z.literal('')),
+  needId: z.string().uuid(UI_MESSAGES.DONATIONS_NEED_REQUIRED),
+  quantity: z.coerce.number().int().min(1, UI_MESSAGES.DONATIONS_QUANTITY_MIN),
   message: z
     .string()
     .trim()

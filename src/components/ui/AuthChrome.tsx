@@ -132,7 +132,7 @@ interface AuthPasswordFieldProps extends Omit<InputHTMLAttributes<HTMLInputEleme
 export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldProps>(
   /**
    * Entrada: showPassword, onToggle y props de Input excepto type; ref: referencia al input nativo.
-   * Proceso: Renderiza campo de contraseña con toggle accesible mediante forwardRef.
+   * Proceso: Renderiza campo de contraseña con toggle de visibilidad mediante icono.
    * Salida: Retorna el elemento JSX del campo de contraseña.
    */
   function AuthPasswordField({ showPassword, onToggle, label, filled, ...props }, ref) {
@@ -146,11 +146,11 @@ export const AuthPasswordField = forwardRef<HTMLInputElement, AuthPasswordFieldP
           <button
             type="button"
             onClick={onToggle}
-            className="rounded-md px-1 text-xs font-semibold text-primary-700 transition-smooth hover:text-primary-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
+            className="inline-flex size-8 items-center justify-center rounded-md text-text-muted transition-smooth hover:bg-primary-50 hover:text-primary-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600"
             aria-label={showPassword ? UI_MESSAGES.LOGIN_HIDE_PASSWORD : UI_MESSAGES.LOGIN_SHOW_PASSWORD}
             aria-pressed={showPassword}
           >
-            {showPassword ? UI_MESSAGES.LOGIN_PASSWORD_TOGGLE_HIDE : UI_MESSAGES.LOGIN_PASSWORD_TOGGLE_SHOW}
+            <Icon name={showPassword ? 'eye-crossed' : 'eye'} size="md" decorative />
           </button>
         }
         {...props}

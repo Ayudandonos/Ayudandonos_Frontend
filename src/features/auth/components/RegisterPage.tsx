@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import {
   AuthFooter,
   AuthHeader,
+  AuthPasswordField,
   AuthSubmitButton,
 } from '@/components/ui/AuthChrome';
 import { Card } from '@/components/ui/Card';
@@ -30,6 +32,8 @@ export function RegisterPage() {
   const { registerUser, registerFoundation } = useAuth();
   const [role, setRole] = useState<ProfileRole>('USER');
   const [apiError, setApiError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const userForm = useForm<RegisterUserFormData>({
     resolver: zodResolver(registerUserSchema),
@@ -159,19 +163,21 @@ export function RegisterPage() {
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showPassword}
+                  onToggle={() => setShowPassword((value) => !value)}
                   error={userForm.formState.errors.password?.message}
                   {...userForm.register('password')}
                 />
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_CONFIRM_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showConfirmPassword}
+                  onToggle={() => setShowConfirmPassword((value) => !value)}
                   error={userForm.formState.errors.confirmPassword?.message}
                   {...userForm.register('confirmPassword')}
                 />
@@ -194,15 +200,9 @@ export function RegisterPage() {
                 </span>
               </label>
               {userForm.formState.errors.acceptTerms && (
-                <p className="text-sm text-red-600" role="alert">
-                  {userForm.formState.errors.acceptTerms.message}
-                </p>
+                <Alert variant="danger">{userForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && (
-                <p className="text-sm text-red-600" role="alert">
-                  {apiError}
-                </p>
-              )}
+              {apiError && <Alert variant="danger">{apiError}</Alert>}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}
@@ -259,19 +259,21 @@ export function RegisterPage() {
                 />
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showPassword}
+                  onToggle={() => setShowPassword((value) => !value)}
                   error={foundationForm.formState.errors.password?.message}
                   {...foundationForm.register('password')}
                 />
-                <Input
+                <AuthPasswordField
                   label={UI_MESSAGES.REGISTER_CONFIRM_PASSWORD}
-                  type="password"
                   autoComplete="new-password"
                   filled
+                  showPassword={showConfirmPassword}
+                  onToggle={() => setShowConfirmPassword((value) => !value)}
                   error={foundationForm.formState.errors.confirmPassword?.message}
                   {...foundationForm.register('confirmPassword')}
                 />
@@ -294,15 +296,9 @@ export function RegisterPage() {
                 </span>
               </label>
               {foundationForm.formState.errors.acceptTerms && (
-                <p className="text-sm text-red-600" role="alert">
-                  {foundationForm.formState.errors.acceptTerms.message}
-                </p>
+                <Alert variant="danger">{foundationForm.formState.errors.acceptTerms.message}</Alert>
               )}
-              {apiError && (
-                <p className="text-sm text-red-600" role="alert">
-                  {apiError}
-                </p>
-              )}
+              {apiError && <Alert variant="danger">{apiError}</Alert>}
               <AuthSubmitButton
                 isLoading={isSubmitting}
                 label={UI_MESSAGES.REGISTER_SUBMIT}

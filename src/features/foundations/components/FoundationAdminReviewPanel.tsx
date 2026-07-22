@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { UI_MESSAGES } from '@/constants/messages.constants';
@@ -142,21 +143,17 @@ export function FoundationAdminReviewPanel({
 
   return (
     <div className="space-y-4 border-t border-border-default pt-4">
-      <div className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-        <p className="font-semibold">{UI_MESSAGES.FOUNDATIONS_CURRENT_STATUS}</p>
-        <p className="mt-1">
-          {UI_MESSAGES.FOUNDATIONS_REGISTERED_AT}:{' '}
-          {new Date(foundation.createdAt).toLocaleDateString('es-CO')}
-        </p>
-      </div>
+      <Alert variant="warning" title={UI_MESSAGES.FOUNDATIONS_CURRENT_STATUS}>
+        {UI_MESSAGES.FOUNDATIONS_REGISTERED_AT}:{' '}
+        {new Date(foundation.createdAt).toLocaleDateString('es-CO')}
+      </Alert>
 
       <form className="space-y-3" onSubmit={(event) => event.preventDefault()}>
-        {actionError && <p className="text-xs text-red-600">{actionError}</p>}
+        {actionError && <Alert variant="danger">{actionError}</Alert>}
         {foundation.status === 'REJECTED' && foundation.rejectionReason && (
-          <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-            <p className="font-semibold">{UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}</p>
-            <p className="mt-1">{foundation.rejectionReason}</p>
-          </div>
+          <Alert variant="danger" title={UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}>
+            {foundation.rejectionReason}
+          </Alert>
         )}
 
         <div>

@@ -1,26 +1,36 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { AppImage } from '@/components/ui/AppImage';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useToast } from '@/context/useToast';
 
 interface FoundationLogoUploaderProps {
   logoUrl: string | null;
   isUploading?: boolean;
+  successMessage?: string;
   onUpload: (file: File) => Promise<void>;
 }
 
 /**
- * Entrada: logoUrl: URL actual; isUploading: estado de carga; onUpload: callback async.
- * Proceso: Permite previsualizar y reemplazar el logo de la fundacion.
+ * Entrada: logoUrl, isUploading, successMessage y onUpload.
+ * Proceso: Permite previsualizar/subir logo; confirma exito via toast.
  * Salida: Retorna el elemento JSX del uploader de logo.
  */
 export function FoundationLogoUploader({
   logoUrl,
   isUploading = false,
+  successMessage,
   onUpload,
 }: FoundationLogoUploaderProps) {
+  const { pushToast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (successMessage) {
+      pushToast({ variant: 'success', message: successMessage });
+    }
+  }, [successMessage, pushToast]);
 
   /**
    * Entrada: event: cambio del input file con imagen de logo.
@@ -48,7 +58,16 @@ export function FoundationLogoUploader({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm font-semibold text-text-primary">{UI_MESSAGES.FOUNDATIONS_SECTION_LOGO}</p>
+      <div>
+        <p className="text-sm font-semibold text-text-primary">
+          {UI_MESSAGES.FOUNDATIONS_SECTION_LOGO}
+          <span className="ms-2 text-xs font-normal text-text-muted">
+            ({UI_MESSAGES.FOUNDATIONS_BADGE_OPTIONAL})
+          </span>
+        </p>
+        <p className="mt-1 text-sm text-text-secondary">{UI_MESSAGES.FOUNDATIONS_LOGO_HINT}</p>
+      </div>
+
       <div className="flex items-center gap-4">
         <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-xl border border-border-default bg-vivid-50">
           {displayUrl ? (

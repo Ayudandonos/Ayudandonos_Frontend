@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -170,16 +171,8 @@ export function CampaignNeedsManager({ campaignId }: CampaignNeedsManagerProps) 
         </Button>
       </div>
 
-      {success && (
-        <p className="rounded-lg bg-success-500/10 px-3 py-2 text-sm text-success-600" role="status">
-          {success}
-        </p>
-      )}
-      {error && (
-        <p className="rounded-lg bg-error-500/10 px-3 py-2 text-sm text-error-600" role="alert">
-          {error}
-        </p>
-      )}
+      {success && <Alert variant="success">{success}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
 
       {showForm && (
         <form className="space-y-4 rounded-lg border border-border-default bg-vivid-50/50 p-4" onSubmit={handleSubmit(onSubmit)} noValidate>

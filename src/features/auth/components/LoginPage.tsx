@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/Input';
 import { FIGMA_ASSETS } from '@/constants/figma-assets.constants';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useAuth } from '@/context/useAuth';
+import { useToast } from '@/context/useToast';
 import { parseApiError } from '@/utils/api-error';
 import { canFoundationOperate } from '@/utils/foundation-access';
 import { loginSchema, type LoginFormData } from '@/features/auth/validations/auth.validations';
@@ -26,8 +27,8 @@ import { loginSchema, type LoginFormData } from '@/features/auth/validations/aut
 export function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { pushToast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
-  const [apiError, setApiError] = useState('');
 
   const {
     register,
@@ -45,7 +46,6 @@ export function LoginPage() {
    * Salida: No retorna valor; navega a la ruta correspondiente o muestra error.
    */
   const onSubmit = async (data: LoginFormData) => {
-    setApiError('');
     try {
       const { user, foundation } = await login(data.email, data.password, data.remember ?? true);
       const redirect =
@@ -59,16 +59,17 @@ export function LoginPage() {
       navigate(redirect, { replace: true });
     } catch (error) {
       const parsed = parseApiError(error);
+      let message = parsed.message || UI_MESSAGES.AUTH_GENERIC_ERROR;
       if (parsed.status === 401) {
-        setApiError(parsed.message || UI_MESSAGES.AUTH_INVALID_CREDENTIALS);
+        message = parsed.message || UI_MESSAGES.AUTH_INVALID_CREDENTIALS;
       } else if (parsed.status === 403) {
-        setApiError(parsed.message || UI_MESSAGES.AUTH_ACCOUNT_DISABLED);
+        message = parsed.message || UI_MESSAGES.AUTH_ACCOUNT_DISABLED;
       } else {
-        Object.entries(parsed.fieldErrors).forEach(([field, message]) => {
-          setError(field as keyof LoginFormData, { message });
+        Object.entries(parsed.fieldErrors).forEach(([field, fieldMessage]) => {
+          setError(field as keyof LoginFormData, { message: fieldMessage });
         });
-        setApiError(parsed.message || UI_MESSAGES.AUTH_GENERIC_ERROR);
       }
+      pushToast({ variant: 'danger', message });
     }
   };
 
@@ -138,11 +139,6 @@ export function LoginPage() {
                   />
                   <span className="text-caption">{UI_MESSAGES.LOGIN_REMEMBER}</span>
                 </label>
-                {apiError && (
-                  <p className="text-sm text-error-500" role="alert">
-                    {apiError}
-                  </p>
-                )}
                 <AuthSubmitButton
                   isLoading={isSubmitting}
                   label={UI_MESSAGES.LOGIN_SUBMIT}

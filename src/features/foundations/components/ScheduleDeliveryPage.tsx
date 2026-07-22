@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Alert } from '@/components/ui/Alert';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -106,11 +107,7 @@ export function ScheduleDeliveryPage() {
         </h1>
         <p className="text-text-secondary">{UI_MESSAGES.FOUNDATION_DELIVERY_SELECT_DONATION}</p>
 
-        {error && (
-          <p className="rounded-lg bg-error-500/10 px-3 py-2 text-sm text-error-600" role="alert">
-            {error}
-          </p>
-        )}
+        {error && <Alert variant="danger">{error}</Alert>}
 
         {candidates.length === 0 ? (
           <EmptyState title={UI_MESSAGES.FOUNDATION_DELIVERY_NO_DONATIONS} />
@@ -194,11 +191,7 @@ export function ScheduleDeliveryPage() {
               setLongitude(nextLng);
             }}
           />
-          {error && (
-            <p className="text-sm text-error-500" role="alert">
-              {error}
-            </p>
-          )}
+          {error && <Alert variant="danger">{error}</Alert>}
           <Button type="submit" variant="primary" size="lg" isLoading={isSubmitting}>
             {UI_MESSAGES.FOUNDATION_DELIVERY_SCHEDULE_SUBMIT}
           </Button>

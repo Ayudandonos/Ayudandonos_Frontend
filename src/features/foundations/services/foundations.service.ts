@@ -94,7 +94,6 @@ async function uploadLogo(id: string, file: File): Promise<FoundationDetail> {
   const { data } = await api.post<ApiSuccessResponse<FoundationDetail>>(
     `/foundations/${id}/logo`,
     formData,
-    { headers: { 'Content-Type': 'multipart/form-data' } },
   );
 
   return data.data;
@@ -117,7 +116,6 @@ async function uploadDocument(
   const { data } = await api.post<ApiSuccessResponse<FoundationDetail>>(
     `/foundations/${id}/documents`,
     formData,
-    { headers: { 'Content-Type': 'multipart/form-data' } },
   );
 
   return data.data;
