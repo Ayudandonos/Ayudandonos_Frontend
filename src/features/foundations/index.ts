@@ -6,4 +6,5 @@ export { FoundationsListPage } from './components/FoundationsListPage';
 export { FoundationDetailPage } from './components/FoundationDetailPage';
 export { FoundationProfilePage } from './components/FoundationProfilePage';
 export { AdminFoundationsPage } from './components/AdminFoundationsPage';
+export { NearbyFoundationsPage } from './components/NearbyFoundationsPage';
 export { foundationsService } from './services/foundations.service';

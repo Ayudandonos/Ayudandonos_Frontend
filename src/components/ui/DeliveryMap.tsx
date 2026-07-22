@@ -4,7 +4,7 @@ import { UI_MESSAGES } from '@/constants/messages.constants';
 import { cn } from '@/utils/cn';
 
 const DEFAULT_CENTER = { lat: 4.711, lng: -74.0721 };
-const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '';
+const GOOGLE_MAPS_API_KEY = (import.meta.env.VITE_GOOGLE_MAPS_API_KEY ?? '').trim();
 const GOOGLE_MAPS_LIBRARIES: 'places'[] = ['places'];
 
 interface DeliveryMapProps {
@@ -51,19 +51,21 @@ function MapFallback({
 }
 
 /**
- * Entrada: latitude/longitude/address: ubicacion; editable y onChange opcionales.
- * Proceso: Carga Google Maps JS API y renderiza mapa con marcador; sin key muestra fallback.
- * Salida: Retorna el elemento JSX del mapa o alternativa textual.
+ * Entrada: props de DeliveryMap (solo se monta si hay API key).
+ * Proceso: Carga el script de Google Maps y renderiza el mapa interactivo.
+ * Salida: Retorna el mapa, loading o fallback ante error de carga.
  */
-export function DeliveryMap({
-  latitude,
-  longitude,
-  address,
-  editable = false,
-  onChange,
-  height = '16rem',
-  className,
-}: DeliveryMapProps) {
+function DeliveryMapLoaded(props: DeliveryMapProps) {
+  const {
+    latitude,
+    longitude,
+    address,
+    editable = false,
+    onChange,
+    height = '16rem',
+    className,
+  } = props;
+
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'ayudandonos-google-map-script',
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
@@ -96,7 +98,7 @@ export function DeliveryMap({
     [editable, onChange],
   );
 
-  if (!GOOGLE_MAPS_API_KEY || loadError) {
+  if (loadError) {
     return (
       <MapFallback
         latitude={latitude}
@@ -144,4 +146,25 @@ export function DeliveryMap({
       </GoogleMap>
     </div>
   );
+}
+
+/**
+ * Entrada: latitude/longitude/address: ubicacion; editable y onChange opcionales.
+ * Proceso: Sin API key muestra fallback (no carga el script de Google); con key monta el mapa.
+ * Salida: Retorna el elemento JSX del mapa o alternativa textual.
+ */
+export function DeliveryMap(props: DeliveryMapProps) {
+  if (!GOOGLE_MAPS_API_KEY) {
+    return (
+      <MapFallback
+        latitude={props.latitude}
+        longitude={props.longitude}
+        address={props.address}
+        height={props.height}
+        className={props.className}
+      />
+    );
+  }
+
+  return <DeliveryMapLoaded {...props} />;
 }

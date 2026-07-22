@@ -124,6 +124,27 @@ export interface UpdateFoundationPayload {
   socialLinks?: FoundationSocialLink[];
 }
 
+export interface NearbyFoundation {
+  id: string;
+  name: string;
+  category: string | null;
+  city: string | null;
+  logoUrl: string | null;
+  distanceKm: number;
+  latitude?: number | null;
+  longitude?: number | null;
+}
+
+export interface NearbyFoundationsParams {
+  latitude: number;
+  longitude: number;
+  radiusKm?: number;
+}
+
+export interface NearbyFoundationsData {
+  items: NearbyFoundation[];
+}
+
 export interface UpdateFoundationStatusPayload {
   status: FoundationStatus;
   rejectionReason?: string | null;

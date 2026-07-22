@@ -16,6 +16,7 @@ import {
   type CampaignNeedFormData,
 } from '@/features/campaigns/validations/campaigns.validations';
 import { parseApiError } from '@/utils/api-error';
+import { redirectFoundationOnForbidden } from '@/utils/foundation-api-guard';
 
 type DraftNeed = CampaignNeedFormData & { localId: string };
 
@@ -119,6 +120,9 @@ export function CreateCampaignPage() {
         navigate(`/foundation/campaigns/${created.id}/edit`);
       }
     } catch (submitError) {
+      if (redirectFoundationOnForbidden(submitError, navigate)) {
+        return;
+      }
       setApiError(parseApiError(submitError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
     } finally {
       setIsSaving(false);

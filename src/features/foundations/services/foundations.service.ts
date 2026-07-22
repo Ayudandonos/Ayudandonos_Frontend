@@ -4,6 +4,8 @@ import type {
   FoundationDetail,
   FoundationDocumentType,
   ListFoundationsParams,
+  NearbyFoundationsParams,
+  NearbyFoundation,
   PaginatedFoundationsData,
   UpdateFoundationPayload,
   UpdateFoundationStatusPayload,
@@ -139,6 +141,20 @@ async function downloadDocument(
   return { blob: response.data, fileName };
 }
 
+/**
+ * Entrada: params: coordenadas del usuario y radio en kilometros.
+ * Proceso: Consulta GET /foundations/nearby.
+ * Salida: Retorna fundaciones ordenadas por distancia.
+ */
+async function fetchNearbyFoundations(params: NearbyFoundationsParams): Promise<NearbyFoundation[]> {
+  const { data } = await api.get<
+    ApiSuccessResponse<{ items: NearbyFoundation[] } | NearbyFoundation[]>
+  >('/foundations/nearby', { params });
+
+  const payload = data.data;
+  return Array.isArray(payload) ? payload : (payload.items ?? []);
+}
+
 export const foundationsService = {
   fetchFoundations,
   fetchFoundationById,
@@ -148,4 +164,5 @@ export const foundationsService = {
   uploadLogo,
   uploadDocument,
   downloadDocument,
+  fetchNearbyFoundations,
 };

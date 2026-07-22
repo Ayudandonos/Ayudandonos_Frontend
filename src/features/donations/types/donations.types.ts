@@ -68,8 +68,8 @@ export interface CreateDonationPayload {
   needId: string;
   quantity: number;
   notes?: string;
-  estimatedDeliveryAt?: string;
   initialMessage?: string;
+  estimatedDeliveryAt?: string;
 }
 
 export interface UpdateDonationDeliveryPayload {

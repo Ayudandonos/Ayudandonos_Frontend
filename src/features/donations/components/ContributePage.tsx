@@ -46,8 +46,8 @@ export function ContributePage() {
       needId: preselectedNeedId,
       quantity: 1,
       notes: '',
-      estimatedDeliveryAt: '',
       initialMessage: '',
+      estimatedDeliveryAt: '',
     },
   });
 
@@ -95,8 +95,8 @@ export function ContributePage() {
         needId: data.needId,
         quantity: data.quantity,
         notes: data.notes || undefined,
-        estimatedDeliveryAt: toIsoDateTime(data.estimatedDeliveryAt) ?? undefined,
         initialMessage: data.initialMessage || undefined,
+        estimatedDeliveryAt: toIsoDateTime(data.estimatedDeliveryAt) ?? undefined,
       });
       navigate(`/my-donations/${created.id}`);
     } catch (error) {
