@@ -4,7 +4,7 @@ Documento de handoff para el frontend. El backend ya esta implementado en la ram
 
 **Rama frontend recomendada:** `feature/campaigns-flow`  
 **Base API:** `VITE_API_URL` (ej. `http://localhost:3000/api/v1`)  
-**Mapas:** Google Maps JS — variable `VITE_GOOGLE_MAPS_API_KEY`  
+**Mapas:** Leaflet + OpenStreetMap (sin API key)  
 **Auth:** Bearer JWT (interceptor Axios ya existente)
 
 Respuesta estandar:
@@ -160,15 +160,17 @@ Cada item trae `donor`, `need`, `campaign`, `statusHistory`, delivery, `conversa
 
 ---
 
-## Mapa (Google Maps)
+## Mapa (Leaflet + OpenStreetMap)
 
-1. Dependencia: `@react-google-maps/api`.
-2. Env: `VITE_GOOGLE_MAPS_API_KEY` en `.env` y tipado en `vite-env.d.ts`.
-3. Componente reutilizable (ej. `DeliveryMap`):
+1. Dependencias: `leaflet`, `react-leaflet`, `@types/leaflet`.
+2. CSS: importar `leaflet/dist/leaflet.css` en `main.tsx`.
+3. Iconos: `setupLeafletDefaultIcons()` corrige rutas rotas con Vite.
+4. Componente reutilizable `DeliveryMap`:
    - Lectura: marker fijo.
-   - Edicion: click/drag actualiza lat/lng y opcionalmente address.
-   - Sin API key: fallback textual (coords/direccion), **no romper** la app.
-4. Centro por defecto sugerido: Bogota `4.7110, -74.0721`.
+   - Edicion: click/drag actualiza lat/lng.
+   - Tiles OSM publicos (sin API key).
+5. Centro por defecto sugerido: Bogota `4.7110, -74.0721`.
+6. Nearby: `NearbyFoundationsMap` con circulo de radio, marcador de usuario y popups.
 
 ---
 
@@ -190,7 +192,7 @@ Cada item trae `donor`, `need`, `campaign`, `statusHistory`, delivery, `conversa
 - [ ] Donante ve campanas publicadas, aporta, ve la donacion en `/my-donations`.
 - [ ] Ambos chatean en el detalle de la donacion.
 - [ ] Fundacion ve la solicitud en `/foundation/requests`, agenda entrega en mapa, confirma estados.
-- [ ] Sin key de Google Maps la UI degrada sin crash.
+- [ ] Sin dependencia de Google Maps JS; mapas con Leaflet/OSM.
 - [ ] `npm run build` y `npm run lint` OK.
 - [ ] Guards de fundacion siguen bloqueando si no esta operativa.
 

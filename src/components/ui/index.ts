@@ -12,7 +12,7 @@ export { EmptyState } from './EmptyState';
 export { ProgressBar } from './ProgressBar';
 export { DeliveryMap } from './DeliveryMap';
 export { LocationMap } from './LocationMap';
-export { buildGoogleMapsDirectionsUrl } from '@/utils/maps';
+export { buildOpenStreetMapUrl, buildGoogleMapsDirectionsUrl } from '@/utils/maps';
 export { Skeleton } from './Skeleton';
 export { Icon, ICONS, type IconName, type IconSize } from './Icon';
 export {

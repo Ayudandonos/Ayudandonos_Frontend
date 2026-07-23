@@ -7,6 +7,7 @@ import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useToast } from '@/context/useToast';
+import { useGeocodeOnLocationChange } from '@/hooks/useGeocodeOnLocationChange';
 import { LocationCascadingFields } from '@/features/foundations/components/LocationCascadingFields';
 import {
   normalizeOptionalUrl,
@@ -155,7 +156,19 @@ export function FoundationForm({
   });
 
   const socialLinks = watch('socialLinks') ?? [];
+  const country = watch('country');
+  const department = watch('department');
+  const city = watch('city');
+  const address = watch('address');
   const displayError = apiError || clientError;
+
+  const { isGeocoding, geocodeError } = useGeocodeOnLocationChange({
+    query: { country, department, city, address },
+    onCoords: (latitude, longitude) => {
+      setValue('latitude', latitude, { shouldDirty: true, shouldValidate: true });
+      setValue('longitude', longitude, { shouldDirty: true, shouldValidate: true });
+    },
+  });
 
   const socialFieldErrors = useMemo(() => {
     const map: Partial<Record<(typeof SOCIAL_NETWORKS)[number], string>> = {};
@@ -353,6 +366,14 @@ export function FoundationForm({
         <div className="space-y-2">
           <p className="text-sm font-medium text-text-primary">{UI_MESSAGES.FOUNDATIONS_FORM_MAP}</p>
           <p className="text-xs text-text-muted">{UI_MESSAGES.FOUNDATIONS_FORM_MAP_HINT}</p>
+          {isGeocoding && (
+            <p className="text-xs text-text-secondary">{UI_MESSAGES.MAP_GEOCODING}</p>
+          )}
+          {geocodeError && (
+            <p className="text-xs text-amber-800" role="status">
+              {geocodeError}
+            </p>
+          )}
           <Controller
             name="latitude"
             control={control}
@@ -377,24 +398,6 @@ export function FoundationForm({
           {errors.latitude?.message && (
             <p className="text-sm text-error-500">{errors.latitude.message}</p>
           )}
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Input
-              label={UI_MESSAGES.FOUNDATIONS_FORM_LATITUDE}
-              type="number"
-              step="any"
-              value={watch('latitude') ?? ''}
-              readOnly
-              optionalMark
-            />
-            <Input
-              label={UI_MESSAGES.FOUNDATIONS_FORM_LONGITUDE}
-              type="number"
-              step="any"
-              value={watch('longitude') ?? ''}
-              readOnly
-              optionalMark
-            />
-          </div>
         </div>
       </section>
 

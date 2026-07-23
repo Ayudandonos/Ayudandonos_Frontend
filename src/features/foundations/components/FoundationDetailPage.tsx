@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Card } from '@/components/ui/Card';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { FoundationDetailPanel } from '@/features/foundations/components/FoundationDetailPanel';
+import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
+import { PublicFoundationProfile } from '@/features/foundations/components/PublicFoundationProfile';
 import { foundationsService } from '@/features/foundations/services/foundations.service';
 import type { FoundationDetail } from '@/features/foundations/types/foundations.types';
 import { parseApiError } from '@/utils/api-error';
 
 /**
  * Entrada: Ninguna (id desde params de ruta).
- * Proceso: Carga detalle publico de fundacion verificada desde la API.
+ * Proceso: Carga detalle publico de fundacion verificada y muestra perfil visual.
  * Salida: Retorna el elemento JSX de la pagina de detalle.
  */
 export function FoundationDetailPage() {
@@ -60,15 +61,19 @@ export function FoundationDetailPage() {
   }, [id]);
 
   if (isLoading) {
-    return <p className="px-4 py-10 text-sm text-text-secondary">{UI_MESSAGES.LOADING}</p>;
+    return (
+      <div className="mx-auto max-w-5xl">
+        <FoundationsLoadingSkeleton variant="profile" />
+      </div>
+    );
   }
 
   if (error || !foundation) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-10">
-        <Card glass={false} className="border border-border-default bg-white">
+      <div className="mx-auto max-w-3xl">
+        <Card glass={false} className="border border-border-default bg-white p-6">
           <p className="text-sm text-red-700">{error || UI_MESSAGES.FOUNDATIONS_NOT_FOUND}</p>
-          <Link to="/foundations" className="mt-4 inline-block text-sm font-medium text-vivid-700">
+          <Link to="/foundations" className="mt-4 inline-block text-sm font-medium text-primary-700">
             {UI_MESSAGES.FOUNDATIONS_BACK_TO_LIST}
           </Link>
         </Card>
@@ -77,11 +82,11 @@ export function FoundationDetailPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
-      <Link to="/foundations" className="text-sm font-medium text-vivid-700">
-        ← {UI_MESSAGES.FOUNDATIONS_BACK_TO_LIST}
+    <div className="mx-auto max-w-5xl space-y-4">
+      <Link to="/foundations" className="inline-block text-sm font-medium text-primary-700">
+        {UI_MESSAGES.FOUNDATIONS_BACK_TO_LIST}
       </Link>
-      <FoundationDetailPanel foundation={foundation} />
+      <PublicFoundationProfile foundation={foundation} />
     </div>
   );
 }

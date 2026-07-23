@@ -75,12 +75,12 @@ export function ContactFoundationModal({
   if (availableNeeds.length === 0) {
     return (
       <div
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4"
+        className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-4"
         role="dialog"
         aria-modal="true"
         aria-labelledby="contact-foundation-title"
       >
-        <div className="w-full max-w-lg space-y-4 rounded-xl border border-border-default bg-white p-6 shadow-xl">
+        <div className="relative z-[1101] w-full max-w-lg space-y-4 rounded-xl border border-border-default bg-white p-6 shadow-xl">
           <h3 id="contact-foundation-title" className="text-lg font-bold text-text-primary">
             {UI_MESSAGES.CAMPAIGNS_CONTACT_TITLE}
           </h3>
@@ -102,12 +102,12 @@ export function ContactFoundationModal({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/50 p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-foundation-title"
     >
-      <div className="w-full max-w-lg rounded-xl border border-border-default bg-white p-6 shadow-xl">
+      <div className="relative z-[1101] w-full max-w-lg rounded-xl border border-border-default bg-white p-6 shadow-xl">
         <h3 id="contact-foundation-title" className="text-lg font-bold text-text-primary">
           {UI_MESSAGES.CAMPAIGNS_CONTACT_TITLE}
         </h3>

@@ -58,7 +58,10 @@ export const UI_MESSAGES = {
   CAMPAIGNS_FORM_END_DATE: 'Fecha de finalización',
   CAMPAIGNS_FORM_ADDRESS: 'Dirección de entrega',
   CAMPAIGNS_FORM_MAP: 'Ubicación en el mapa',
-  CAMPAIGNS_FORM_MAP_HINT: 'Haz clic en el mapa o arrastra el marcador para fijar latitud y longitud.',
+  CAMPAIGNS_FORM_MAP_HINT:
+    'Escribe la dirección completa incluyendo ciudad (ej. Calle 13 #14-20, Cúcuta). El mapa se actualiza solo; puedes ajustar el marcador.',
+  CAMPAIGNS_FORM_ADDRESS_HINT:
+    'Incluye barrio y ciudad para ubicar correctamente el punto de entrega.',
   CAMPAIGNS_SAVE_DRAFT: 'Guardar borrador',
   CAMPAIGNS_SAVE_CHANGES: 'Guardar cambios',
   CAMPAIGNS_PUBLISH: 'Publicar campaña',
@@ -101,7 +104,8 @@ export const UI_MESSAGES = {
   CAMPAIGNS_URL_INVALID: 'URL de imagen inválida.',
   CAMPAIGNS_ADDRESS_MIN: 'La dirección debe tener al menos 5 caracteres.',
   CAMPAIGNS_END_BEFORE_START: 'La fecha final debe ser posterior a la de inicio.',
-  CAMPAIGNS_COORDS_INCOMPLETE: 'Debes indicar latitud y longitud juntas.',
+  CAMPAIGNS_COORDS_INCOMPLETE:
+    'Marca el punto de entrega en el mapa (escribe una dirección con ciudad o haz clic en el mapa).',
   CAMPAIGNS_CONTACT_TITLE: 'Contactar para donar',
   CAMPAIGNS_CONTACT_DESC:
     'Elige qué aportar y escribe un mensaje. Se creará tu compromiso y se abrirá el chat con la fundación.',
@@ -278,10 +282,10 @@ export const UI_MESSAGES = {
   LOCATION_SERVICE_UNAVAILABLE:
     'El servicio de ubicaciones no está disponible temporalmente (503). Reintenta en unos segundos.',
   AUTH_EMAIL_INVALID: 'Correo electrónico inválido.',
-  MAP_UNAVAILABLE:
-    'Mapa no disponible. Configura VITE_GOOGLE_MAPS_API_KEY para ver el mapa interactivo.',
-  MAP_COORDS: (latitude: number, longitude: number) =>
-    `Coordenadas: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
+  MAP_GEOCODE_ERROR: 'No fue posible ubicar la dirección en el mapa. Intenta de nuevo o marca el punto manualmente.',
+  MAP_GEOCODE_NOT_FOUND:
+    'No encontramos esa ubicación. Revisa la dirección o marca el punto en el mapa.',
+  MAP_GEOCODING: 'Ubicando en el mapa...',
   CAMPAIGNS_CREATE_NEEDS_HINT:
     'Agrega al menos una necesidad. Sin ellas los donantes no pueden aportar ni contactarte.',
   CAMPAIGNS_NEED_DRAFT_EMPTY: 'Agrega al menos una necesidad para publicar la campaña.',
@@ -363,10 +367,11 @@ export const UI_MESSAGES = {
     'Tu fundación está suspendida. No puedes operar campañas ni solicitudes hasta que un administrador reactive la cuenta.',
   FOUNDATIONS_FORM_MAP: 'Ubicación en el mapa (opcional)',
   FOUNDATIONS_FORM_MAP_HINT:
-    'Indica latitud y longitud juntas para aparecer en búsquedas cercanas. Haz clic en el mapa o arrastra el marcador.',
+    'Elige primero país, departamento y ciudad; luego la dirección. El mapa se centra ahí (no en otra ciudad). Puedes ajustar el marcador.',
   FOUNDATIONS_FORM_LATITUDE: 'Latitud',
   FOUNDATIONS_FORM_LONGITUDE: 'Longitud',
-  FOUNDATIONS_COORDS_INCOMPLETE: 'Debes indicar latitud y longitud juntas, o dejar ambas vacías.',
+  FOUNDATIONS_COORDS_INCOMPLETE:
+    'Marca la ubicación en el mapa (elige ciudad y dirección, o haz clic en el mapa).',
   FOUNDATIONS_READINESS_TITLE: 'Requisitos para operar',
   FOUNDATIONS_READINESS_PROFILE: 'Perfil completo',
   FOUNDATIONS_READINESS_DOCUMENTS: 'Documentos obligatorios cargados',
@@ -376,16 +381,31 @@ export const UI_MESSAGES = {
     'Encuentra organizaciones verificadas cerca de tu ubicación y conoce a qué distancia están.',
   FOUNDATIONS_NEARBY_RADIUS: 'Radio de búsqueda (km)',
   FOUNDATIONS_NEARBY_USE_LOCATION: 'Usar mi ubicación',
-  FOUNDATIONS_NEARBY_MANUAL_COORDS: 'Ubicación manual',
+  FOUNDATIONS_NEARBY_MANUAL_COORDS: 'Buscar por ciudad o dirección',
+  FOUNDATIONS_NEARBY_PLACE_PLACEHOLDER: 'Ej. Cúcuta, Norte de Santander',
   FOUNDATIONS_NEARBY_LATITUDE: 'Latitud',
   FOUNDATIONS_NEARBY_LONGITUDE: 'Longitud',
   FOUNDATIONS_NEARBY_SEARCH: 'Buscar',
   FOUNDATIONS_NEARBY_DISTANCE: (km: number) => `${km.toFixed(1)} km`,
   FOUNDATIONS_NEARBY_EMPTY: 'No hay fundaciones en el radio seleccionado.',
   FOUNDATIONS_NEARBY_GEO_DENIED:
-    'No pudimos acceder a tu ubicación. Ingresa latitud y longitud manualmente o revisa los permisos del navegador.',
+    'No pudimos acceder a tu ubicación. Activa el GPS o busca por ciudad/dirección.',
   FOUNDATIONS_NEARBY_LOAD_ERROR: 'No fue posible cargar fundaciones cercanas.',
   FOUNDATIONS_NEARBY_ALL_CATEGORIES: 'Todas las categorías',
+  FOUNDATIONS_NEARBY_YOUR_LOCATION: 'Tu ubicación',
+  FOUNDATIONS_NEARBY_VIEW_PROFILE: 'Ver perfil',
+  FOUNDATIONS_NEARBY_COORDS_INVALID: 'Escribe una ciudad o dirección válida para buscar.',
+  FOUNDATIONS_NEARBY_RESULTS: (total: number, radiusKm: number) =>
+    `${total} fundacion${total === 1 ? '' : 'es'} en un radio de ${radiusKm} km.`,
+  FOUNDATIONS_PUBLIC_ABOUT: 'Sobre la organización',
+  FOUNDATIONS_PUBLIC_CONTACT: 'Contacto',
+  FOUNDATIONS_PUBLIC_LOCATION: 'Ubicación',
+  FOUNDATIONS_PUBLIC_MISSION: 'Misión',
+  FOUNDATIONS_PUBLIC_VISION: 'Visión',
+  FOUNDATIONS_PUBLIC_WEBSITE: 'Sitio web',
+  FOUNDATIONS_PUBLIC_NO_LOCATION: 'Esta fundación aún no publicó su ubicación en el mapa.',
+  FOUNDATIONS_PUBLIC_VERIFIED_SINCE: 'Verificada desde',
+  FOUNDATIONS_PUBLIC_CAMPAIGNS_CTA: 'Ver campañas',
   FOUNDATIONS_REQUESTS_LOAD_ERROR: 'No fue posible cargar las solicitudes de ayuda.',
   FOUNDATIONS_REQUESTS_EMPTY: 'Aún no tienes solicitudes de ayuda pendientes.',
   FOUNDATIONS_REQUESTS_IN_DEVELOPMENT:

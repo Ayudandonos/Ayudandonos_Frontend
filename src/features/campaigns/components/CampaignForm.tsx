@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useGeocodeOnLocationChange } from '@/hooks/useGeocodeOnLocationChange';
 import {
   campaignFormSchema,
   type CampaignFormData,
@@ -44,6 +45,7 @@ export function CampaignForm({
     handleSubmit,
     control,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CampaignFormData>({
     resolver: zodResolver(campaignFormSchema),
@@ -57,6 +59,15 @@ export function CampaignForm({
       deliveryLatitude: null,
       deliveryLongitude: null,
       ...defaultValues,
+    },
+  });
+
+  const deliveryAddress = watch('deliveryAddress');
+  const { isGeocoding, geocodeError } = useGeocodeOnLocationChange({
+    query: { address: deliveryAddress, country: 'Colombia' },
+    onCoords: (latitude, longitude) => {
+      setValue('deliveryLatitude', latitude, { shouldDirty: true, shouldValidate: true });
+      setValue('deliveryLongitude', longitude, { shouldDirty: true, shouldValidate: true });
     },
   });
 
@@ -106,11 +117,20 @@ export function CampaignForm({
       <Input
         label={UI_MESSAGES.CAMPAIGNS_FORM_ADDRESS}
         error={errors.deliveryAddress?.message}
+        hint={UI_MESSAGES.CAMPAIGNS_FORM_ADDRESS_HINT}
         {...register('deliveryAddress')}
       />
       <div className="space-y-2">
         <p className="text-label">{UI_MESSAGES.CAMPAIGNS_FORM_MAP}</p>
         <p className="text-xs text-text-muted">{UI_MESSAGES.CAMPAIGNS_FORM_MAP_HINT}</p>
+        {isGeocoding && (
+          <p className="text-xs text-text-secondary">{UI_MESSAGES.MAP_GEOCODING}</p>
+        )}
+        {geocodeError && (
+          <p className="text-xs text-amber-800" role="status">
+            {geocodeError}
+          </p>
+        )}
         <Controller
           name="deliveryLatitude"
           control={control}
@@ -135,22 +155,6 @@ export function CampaignForm({
         {errors.deliveryLatitude?.message && (
           <p className="text-sm text-error-500">{errors.deliveryLatitude.message}</p>
         )}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Input
-            label={UI_MESSAGES.CAMPAIGNS_LAT}
-            type="number"
-            step="any"
-            value={watch('deliveryLatitude') ?? ''}
-            readOnly
-          />
-          <Input
-            label={UI_MESSAGES.CAMPAIGNS_LNG}
-            type="number"
-            step="any"
-            value={watch('deliveryLongitude') ?? ''}
-            readOnly
-          />
-        </div>
       </div>
       {children}
       {apiError && <Alert variant="danger">{apiError}</Alert>}

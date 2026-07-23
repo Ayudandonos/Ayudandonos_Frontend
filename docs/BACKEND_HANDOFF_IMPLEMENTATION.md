@@ -13,7 +13,7 @@ Documento de seguimiento para las vistas e integraciones alineadas con la checkl
 | 2 | Perfil USER | Hecho | `GET/PATCH /users/me` — `src/features/users/`, ruta `/profile` |
 | 3 | Stats donante | Hecho | `DonorStatsPanel` en perfil USER (`donationStats`) |
 | 4 | Sesión `/auth/me` | Parcial | Campos opcionales en `User`/`Foundation`; `fetchMe()` tras guardar perfil |
-| 5 | Fundaciones cercanas | Hecho | `GET /foundations/nearby` — `/foundations/nearby` |
+| 5 | Fundaciones cercanas | Hecho (Leaflet) | `GET /foundations/nearby` — `/foundations/nearby` |
 | 6 | Guardas fundación | Reforzado | `FoundationReadinessChecklist` en perfil; guard existente en rutas |
 | 7 | Notificaciones | Hecho | `/notifications`, campana en `DashboardHeader`, polling unread-count |
 | 8 | Admin dashboard | Hecho | Query `latestNeedsLimit`, `featuredCampaignsLimit` en UI |
@@ -74,6 +74,57 @@ Cierre de checklist backend de fundaciones en rama `feature/foundations-checklis
 - Alerta UI para estado `SUSPENDED`
 - Filtro cascada pais/departamento/ciudad en listado publico
 - Retry y mensaje especifico ante locations 503
+
+## Mapas Leaflet (2026-07-23)
+
+Migracion completa de Google Maps JS a Leaflet + OpenStreetMap en rama `feature/maps-leaflet`:
+
+- `DeliveryMap` / `LocationMap` (campanas, entregas, perfil fundacion)
+- Nearby: DTO completo (`origin`, `total`, `categories`, `items`), TanStack Query, sync lista↔mapa
+- Sin `VITE_GOOGLE_MAPS_API_KEY`; tiles OSM publicos
+- Geocodificacion en front (Nominatim) al cambiar pais/depto/ciudad/direccion
+- Modales con `z-index` alto para no quedar bajo panes de Leaflet
+- `/foundations` y `/foundations/:id` usan sidebar si hay sesion (`FoundationsBrowseLayout`)
+
+### Pendiente backend recomendado (geocodificacion)
+
+Exponer un proxy para no depender de Nominatim desde el navegador:
+
+```
+GET /api/v1/locations/geocode?street=&city=&state=&country=
+```
+
+Respuesta sugerida:
+
+```json
+{
+  "success": true,
+  "message": "OK",
+  "data": {
+    "latitude": 7.8939,
+    "longitude": -72.5078,
+    "displayName": "Calle 13 #14-20, Cúcuta, Norte de Santander, Colombia"
+  },
+  "errors": null
+}
+```
+
+Requisitos:
+
+- Busqueda **estructurada** (street/city/state/country), no solo `q=` libre
+- Validar que el resultado pertenezca a la ciudad/departamento indicados (evitar default a Bogota)
+- Rate limit, User-Agent propio, cache
+- 404/null cuando no hay match fiable
+- El front **ya no muestra** lat/lng al usuario; sigue enviando coords al guardar para nearby/mapa
+- Ideal: al hacer `PATCH /foundations/:id` o campañas, si llega `address` + ciudad/depto sin coords, el backend geocodifica y persiste lat/lng
+
+### Backend — modal contactar / donaciones
+
+No requiere cambios para el bug de z-index (era CSS). El flujo ya usa `POST /donations` con `needId`, `quantity`, `notes`/`initialMessage`.
+
+### Backend — listado/detalle fundaciones
+
+No requiere cambios de API: el problema del sidebar era solo de routing frontend.
 
 ## Verificación
 
