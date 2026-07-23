@@ -79,6 +79,8 @@ export interface FoundationDetail extends FoundationListItem {
   observations: FoundationAdminObservation[];
   isProfileComplete: boolean;
   hasRequiredDocuments: boolean;
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface FoundationStats {
@@ -123,6 +125,8 @@ export interface UpdateFoundationPayload {
   legalRepresentativeName?: string;
   legalRepresentativeDocument?: string;
   socialLinks?: FoundationSocialLink[];
+  latitude?: number | null;
+  longitude?: number | null;
 }
 
 export interface NearbyFoundation {

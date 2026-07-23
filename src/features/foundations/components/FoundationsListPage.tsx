@@ -18,14 +18,20 @@ import { useFoundationsList } from '@/features/foundations/hooks/useFoundationsL
 export function FoundationsListPage() {
   const [city, setCity] = useState('');
   const [category, setCategory] = useState('');
+  const [country, setCountry] = useState('');
+  const [department, setDepartment] = useState('');
   const debouncedCity = useDebounce(city, 400);
   const debouncedCategory = useDebounce(category, 400);
+  const debouncedCountry = useDebounce(country, 400);
+  const debouncedDepartment = useDebounce(department, 400);
 
   const { items, page, totalPages, total, search, isLoading, error, setSearch, setPage } =
     useFoundationsList({
       limit: 9,
       city: debouncedCity || undefined,
       category: debouncedCategory || undefined,
+      country: debouncedCountry || undefined,
+      department: debouncedDepartment || undefined,
     });
 
   return (
@@ -39,10 +45,15 @@ export function FoundationsListPage() {
         search={search}
         city={city}
         category={category}
+        country={country}
+        department={department}
         onSearchChange={setSearch}
         onCityChange={setCity}
         onCategoryChange={setCategory}
+        onCountryChange={setCountry}
+        onDepartmentChange={setDepartment}
         showExtendedFilters
+        showLocationCascadingFilters
       />
 
       {isLoading && <FoundationsLoadingSkeleton variant="cards" />}

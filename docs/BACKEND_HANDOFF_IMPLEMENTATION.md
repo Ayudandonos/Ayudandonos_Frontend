@@ -65,6 +65,16 @@ Documento de seguimiento para las vistas e integraciones alineadas con la checkl
 
 **Mitigacion backend (desarrollo):** subir `RATE_LIMIT_MAX` (ej. 1000) y reiniciar el servidor. Si ya hay 429, esperar la ventana o reiniciar para resetear el contador en memoria.
 
+## Gaps fundaciones (2026-07-23)
+
+Cierre de checklist backend de fundaciones en rama `feature/foundations-checklist-gaps`:
+
+- Coordenadas `latitude`/`longitude` en perfil (mapa + validacion ambas o ninguna)
+- 403 operativo diferenciado (`PROFILE_REQUIRED` vs `VERIFICATION_REQUIRED`) en campanas/needs/solicitudes
+- Alerta UI para estado `SUSPENDED`
+- Filtro cascada pais/departamento/ciudad en listado publico
+- Retry y mensaje especifico ante locations 503
+
 ## Verificación
 
 ```bash

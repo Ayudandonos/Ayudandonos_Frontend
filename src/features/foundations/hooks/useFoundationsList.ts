@@ -9,6 +9,7 @@ interface UseFoundationsListOptions {
   limit?: number;
   city?: string;
   category?: string;
+  country?: string;
   department?: string;
 }
 
@@ -30,7 +31,7 @@ interface UseFoundationsListResult {
  * Salida: Retorna estado y handlers para el listado publico.
  */
 export function useFoundationsList(options: UseFoundationsListOptions = {}): UseFoundationsListResult {
-  const { limit = 9, city, category, department } = options;
+  const { limit = 9, city, category, country, department } = options;
   const [items, setItems] = useState<FoundationListItem[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -59,6 +60,7 @@ export function useFoundationsList(options: UseFoundationsListOptions = {}): Use
           search: debouncedSearch || undefined,
           city,
           category,
+          country,
           department,
         });
 
@@ -83,11 +85,11 @@ export function useFoundationsList(options: UseFoundationsListOptions = {}): Use
     return () => {
       cancelled = true;
     };
-  }, [page, debouncedSearch, limit, city, category, department]);
+  }, [page, debouncedSearch, limit, city, category, country, department]);
 
   useEffect(() => {
     setPage(1);
-  }, [debouncedSearch, city, category, department]);
+  }, [debouncedSearch, city, category, country, department]);
 
   return {
     items,
