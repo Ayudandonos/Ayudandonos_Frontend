@@ -10,7 +10,7 @@ interface LocationMapProps {
 
 /**
  * Entrada: latitude/longitude, editable y onChange con objeto coords.
- * Proceso: Adapta DeliveryMap (Google Maps) a la API LocationMap.
+ * Proceso: Adapta DeliveryMap (Leaflet) a la API LocationMap.
  * Salida: Retorna el elemento JSX del mapa.
  */
 export function LocationMap({

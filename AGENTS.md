@@ -95,4 +95,4 @@ npm run preview      # Preview del build
 Copiar `.env.example` a `.env`.
 
 - `VITE_API_URL` — URL base de la API (`/api/v1`).
-- `VITE_GOOGLE_MAPS_API_KEY` — Maps JavaScript API (mapa de entregas). Sin key, UI con fallback textual.
+- Mapas con **Leaflet + OpenStreetMap** (sin API key).

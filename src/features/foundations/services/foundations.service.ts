@@ -4,6 +4,7 @@ import type {
   FoundationDetail,
   FoundationDocumentType,
   ListFoundationsParams,
+  NearbyFoundationsData,
   NearbyFoundationsParams,
   NearbyFoundation,
   PaginatedFoundationsData,
@@ -143,16 +144,37 @@ async function downloadDocument(
 
 /**
  * Entrada: params: coordenadas del usuario y radio en kilometros.
- * Proceso: Consulta GET /foundations/nearby.
- * Salida: Retorna fundaciones ordenadas por distancia.
+ * Proceso: Consulta GET /foundations/nearby y normaliza el DTO (items o envoltorio completo).
+ * Salida: Retorna NearbyFoundationsData con origin, total, categories e items.
  */
-async function fetchNearbyFoundations(params: NearbyFoundationsParams): Promise<NearbyFoundation[]> {
+async function fetchNearbyFoundations(
+  params: NearbyFoundationsParams,
+): Promise<NearbyFoundationsData> {
   const { data } = await api.get<
-    ApiSuccessResponse<{ items: NearbyFoundation[] } | NearbyFoundation[]>
+    ApiSuccessResponse<NearbyFoundationsData | NearbyFoundation[]>
   >('/foundations/nearby', { params });
 
   const payload = data.data;
-  return Array.isArray(payload) ? payload : (payload.items ?? []);
+  const fallbackRadius = params.radiusKm ?? 5;
+  const fallbackOrigin = { latitude: params.latitude, longitude: params.longitude };
+
+  if (Array.isArray(payload)) {
+    return {
+      radiusKm: fallbackRadius,
+      origin: fallbackOrigin,
+      total: payload.length,
+      categories: [],
+      items: payload,
+    };
+  }
+
+  return {
+    radiusKm: payload.radiusKm ?? fallbackRadius,
+    origin: payload.origin ?? fallbackOrigin,
+    total: payload.total ?? payload.items?.length ?? 0,
+    categories: payload.categories ?? [],
+    items: payload.items ?? [],
+  };
 }
 
 export const foundationsService = {

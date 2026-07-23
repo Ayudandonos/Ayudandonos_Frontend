@@ -16,7 +16,7 @@ import type { Campaign, CampaignNeed } from '@/features/campaigns/types/campaign
 import { useAuth } from '@/context/useAuth';
 import { parseApiError } from '@/utils/api-error';
 import { formatDate, needProgressPercent } from '@/utils/date-format';
-import { buildGoogleMapsDirectionsUrl } from '@/utils/maps';
+import { buildOpenStreetMapUrl } from '@/utils/maps';
 
 /**
  * Entrada: Ninguna (id desde useParams).
@@ -84,7 +84,7 @@ export function CampaignDetailPage() {
   const hasCoords =
     campaign.deliveryLatitude != null && campaign.deliveryLongitude != null;
   const mapsUrl = hasCoords
-    ? buildGoogleMapsDirectionsUrl(campaign.deliveryLatitude!, campaign.deliveryLongitude!)
+    ? buildOpenStreetMapUrl(campaign.deliveryLatitude!, campaign.deliveryLongitude!)
     : null;
   const canContribute = isAuthenticated && role === 'USER';
 

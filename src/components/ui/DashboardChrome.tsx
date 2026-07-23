@@ -69,8 +69,12 @@ export function SideNav() {
    * Proceso: Determina si la ruta actual coincide o es prefijo del path dado.
    * Salida: Retorna true si el enlace debe mostrarse como activo.
    */
-  const isActive = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(`${path}/`);
+  const isActive = (path: string) => {
+    if (path === '/foundations') {
+      return location.pathname === '/foundations' || /^\/foundations\/[^/]+$/.test(location.pathname);
+    }
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
   return (
     <aside className="flex h-full w-64 shrink-0 flex-col border-r border-border-default bg-vivid-50">

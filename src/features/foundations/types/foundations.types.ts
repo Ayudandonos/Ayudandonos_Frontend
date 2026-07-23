@@ -132,12 +132,23 @@ export interface UpdateFoundationPayload {
 export interface NearbyFoundation {
   id: string;
   name: string;
+  acronym?: string | null;
   category: string | null;
   city: string | null;
   logoUrl: string | null;
+  latitude: number;
+  longitude: number;
   distanceKm: number;
-  latitude?: number | null;
-  longitude?: number | null;
+}
+
+export interface NearbyCategoryCount {
+  category: string;
+  count: number;
+}
+
+export interface NearbyOrigin {
+  latitude: number;
+  longitude: number;
 }
 
 export interface NearbyFoundationsParams {
@@ -147,6 +158,10 @@ export interface NearbyFoundationsParams {
 }
 
 export interface NearbyFoundationsData {
+  radiusKm: number;
+  origin: NearbyOrigin;
+  total: number;
+  categories: NearbyCategoryCount[];
   items: NearbyFoundation[];
 }
 

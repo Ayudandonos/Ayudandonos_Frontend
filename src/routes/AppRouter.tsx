@@ -42,8 +42,17 @@ import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { FoundationDashboardGuard } from '@/routes/FoundationDashboardGuard';
 import { DashboardRedirect } from '@/routes/DashboardRedirect';
 import { RoleRoute } from '@/routes/RoleRoute';
+import { FoundationsBrowseLayout } from '@/routes/FoundationsBrowseLayout';
 
 export const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <FoundationsBrowseLayout />,
+    children: [
+      { path: 'foundations', element: <FoundationsListPage /> },
+      { path: 'foundations/:id', element: <FoundationDetailPage /> },
+    ],
+  },
   {
     path: '/',
     element: <AuthLayout />,
@@ -53,8 +62,6 @@ export const router = createBrowserRouter([
       { path: 'impacto', element: <ImpactPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
-      { path: 'foundations', element: <FoundationsListPage /> },
-      { path: 'foundations/:id', element: <FoundationDetailPage /> },
       { path: 'legal/secure-platform', element: <SecurePlatformPage /> },
       { path: 'legal/terms', element: <TermsOfServicePage /> },
       { path: 'legal/privacy', element: <PrivacyPolicyPage /> },

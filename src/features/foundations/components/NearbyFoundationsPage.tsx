@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppImage } from '@/components/ui/AppImage';
 import { Button } from '@/components/ui/Button';
@@ -8,109 +8,108 @@ import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
 import { NearbyFoundationsMap } from '@/features/foundations/components/NearbyFoundationsMap';
-import { foundationsService } from '@/features/foundations/services/foundations.service';
-import type { NearbyFoundation } from '@/features/foundations/types/foundations.types';
+import { useNearbyFoundations } from '@/features/foundations/hooks/useNearbyFoundations';
+import { useNearbyGeolocation } from '@/features/foundations/hooks/useNearbyGeolocation';
 import { parseApiError } from '@/utils/api-error';
+import { geocodeLocation } from '@/utils/geocode';
 import { cn } from '@/utils/cn';
 
 const DEFAULT_RADIUS_KM = 5;
 
 /**
- * Entrada: Ninguna (usuario autenticado o visitante en dashboard).
- * Proceso: Geolocaliza o usa coordenadas manuales y lista fundaciones en radio.
+ * Entrada: Ninguna (usuario autenticado en dashboard).
+ * Proceso: Geolocaliza o busca por ciudad/direccion; lista y mapa sincronizados.
  * Salida: Retorna el elemento JSX de fundaciones cercanas.
  */
 export function NearbyFoundationsPage() {
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
-  const [manualLat, setManualLat] = useState('');
-  const [manualLng, setManualLng] = useState('');
-  const [items, setItems] = useState<NearbyFoundation[]>([]);
+  const [placeQuery, setPlaceQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [geoHint, setGeoHint] = useState('');
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [manualError, setManualError] = useState('');
+  const [isGeocodingPlace, setIsGeocodingPlace] = useState(false);
 
-  /**
-   * Entrada: lat y lng: coordenadas de busqueda.
-   * Proceso: Solicita GET /foundations/nearby con radio configurado.
-   * Salida: No retorna valor.
-   */
-  const searchNearby = useCallback(
-    async (lat: number, lng: number) => {
-      setIsLoading(true);
-      setError('');
-      setLatitude(lat);
-      setLongitude(lng);
-      try {
-        const result = await foundationsService.fetchNearbyFoundations({
-          latitude: lat,
-          longitude: lng,
-          radiusKm,
-        });
-        setItems(result);
-      } catch (loadError) {
-        setItems([]);
-        setError(parseApiError(loadError).message || UI_MESSAGES.FOUNDATIONS_NEARBY_LOAD_ERROR);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [radiusKm],
-  );
+  const { origin, geoHint, isLocating, setOrigin, requestBrowserLocation } = useNearbyGeolocation();
 
-  /**
-   * Entrada: Ninguna.
-   * Proceso: Pide permiso de geolocalizacion del navegador.
-   * Salida: No retorna valor.
-   */
-  function handleUseLocation() {
-    setGeoHint('');
-    if (!navigator.geolocation) {
-      setGeoHint(UI_MESSAGES.FOUNDATIONS_NEARBY_GEO_DENIED);
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        void searchNearby(position.coords.latitude, position.coords.longitude);
-      },
-      () => {
-        setGeoHint(UI_MESSAGES.FOUNDATIONS_NEARBY_GEO_DENIED);
-      },
-      { enableHighAccuracy: true, timeout: 12_000 },
-    );
-  }
+  const queryParams = origin
+    ? { latitude: origin.latitude, longitude: origin.longitude, radiusKm }
+    : null;
 
-  /**
-   * Entrada: Ninguna.
-   * Proceso: Parsea lat/lng manuales y ejecuta busqueda.
-   * Salida: No retorna valor.
-   */
-  function handleManualSearch() {
-    const lat = Number.parseFloat(manualLat);
-    const lng = Number.parseFloat(manualLng);
-    if (Number.isNaN(lat) || Number.isNaN(lng)) {
-      setError(UI_MESSAGES.FOUNDATIONS_NEARBY_LOAD_ERROR);
-      return;
-    }
-    void searchNearby(lat, lng);
-  }
+  const { data, isLoading, isFetching, error, isError } = useNearbyFoundations(queryParams);
+
+  const items = useMemo(() => data?.items ?? [], [data?.items]);
+  const categoriesFromApi = useMemo(() => data?.categories ?? [], [data?.categories]);
+  const total = data?.total ?? items.length;
+  const mapRadiusKm = data?.radiusKm ?? radiusKm;
 
   const categories = useMemo(() => {
+    if (categoriesFromApi.length > 0) {
+      return categoriesFromApi
+        .map((entry) => entry.category)
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b, 'es'));
+    }
     const set = new Set<string>();
     items.forEach((item) => {
       if (item.category) set.add(item.category);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'es'));
-  }, [items]);
+  }, [categoriesFromApi, items]);
 
   const filteredItems = useMemo(() => {
     if (!selectedCategory) return items;
     return items.filter((item) => item.category === selectedCategory);
   }, [items, selectedCategory]);
 
-  const hasCoords = latitude != null && longitude != null;
+  useEffect(() => {
+    setSelectedCategory(null);
+    setSelectedId(null);
+  }, [origin?.latitude, origin?.longitude, radiusKm]);
+
+  useEffect(() => {
+    if (selectedId && !filteredItems.some((item) => item.id === selectedId)) {
+      setSelectedId(null);
+    }
+  }, [filteredItems, selectedId]);
+
+  /**
+   * Entrada: Ninguna.
+   * Proceso: Geocodifica ciudad/direccion escrita y fija el origen de busqueda.
+   * Salida: No retorna valor.
+   */
+  async function handlePlaceSearch() {
+    const trimmed = placeQuery.trim();
+    if (!trimmed) {
+      setManualError(UI_MESSAGES.FOUNDATIONS_NEARBY_COORDS_INVALID);
+      return;
+    }
+
+    setManualError('');
+    setIsGeocodingPlace(true);
+    try {
+      const result = await geocodeLocation({
+        address: trimmed,
+        country: 'Colombia',
+      });
+      if (!result) {
+        setManualError(UI_MESSAGES.MAP_GEOCODE_NOT_FOUND);
+        return;
+      }
+      setOrigin({ latitude: result.latitude, longitude: result.longitude });
+    } catch {
+      setManualError(UI_MESSAGES.MAP_GEOCODE_ERROR);
+    } finally {
+      setIsGeocodingPlace(false);
+    }
+  }
+
+  const loadError = isError
+    ? parseApiError(error).message || UI_MESSAGES.FOUNDATIONS_NEARBY_LOAD_ERROR
+    : '';
+  const showLoading =
+    Boolean(origin) &&
+    (isLoading || isLocating || isGeocodingPlace || (isFetching && !data));
+  const hasCoords = origin != null;
 
   return (
     <div className="mx-auto max-w-6xl space-y-6">
@@ -137,8 +136,8 @@ export function NearbyFoundationsPage() {
             />
             <p className="text-xs text-text-muted">{radiusKm} km</p>
           </div>
-          <Button type="button" onClick={handleUseLocation}>
-            {UI_MESSAGES.FOUNDATIONS_NEARBY_USE_LOCATION}
+          <Button type="button" onClick={requestBrowserLocation} disabled={isLocating}>
+            {isLocating ? UI_MESSAGES.LOADING : UI_MESSAGES.FOUNDATIONS_NEARBY_USE_LOCATION}
           </Button>
         </div>
 
@@ -152,113 +151,134 @@ export function NearbyFoundationsPage() {
           <p className="text-sm font-medium text-text-primary">
             {UI_MESSAGES.FOUNDATIONS_NEARBY_MANUAL_COORDS}
           </p>
-          <div className="mt-3 grid gap-4 sm:grid-cols-3">
-            <Input
-              label={UI_MESSAGES.FOUNDATIONS_NEARBY_LATITUDE}
-              value={manualLat}
-              onChange={(event) => setManualLat(event.target.value)}
-              inputMode="decimal"
-            />
-            <Input
-              label={UI_MESSAGES.FOUNDATIONS_NEARBY_LONGITUDE}
-              value={manualLng}
-              onChange={(event) => setManualLng(event.target.value)}
-              inputMode="decimal"
-            />
-            <div className="flex items-end">
-              <Button type="button" variant="secondary" className="w-full" onClick={handleManualSearch}>
-                {UI_MESSAGES.FOUNDATIONS_NEARBY_SEARCH}
-              </Button>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <div className="min-w-0 flex-1">
+              <Input
+                label={UI_MESSAGES.FOUNDATIONS_FORM_CITY}
+                value={placeQuery}
+                onChange={(event) => setPlaceQuery(event.target.value)}
+                placeholder={UI_MESSAGES.FOUNDATIONS_NEARBY_PLACE_PLACEHOLDER}
+              />
             </div>
+            <Button
+              type="button"
+              variant="secondary"
+              isLoading={isGeocodingPlace}
+              onClick={() => void handlePlaceSearch()}
+            >
+              {UI_MESSAGES.FOUNDATIONS_NEARBY_SEARCH}
+            </Button>
           </div>
         </div>
       </Card>
 
-      {error && (
+      {(manualError || loadError) && (
         <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
-          {error}
+          {manualError || loadError}
         </p>
       )}
 
-      {isLoading && <FoundationsLoadingSkeleton variant="cards" />}
+      {showLoading && <FoundationsLoadingSkeleton variant="cards" />}
 
-      {!isLoading && hasCoords && (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <NearbyFoundationsMap
-            userLatitude={latitude}
-            userLongitude={longitude}
-            foundations={filteredItems}
-            height="22rem"
-          />
+      {!showLoading && hasCoords && (
+        <div className="space-y-4">
+          <p className="text-sm text-text-secondary">
+            {UI_MESSAGES.FOUNDATIONS_NEARBY_RESULTS(total, mapRadiusKm)}
+          </p>
 
-          <div className="space-y-4">
-            {categories.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setSelectedCategory(null)}
-                  className={cn(
-                    'rounded-full border px-3 py-1 text-xs font-medium',
-                    selectedCategory === null
-                      ? 'border-primary-600 bg-primary-50 text-primary-700'
-                      : 'border-border-default text-text-secondary',
-                  )}
-                >
-                  {UI_MESSAGES.FOUNDATIONS_NEARBY_ALL_CATEGORIES}
-                </button>
-                {categories.map((category) => (
+          <div className="grid gap-6 lg:grid-cols-2">
+            <NearbyFoundationsMap
+              userLatitude={origin.latitude}
+              userLongitude={origin.longitude}
+              radiusKm={mapRadiusKm}
+              foundations={filteredItems}
+              selectedId={selectedId}
+              onSelect={setSelectedId}
+              height="22rem"
+            />
+
+            <div className="space-y-4">
+              {categories.length > 0 && (
+                <div className="flex flex-wrap gap-2">
                   <button
-                    key={category}
                     type="button"
-                    onClick={() => setSelectedCategory(category)}
+                    onClick={() => setSelectedCategory(null)}
                     className={cn(
                       'rounded-full border px-3 py-1 text-xs font-medium',
-                      selectedCategory === category
+                      selectedCategory === null
                         ? 'border-primary-600 bg-primary-50 text-primary-700'
                         : 'border-border-default text-text-secondary',
                     )}
                   >
-                    {category}
+                    {UI_MESSAGES.FOUNDATIONS_NEARBY_ALL_CATEGORIES}
                   </button>
-                ))}
-              </div>
-            )}
-
-            {filteredItems.length === 0 ? (
-              <EmptyState title={UI_MESSAGES.FOUNDATIONS_NEARBY_EMPTY} />
-            ) : (
-              <ul className="space-y-3">
-                {filteredItems.map((item) => (
-                  <li key={item.id}>
-                    <Link
-                      to={`/foundations/${item.id}`}
-                      className="flex items-center gap-4 rounded-xl border border-border-default bg-white p-4 transition-colors hover:border-primary-300"
-                    >
-                      {item.logoUrl ? (
-                        <AppImage
-                          src={item.logoUrl}
-                          alt=""
-                          className="h-12 w-12 rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-vivid-100 text-sm font-semibold text-vivid-700">
-                          {item.name.charAt(0)}
-                        </div>
+                  {categories.map((category) => (
+                    <button
+                      key={category}
+                      type="button"
+                      onClick={() => setSelectedCategory(category)}
+                      className={cn(
+                        'rounded-full border px-3 py-1 text-xs font-medium',
+                        selectedCategory === category
+                          ? 'border-primary-600 bg-primary-50 text-primary-700'
+                          : 'border-border-default text-text-secondary',
                       )}
-                      <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-text-primary">{item.name}</p>
-                        <p className="text-sm text-text-secondary">
-                          {[item.category, item.city].filter(Boolean).join(' · ')}
-                        </p>
-                      </div>
-                      <span className="text-sm font-medium text-primary-600">
-                        {UI_MESSAGES.FOUNDATIONS_NEARBY_DISTANCE(item.distanceKm)}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
+                    >
+                      {category}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {filteredItems.length === 0 ? (
+                <EmptyState title={UI_MESSAGES.FOUNDATIONS_NEARBY_EMPTY} />
+              ) : (
+                <ul className="space-y-3">
+                  {filteredItems.map((item) => (
+                    <li key={item.id}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(item.id)}
+                        className={cn(
+                          'flex w-full items-center gap-4 rounded-xl border bg-white p-4 text-left transition-colors',
+                          selectedId === item.id
+                            ? 'border-primary-500 ring-2 ring-primary-100'
+                            : 'border-border-default hover:border-primary-300',
+                        )}
+                      >
+                        {item.logoUrl ? (
+                          <AppImage
+                            src={item.logoUrl}
+                            alt=""
+                            className="h-12 w-12 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-vivid-100 text-sm font-semibold text-vivid-700">
+                            {item.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-text-primary">{item.name}</p>
+                          <p className="text-sm text-text-secondary">
+                            {[item.acronym, item.category, item.city].filter(Boolean).join(' · ')}
+                          </p>
+                          <Link
+                            to={`/foundations/${item.id}`}
+                            className="mt-1 inline-block text-xs font-medium text-primary-700 underline"
+                            onClick={(event) => event.stopPropagation()}
+                          >
+                            {UI_MESSAGES.FOUNDATIONS_NEARBY_VIEW_PROFILE}
+                          </Link>
+                        </div>
+                        <span className="text-sm font-medium text-primary-600">
+                          {UI_MESSAGES.FOUNDATIONS_NEARBY_DISTANCE(item.distanceKm)}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       )}

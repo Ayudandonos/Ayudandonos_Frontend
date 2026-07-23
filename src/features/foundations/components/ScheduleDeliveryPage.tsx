@@ -8,6 +8,7 @@ import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
+import { useGeocodeOnLocationChange } from '@/hooks/useGeocodeOnLocationChange';
 import { donationsService } from '@/features/donations/services/donations.service';
 import type { Donation } from '@/features/donations/types/donations.types';
 import { parseApiError } from '@/utils/api-error';
@@ -34,6 +35,15 @@ export function ScheduleDeliveryPage() {
   const [latitude, setLatitude] = useState<number | null>(null);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [estimatedDeliveryAt, setEstimatedDeliveryAt] = useState('');
+
+  const { isGeocoding, geocodeError } = useGeocodeOnLocationChange({
+    query: { address, country: 'Colombia' },
+    enabled: Boolean(donationId),
+    onCoords: (nextLat, nextLng) => {
+      setLatitude(nextLat);
+      setLongitude(nextLng);
+    },
+  });
 
   /**
    * Entrada: Ninguna.
@@ -174,6 +184,7 @@ export function ScheduleDeliveryPage() {
             label={UI_MESSAGES.FOUNDATION_DELIVERY_SCHEDULE_PLACEHOLDER}
             value={address}
             onChange={(event) => setAddress(event.target.value)}
+            hint={UI_MESSAGES.CAMPAIGNS_FORM_ADDRESS_HINT}
           />
           <Input
             label={UI_MESSAGES.DONATIONS_ESTIMATED_DATE}
@@ -181,6 +192,14 @@ export function ScheduleDeliveryPage() {
             value={estimatedDeliveryAt}
             onChange={(event) => setEstimatedDeliveryAt(event.target.value)}
           />
+          {isGeocoding && (
+            <p className="text-xs text-text-secondary">{UI_MESSAGES.MAP_GEOCODING}</p>
+          )}
+          {geocodeError && (
+            <p className="text-xs text-amber-800" role="status">
+              {geocodeError}
+            </p>
+          )}
           <DeliveryMap
             latitude={latitude}
             longitude={longitude}

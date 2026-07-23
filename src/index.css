@@ -255,3 +255,25 @@ textarea.glass-subtle,
     radial-gradient(ellipse 60% 40% at 50% 0%, rgba(102, 70, 255, 0.06), transparent),
     linear-gradient(180deg, #f6f1ff 0%, #fcf8ff 50%, #ffffff 100%);
 }
+
+/* Marcador de ubicacion del usuario (Leaflet DivIcon) */
+.ayudandonos-user-marker {
+  background: transparent;
+  border: none;
+}
+
+.ayudandonos-user-marker__dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border-radius: 9999px;
+  background: var(--color-primary-600);
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 2px rgba(102, 70, 255, 0.35);
+}
+
+/* Contiene z-index internos de Leaflet para que no tapen modales */
+.leaflet-container {
+  z-index: 0;
+}
