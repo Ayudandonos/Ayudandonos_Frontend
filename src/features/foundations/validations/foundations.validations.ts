@@ -74,58 +74,72 @@ const socialNetworkEnum = z.enum([
   'OTHER',
 ]);
 
-export const updateFoundationSchema = z.object({
-  name: requiredText(2, UI_MESSAGES.FOUNDATIONS_NAME_MIN),
-  acronym: optionalAcronym,
-  nit: requiredText(5, UI_MESSAGES.FOUNDATIONS_NIT_MIN, 20),
-  category: requiredText(2, UI_MESSAGES.FOUNDATIONS_CATEGORY_MIN),
-  mission: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 1000),
-  vision: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 1000),
-  description: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 2000),
-  city: requiredText(2, UI_MESSAGES.FOUNDATIONS_CITY_MIN),
-  department: requiredText(2, UI_MESSAGES.FOUNDATIONS_DEPARTMENT_MIN),
-  country: requiredText(2, UI_MESSAGES.FOUNDATIONS_COUNTRY_MIN),
-  address: requiredText(5, UI_MESSAGES.FOUNDATIONS_ADDRESS_MIN),
-  institutionalEmail: z.string().trim().email(UI_MESSAGES.VALIDATION_EMAIL),
-  phone: requiredText(7, UI_MESSAGES.FOUNDATIONS_PHONE_MIN, 20),
-  website: optionalUrl,
-  legalRepresentativeName: requiredText(2, UI_MESSAGES.VALIDATION_FULL_NAME),
-  legalRepresentativeDocument: requiredText(5, UI_MESSAGES.FOUNDATIONS_REPRESENTATIVE_DOCUMENT_MIN),
-  socialLinks: z.preprocess(
-    (value) => {
-      if (!Array.isArray(value)) {
-        return [];
-      }
+export const updateFoundationSchema = z
+  .object({
+    name: requiredText(2, UI_MESSAGES.FOUNDATIONS_NAME_MIN),
+    acronym: optionalAcronym,
+    nit: requiredText(5, UI_MESSAGES.FOUNDATIONS_NIT_MIN, 20),
+    category: requiredText(2, UI_MESSAGES.FOUNDATIONS_CATEGORY_MIN),
+    mission: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 1000),
+    vision: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 1000),
+    description: requiredText(1, UI_MESSAGES.FOUNDATIONS_FIELD_REQUIRED, 2000),
+    city: requiredText(2, UI_MESSAGES.FOUNDATIONS_CITY_MIN),
+    department: requiredText(2, UI_MESSAGES.FOUNDATIONS_DEPARTMENT_MIN),
+    country: requiredText(2, UI_MESSAGES.FOUNDATIONS_COUNTRY_MIN),
+    address: requiredText(5, UI_MESSAGES.FOUNDATIONS_ADDRESS_MIN),
+    institutionalEmail: z.string().trim().email(UI_MESSAGES.VALIDATION_EMAIL),
+    phone: requiredText(7, UI_MESSAGES.FOUNDATIONS_PHONE_MIN, 20),
+    website: optionalUrl,
+    legalRepresentativeName: requiredText(2, UI_MESSAGES.VALIDATION_FULL_NAME),
+    legalRepresentativeDocument: requiredText(5, UI_MESSAGES.FOUNDATIONS_REPRESENTATIVE_DOCUMENT_MIN),
+    latitude: z.number().min(-90).max(90).nullable().optional(),
+    longitude: z.number().min(-180).max(180).nullable().optional(),
+    socialLinks: z.preprocess(
+      (value) => {
+        if (!Array.isArray(value)) {
+          return [];
+        }
 
-      return value
-        .map((item) => {
-          if (!item || typeof item !== 'object') {
-            return null;
-          }
-          const network = (item as { network?: unknown }).network;
-          const rawUrl = (item as { url?: unknown }).url;
-          if (typeof network !== 'string' || typeof rawUrl !== 'string') {
-            return null;
-          }
-          const url = normalizeOptionalUrl(rawUrl);
-          if (!url) {
-            return null;
-          }
-          return { network, url };
-        })
-        .filter((item): item is { network: string; url: string } => item !== null);
-    },
-    z
-      .array(
-        z.object({
-          network: socialNetworkEnum,
-          url: z.string().trim().url(UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL_INVALID),
-        }),
-      )
-      .max(10)
-      .default([]),
-  ),
-});
+        return value
+          .map((item) => {
+            if (!item || typeof item !== 'object') {
+              return null;
+            }
+            const network = (item as { network?: unknown }).network;
+            const rawUrl = (item as { url?: unknown }).url;
+            if (typeof network !== 'string' || typeof rawUrl !== 'string') {
+              return null;
+            }
+            const url = normalizeOptionalUrl(rawUrl);
+            if (!url) {
+              return null;
+            }
+            return { network, url };
+          })
+          .filter((item): item is { network: string; url: string } => item !== null);
+      },
+      z
+        .array(
+          z.object({
+            network: socialNetworkEnum,
+            url: z.string().trim().url(UI_MESSAGES.FOUNDATIONS_FORM_SOCIAL_URL_INVALID),
+          }),
+        )
+        .max(10)
+        .default([]),
+    ),
+  })
+  .superRefine((data, ctx) => {
+    const hasLat = data.latitude !== undefined && data.latitude !== null;
+    const hasLng = data.longitude !== undefined && data.longitude !== null;
+    if (hasLat !== hasLng) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: UI_MESSAGES.FOUNDATIONS_COORDS_INCOMPLETE,
+        path: ['latitude'],
+      });
+    }
+  });
 
 export const updateFoundationStatusSchema = z
   .object({

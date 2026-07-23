@@ -275,6 +275,8 @@ export const UI_MESSAGES = {
   LOCATION_LOADING: 'Cargando...',
   LOCATION_NO_RESULTS: 'Sin resultados',
   LOCATION_LOAD_ERROR: 'No fue posible cargar las ubicaciones. Intenta de nuevo.',
+  LOCATION_SERVICE_UNAVAILABLE:
+    'El servicio de ubicaciones no está disponible temporalmente (503). Reintenta en unos segundos.',
   AUTH_EMAIL_INVALID: 'Correo electrónico inválido.',
   MAP_UNAVAILABLE:
     'Mapa no disponible. Configura VITE_GOOGLE_MAPS_API_KEY para ver el mapa interactivo.',
@@ -357,6 +359,14 @@ export const UI_MESSAGES = {
     'Para usar el resto de la plataforma, completa tu perfil y documentos. Usa la guia de abajo para avanzar paso a paso.',
   FOUNDATIONS_GATE_VERIFICATION:
     'Tu perfil ya esta completo. Cuando un administrador verifique tu fundacion, podras gestionar campanas, necesidades y solicitudes.',
+  FOUNDATIONS_GATE_SUSPENDED:
+    'Tu fundación está suspendida. No puedes operar campañas ni solicitudes hasta que un administrador reactive la cuenta.',
+  FOUNDATIONS_FORM_MAP: 'Ubicación en el mapa (opcional)',
+  FOUNDATIONS_FORM_MAP_HINT:
+    'Indica latitud y longitud juntas para aparecer en búsquedas cercanas. Haz clic en el mapa o arrastra el marcador.',
+  FOUNDATIONS_FORM_LATITUDE: 'Latitud',
+  FOUNDATIONS_FORM_LONGITUDE: 'Longitud',
+  FOUNDATIONS_COORDS_INCOMPLETE: 'Debes indicar latitud y longitud juntas, o dejar ambas vacías.',
   FOUNDATIONS_READINESS_TITLE: 'Requisitos para operar',
   FOUNDATIONS_READINESS_PROFILE: 'Perfil completo',
   FOUNDATIONS_READINESS_DOCUMENTS: 'Documentos obligatorios cargados',

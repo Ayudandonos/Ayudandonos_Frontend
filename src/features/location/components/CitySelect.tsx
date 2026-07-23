@@ -3,7 +3,7 @@ import { SearchableSelect } from '@/features/location/components/SearchableSelec
 import { useCities } from '@/features/location/hooks/useCities';
 import type { City } from '@/features/location/types/location.types';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { parseApiError } from '@/utils/api-error';
+import { getLocationLoadErrorMessage } from '@/features/location/utils/location-query-error';
 
 interface CitySelectProps {
   countryIso: string | null;
@@ -70,10 +70,7 @@ export function CitySelect({
       loading={enabled && (isLoading || (isFetching && !data))}
       fallbackLabel={value?.name}
       error={
-        fieldError ||
-        (enabled && isError
-          ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR
-          : undefined)
+        fieldError || (enabled && isError ? getLocationLoadErrorMessage(error) : undefined)
       }
       onRetry={enabled && isError ? () => void refetch() : undefined}
       requiredMark={requiredMark}

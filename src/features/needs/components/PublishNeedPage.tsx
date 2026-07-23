@@ -14,6 +14,7 @@ import {
   type NeedFormData,
 } from '@/features/needs/validations/needs.validations';
 import { parseApiError } from '@/utils/api-error';
+import { redirectFoundationOnForbidden } from '@/utils/foundation-api-guard';
 
 interface CampaignOption {
   id: string;
@@ -64,11 +65,14 @@ export function PublishNeedPage() {
         setCampaignId(items[0].id);
       }
     } catch (error) {
+      if (redirectFoundationOnForbidden(error, navigate)) {
+        return;
+      }
       setApiError(parseApiError(error).message || UI_MESSAGES.NEEDS_LOAD_ERROR);
     } finally {
       setIsLoadingCampaigns(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     void loadCampaigns();
@@ -97,6 +101,9 @@ export function PublishNeedPage() {
       pushToast({ variant: 'success', message: UI_MESSAGES.NEEDS_CREATED });
       navigate(`/foundation/campaigns/${campaignId}/edit`);
     } catch (error) {
+      if (redirectFoundationOnForbidden(error, navigate)) {
+        return;
+      }
       const message = parseApiError(error).message || UI_MESSAGES.NEEDS_LOAD_ERROR;
       setApiError(message);
       pushToast({ variant: 'danger', message });

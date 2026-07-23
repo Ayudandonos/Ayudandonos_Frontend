@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchCities } from '@/features/location/api/locations.api';
 import { locationQueryKeys } from '@/features/location/hooks/useCountries';
 import type { City } from '@/features/location/types/location.types';
+import { shouldRetryLocationQuery } from '@/features/location/utils/location-query-error';
 
 /**
  * Entrada: countryIso: ISO2 pais; stateIso: ISO estado (nullable si no hay seleccion).
- * Proceso: Obtiene ciudades solo cuando ambos ISO estan definidos; cachea por par.
+ * Proceso: Obtiene ciudades solo cuando ambos ISO estan definidos; reintenta 503.
  * Salida: Retorna estado de consulta tipado de City[].
  */
 export function useCities(
@@ -21,5 +22,6 @@ export function useCities(
     enabled: country.length === 2 && state.length > 0,
     staleTime: 1000 * 60 * 60 * 24,
     gcTime: 1000 * 60 * 60 * 24,
+    retry: shouldRetryLocationQuery,
   });
 }

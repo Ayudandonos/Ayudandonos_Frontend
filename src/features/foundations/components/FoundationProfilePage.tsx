@@ -48,6 +48,8 @@ function buildDefaultValues(foundation: FoundationDetail): UpdateFoundationFormD
     legalRepresentativeName: foundation.legalRepresentativeName ?? '',
     legalRepresentativeDocument: foundation.legalRepresentativeDocument ?? '',
     socialLinks: foundation.socialLinks,
+    latitude: foundation.latitude ?? null,
+    longitude: foundation.longitude ?? null,
   };
 }
 
@@ -277,6 +279,12 @@ export function FoundationProfilePage() {
       {foundation.status === 'REJECTED' && foundation.rejectionReason && (
         <Alert variant="danger" title={UI_MESSAGES.FOUNDATIONS_REJECTION_REASON}>
           {foundation.rejectionReason}
+        </Alert>
+      )}
+
+      {foundation.status === 'SUSPENDED' && (
+        <Alert variant="warning" title={UI_MESSAGES.FOUNDATIONS_FILTER_SUSPENDED}>
+          {UI_MESSAGES.FOUNDATIONS_GATE_SUSPENDED}
         </Alert>
       )}
 

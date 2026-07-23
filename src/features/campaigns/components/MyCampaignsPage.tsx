@@ -12,6 +12,7 @@ import { campaignsService } from '@/features/campaigns/services/campaigns.servic
 import type { Campaign } from '@/features/campaigns/types/campaigns.types';
 import { parseApiError } from '@/utils/api-error';
 import { formatDate } from '@/utils/date-format';
+import { redirectFoundationOnForbidden } from '@/utils/foundation-api-guard';
 
 interface CampaignRow extends Campaign {
   needsCount: number;
@@ -85,12 +86,15 @@ export function MyCampaignsPage() {
       const rows = await withNeedsCounts(result.data.items);
       setCampaigns(rows);
     } catch (loadError) {
+      if (redirectFoundationOnForbidden(loadError, navigate)) {
+        return;
+      }
       setError(parseApiError(loadError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR);
       setCampaigns([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     void loadCampaigns();
@@ -116,6 +120,9 @@ export function MyCampaignsPage() {
       setConfirm(null);
       await loadCampaigns();
     } catch (actionError) {
+      if (redirectFoundationOnForbidden(actionError, navigate)) {
+        return;
+      }
       const message = parseApiError(actionError).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
       setError(message);
       pushToast({ variant: 'danger', message });

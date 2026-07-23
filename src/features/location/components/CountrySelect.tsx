@@ -4,7 +4,7 @@ import { useCountries } from '@/features/location/hooks/useCountries';
 import type { Country } from '@/features/location/types/location.types';
 import { getCountryFlagUrl } from '@/features/location/utils/country-flag';
 import { UI_MESSAGES } from '@/constants/messages.constants';
-import { parseApiError } from '@/utils/api-error';
+import { getLocationLoadErrorMessage } from '@/features/location/utils/location-query-error';
 
 interface CountrySelectProps {
   value: Country | null;
@@ -68,8 +68,7 @@ export function CountrySelect({
       loading={isLoading || (isFetching && !data)}
       fallbackLabel={value?.name}
       error={
-        fieldError ||
-        (isError ? parseApiError(error).message || UI_MESSAGES.LOCATION_LOAD_ERROR : undefined)
+        fieldError || (isError ? getLocationLoadErrorMessage(error) : undefined)
       }
       onRetry={isError ? () => void refetch() : undefined}
       requiredMark={requiredMark}

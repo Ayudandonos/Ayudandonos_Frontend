@@ -10,30 +10,10 @@ import type { Donation } from '@/features/donations/types/donations.types';
 import { EmptyState } from '@/features/foundations/components/EmptyState';
 import { FoundationsLoadingSkeleton } from '@/features/foundations/components/FoundationsLoadingSkeleton';
 import { parseApiError } from '@/utils/api-error';
+import { resolveFoundationAccessGate } from '@/utils/foundation-api-guard';
 import { formatDate } from '@/utils/date-format';
 
 type RequestsAccessError = 'profile' | 'verification' | 'generic';
-
-/**
- * Entrada: status: codigo HTTP de la respuesta de error.
- * Proceso: Clasifica el bloqueo de acceso segun perfil incompleto o falta de verificacion.
- * Salida: Retorna el tipo de restriccion o generic para otros errores.
- */
-function resolveAccessError(status?: number, message?: string): RequestsAccessError {
-  if (status !== 403) {
-    return 'generic';
-  }
-
-  if (message?.toLowerCase().includes('verific')) {
-    return 'verification';
-  }
-
-  if (message?.toLowerCase().includes('perfil') || message?.toLowerCase().includes('documentos')) {
-    return 'profile';
-  }
-
-  return 'generic';
-}
 
 /**
  * Entrada: Ninguna.
@@ -80,8 +60,14 @@ export function HelpRequestsPage() {
         }
 
         if (parsed.status === 403) {
-          setAccessError(resolveAccessError(parsed.status, parsed.message));
-          setErrorMessage(parsed.message || UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION);
+          const gate = resolveFoundationAccessGate(loadError);
+          setAccessError(gate === 'verification' ? 'verification' : 'profile');
+          setErrorMessage(
+            parsed.message ||
+              (gate === 'verification'
+                ? UI_MESSAGES.FOUNDATIONS_GATE_VERIFICATION
+                : UI_MESSAGES.FOUNDATIONS_GATE_INCOMPLETE),
+          );
           return;
         }
 

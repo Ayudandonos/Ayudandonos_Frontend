@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm, type FieldErrors } from 'react-hook-form';
+import { Controller, useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
+import { DeliveryMap } from '@/components/ui/DeliveryMap';
 import { Input } from '@/components/ui/Input';
 import { UI_MESSAGES } from '@/constants/messages.constants';
 import { useToast } from '@/context/useToast';
@@ -36,6 +37,8 @@ const FIELD_LABELS: Record<string, string> = {
   department: UI_MESSAGES.FOUNDATIONS_FORM_DEPARTMENT,
   city: UI_MESSAGES.FOUNDATIONS_FORM_CITY,
   address: UI_MESSAGES.FOUNDATIONS_FORM_ADDRESS,
+  latitude: UI_MESSAGES.FOUNDATIONS_FORM_LATITUDE,
+  longitude: UI_MESSAGES.FOUNDATIONS_FORM_LONGITUDE,
   institutionalEmail: UI_MESSAGES.FOUNDATIONS_FORM_INSTITUTIONAL_EMAIL,
   phone: UI_MESSAGES.FOUNDATIONS_FORM_PHONE,
   website: UI_MESSAGES.FOUNDATIONS_FORM_WEBSITE,
@@ -134,6 +137,7 @@ export function FoundationForm({
   const {
     register,
     handleSubmit,
+    control,
     watch,
     setValue,
     getValues,
@@ -143,6 +147,8 @@ export function FoundationForm({
     defaultValues: {
       ...defaultValues,
       socialLinks: defaultValues.socialLinks ?? [],
+      latitude: defaultValues.latitude ?? null,
+      longitude: defaultValues.longitude ?? null,
     },
     mode: 'onSubmit',
     shouldFocusError: true,
@@ -237,6 +243,8 @@ export function FoundationForm({
         ...data,
         acronym: data.acronym ?? null,
         website: data.website ? normalizeOptionalUrl(data.website) : null,
+        latitude: data.latitude ?? null,
+        longitude: data.longitude ?? null,
         socialLinks: (data.socialLinks ?? [])
           .map((link) => ({
             ...link,
@@ -342,6 +350,52 @@ export function FoundationForm({
           register={register}
           errors={errors}
         />
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-text-primary">{UI_MESSAGES.FOUNDATIONS_FORM_MAP}</p>
+          <p className="text-xs text-text-muted">{UI_MESSAGES.FOUNDATIONS_FORM_MAP_HINT}</p>
+          <Controller
+            name="latitude"
+            control={control}
+            render={({ field: latField }) => (
+              <Controller
+                name="longitude"
+                control={control}
+                render={({ field: lngField }) => (
+                  <DeliveryMap
+                    editable
+                    latitude={latField.value}
+                    longitude={lngField.value}
+                    onChange={(latitude, longitude) => {
+                      latField.onChange(latitude);
+                      lngField.onChange(longitude);
+                    }}
+                  />
+                )}
+              />
+            )}
+          />
+          {errors.latitude?.message && (
+            <p className="text-sm text-error-500">{errors.latitude.message}</p>
+          )}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Input
+              label={UI_MESSAGES.FOUNDATIONS_FORM_LATITUDE}
+              type="number"
+              step="any"
+              value={watch('latitude') ?? ''}
+              readOnly
+              optionalMark
+            />
+            <Input
+              label={UI_MESSAGES.FOUNDATIONS_FORM_LONGITUDE}
+              type="number"
+              step="any"
+              value={watch('longitude') ?? ''}
+              readOnly
+              optionalMark
+            />
+          </div>
+        </div>
       </section>
 
       <section className="space-y-4">

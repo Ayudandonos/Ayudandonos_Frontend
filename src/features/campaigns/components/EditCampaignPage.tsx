@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { buttonLinkClass } from '@/components/ui/button-link-class';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
@@ -14,6 +14,7 @@ import { campaignFormToPayload } from '@/features/campaigns/utils/campaign-paylo
 import type { CampaignFormData } from '@/features/campaigns/validations/campaigns.validations';
 import { parseApiError } from '@/utils/api-error';
 import { toDateTimeLocalValue } from '@/utils/date-format';
+import { redirectFoundationOnForbidden } from '@/utils/foundation-api-guard';
 
 /**
  * Entrada: Ninguna (id desde useParams).
@@ -22,6 +23,7 @@ import { toDateTimeLocalValue } from '@/utils/date-format';
  */
 export function EditCampaignPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { pushToast } = useToast();
   const [campaign, setCampaign] = useState<Campaign | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,12 +43,15 @@ export function EditCampaignPage() {
       const data = await campaignsService.fetchCampaignById(id);
       setCampaign(data);
     } catch (error) {
+      if (redirectFoundationOnForbidden(error, navigate)) {
+        return;
+      }
       setLoadError(parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_NOT_FOUND);
       setCampaign(null);
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     void loadCampaign();
@@ -65,6 +70,9 @@ export function EditCampaignPage() {
       setCampaign(updated);
       pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_UPDATED });
     } catch (error) {
+      if (redirectFoundationOnForbidden(error, navigate)) {
+        return;
+      }
       const message = parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
       setApiError(message);
       pushToast({ variant: 'danger', message });
@@ -85,6 +93,9 @@ export function EditCampaignPage() {
       setCampaign(published);
       pushToast({ variant: 'success', message: UI_MESSAGES.CAMPAIGNS_PUBLISHED });
     } catch (error) {
+      if (redirectFoundationOnForbidden(error, navigate)) {
+        return;
+      }
       const message = parseApiError(error).message || UI_MESSAGES.CAMPAIGNS_LOAD_ERROR;
       setApiError(message);
       pushToast({ variant: 'danger', message });
